@@ -1,0 +1,295 @@
+Include("\\script\\lib\\common.lua")
+Include("\\script\\dailogsys\\g_dialog.lua")
+Include("\\script\\dailogsys\\dailogsay.lua")
+Include("\\script\\task\\task_addplayerexp.lua")
+Include("\\script\\global\\nobitaxd\\config\\cfg_server.lua")
+Include("\\script\\sukien_nam\\lib_xacnhan.lua")
+
+function main()
+	local nMonth = tonumber(GetLocalDate("%m"))
+	
+	if SKN_ThangMo(7) ~= 1 then
+		CreateNewSayEx("<color=yellow>Sø Gi¶ ThÊt TÞch:<color>\nSù kiÖn LÔ ThÊt TÞch chØ diÔn ra trong Th¸ng 7, hÑn gÆp l¹i ®¹i hiÖp sau!", {{"Tho¸t", KetThuc}})
+		return 1
+	end
+
+	local szMsg = "<color=yellow>Sø Gi¶ ThÊt TÞch:<color>\nNgµy lÔ ThÊt TÞch, ng­¬i cã h¸i ®­îc nh÷ng b«ng hoa sen t­¬i th¾m kh«ng? H·y mang ®Õn ®©y ®Ó nhËn th­ëng vµ t×m c¬ héi ghÐp thµnh b¸u vËt."
+	local tbOpt = {
+		{"GhÐp Vßng Hoa Sen", Menu_GhepVong},
+		{"D©ng Vßng Hoa Sen (3 TriÖu EXP)", Menu_DangVong},
+		{"GhÐp Ngò S¾c Hoa Liªn (B¸u VËt)", Menu_GhepNguSac},
+		{"Tho¸t", KetThuc}
+	}
+	CreateNewSayEx(szMsg, tbOpt)
+	return 1
+end
+
+-- ==================== CH?C NANG 1: GHÉP VÒNG HOA SEN ====================
+function Menu_GhepVong()
+	local tbOpt = {
+		{"GhÐp Vßng Kim Liªn", Menu_GhepKim},
+		{"GhÐp Vßng Méc Liªn", Menu_GhepMoc},
+		{"GhÐp Vßng Thñy Liªn", Menu_GhepThuy},
+		{"GhÐp Vßng Háa Liªn", Menu_GhepHoa},
+		{"GhÐp Vßng Thæ Liªn", Menu_GhepTho},
+		{"Quay l¹i", main}
+	}
+	CreateNewSayEx("Muèn ghÐp lo¹i Vßng Hoa Sen nµo?\n\n<color=pink>C«ng thøc: 5 Hoa Sen (cïng lo¹i) + 3 v¹n l­îng = 1 Vßng Hoa Sen<color>", tbOpt)
+end
+
+function Menu_GhepKim()
+	local tbOpt = {
+		{"GhÐp 1 c¸i", function() GhepVong(1, 1) end},
+		{"GhÐp 10 c¸i", function() GhepVong(1, 10) end},
+		{"GhÐp 50 c¸i", function() GhepVong(1, 50) end},
+		{"GhÐp 100 c¸i", function() GhepVong(1, 100) end},
+		{"Quay l¹i", Menu_GhepVong}
+	}
+	CreateNewSayEx("Chän sè l­îng muèn ghÐp <color=yellow>Vßng Kim Liªn<color>:", tbOpt)
+end
+
+function Menu_GhepMoc()
+	local tbOpt = {
+		{"GhÐp 1 c¸i", function() GhepVong(2, 1) end},
+		{"GhÐp 10 c¸i", function() GhepVong(2, 10) end},
+		{"GhÐp 50 c¸i", function() GhepVong(2, 50) end},
+		{"GhÐp 100 c¸i", function() GhepVong(2, 100) end},
+		{"Quay l¹i", Menu_GhepVong}
+	}
+	CreateNewSayEx("Chän sè l­îng muèn ghÐp <color=yellow>Vßng Méc Liªn<color>:", tbOpt)
+end
+
+function Menu_GhepThuy()
+	local tbOpt = {
+		{"GhÐp 1 c¸i", function() GhepVong(3, 1) end},
+		{"GhÐp 10 c¸i", function() GhepVong(3, 10) end},
+		{"GhÐp 50 c¸i", function() GhepVong(3, 50) end},
+		{"GhÐp 100 c¸i", function() GhepVong(3, 100) end},
+		{"Quay l¹i", Menu_GhepVong}
+	}
+	CreateNewSayEx("Chän sè l­îng muèn ghÐp <color=yellow>Vßng Thñy Liªn<color>:", tbOpt)
+end
+
+function Menu_GhepHoa()
+	local tbOpt = {
+		{"GhÐp 1 c¸i", function() GhepVong(4, 1) end},
+		{"GhÐp 10 c¸i", function() GhepVong(4, 10) end},
+		{"GhÐp 50 c¸i", function() GhepVong(4, 50) end},
+		{"GhÐp 100 c¸i", function() GhepVong(4, 100) end},
+		{"Quay l¹i", Menu_GhepVong}
+	}
+	CreateNewSayEx("Chän sè l­îng muèn ghÐp <color=yellow>Vßng Háa Liªn<color>:", tbOpt)
+end
+
+function Menu_GhepTho()
+	local tbOpt = {
+		{"GhÐp 1 c¸i", function() GhepVong(5, 1) end},
+		{"GhÐp 10 c¸i", function() GhepVong(5, 10) end},
+		{"GhÐp 50 c¸i", function() GhepVong(5, 50) end},
+		{"GhÐp 100 c¸i", function() GhepVong(5, 100) end},
+		{"Quay l¹i", Menu_GhepVong}
+	}
+	CreateNewSayEx("Chän sè l­îng muèn ghÐp <color=yellow>Vßng Thæ Liªn<color>:", tbOpt)
+end
+
+-- ==================== CH?C NANG 2: DÂNG VÒNG HOA SEN ====================
+function Menu_DangVong()
+	local tbOpt = {
+		{"D©ng Vßng Kim Liªn", Menu_DangKim},
+		{"D©ng Vßng Méc Liªn", Menu_DangMoc},
+		{"D©ng Vßng Thñy Liªn", Menu_DangThuy},
+		{"D©ng Vßng Háa Liªn", Menu_DangHoa},
+		{"D©ng Vßng Thæ Liªn", Menu_DangTho},
+		{"Quay l¹i", main}
+	}
+	CreateNewSayEx("Muèn d©ng lo¹i Vßng Hoa Sen nµo?\n\n(NhËn 3 triÖu Kinh NghiÖm/c¸i, kÌm x¸c suÊt vËt phÈm quÝ)", tbOpt)
+end
+
+function Menu_DangKim()
+	local tbOpt = {
+		{"D©ng 1 c¸i", function() DangVong(1, 1) end},
+		{"D©ng 10 c¸i", function() DangVong(1, 10) end},
+		{"D©ng 50 c¸i", function() DangVong(1, 50) end},
+		{"D©ng 100 c¸i", function() DangVong(1, 100) end},
+		{"Quay l¹i", Menu_DangVong}
+	}
+	CreateNewSayEx("Chän sè l­îng muèn d©ng <color=yellow>Vßng Kim Liªn<color>:", tbOpt)
+end
+
+function Menu_DangMoc()
+	local tbOpt = {
+		{"D©ng 1 c¸i", function() DangVong(2, 1) end},
+		{"D©ng 10 c¸i", function() DangVong(2, 10) end},
+		{"D©ng 50 c¸i", function() DangVong(2, 50) end},
+		{"D©ng 100 c¸i", function() DangVong(2, 100) end},
+		{"Quay l¹i", Menu_DangVong}
+	}
+	CreateNewSayEx("Chän sè l­îng muèn d©ng <color=yellow>Vßng Méc Liªn<color>:", tbOpt)
+end
+
+function Menu_DangThuy()
+	local tbOpt = {
+		{"D©ng 1 c¸i", function() DangVong(3, 1) end},
+		{"D©ng 10 c¸i", function() DangVong(3, 10) end},
+		{"D©ng 50 c¸i", function() DangVong(3, 50) end},
+		{"D©ng 100 c¸i", function() DangVong(3, 100) end},
+		{"Quay l¹i", Menu_DangVong}
+	}
+	CreateNewSayEx("Chän sè l­îng muèn d©ng <color=yellow>Vßng Thñy Liªn<color>:", tbOpt)
+end
+
+function Menu_DangHoa()
+	local tbOpt = {
+		{"D©ng 1 c¸i", function() DangVong(4, 1) end},
+		{"D©ng 10 c¸i", function() DangVong(4, 10) end},
+		{"D©ng 50 c¸i", function() DangVong(4, 50) end},
+		{"D©ng 100 c¸i", function() DangVong(4, 100) end},
+		{"Quay l¹i", Menu_DangVong}
+	}
+	CreateNewSayEx("Chän sè l­îng muèn d©ng <color=yellow>Vßng Háa Liªn<color>:", tbOpt)
+end
+
+function Menu_DangTho()
+	local tbOpt = {
+		{"D©ng 1 c¸i", function() DangVong(5, 1) end},
+		{"D©ng 10 c¸i", function() DangVong(5, 10) end},
+		{"D©ng 50 c¸i", function() DangVong(5, 50) end},
+		{"D©ng 100 c¸i", function() DangVong(5, 100) end},
+		{"Quay l¹i", Menu_DangVong}
+	}
+	CreateNewSayEx("Chän sè l­îng muèn d©ng <color=yellow>Vßng Thæ Liªn<color>:", tbOpt)
+end
+
+-- ==================== CH?C NANG 3: GHÉP NGU S?C HOA LIÊN ====================
+function Menu_GhepNguSac()
+	local tbMat = {
+		{szName = "Vßng Kim Liªn Hoa", tbProp = {6, 1, 1131, 1, 0, 0}, nCount = 1},
+		{szName = "Vßng Méc Liªn Hoa", tbProp = {6, 1, 1132, 1, 0, 0}, nCount = 1},
+		{szName = "Vßng Thñy Liªn Hoa", tbProp = {6, 1, 1133, 1, 0, 0}, nCount = 1},
+		{szName = "Vßng Háa Liªn Hoa", tbProp = {6, 1, 1134, 1, 0, 0}, nCount = 1},
+		{szName = "Vßng Thæ Liªn Hoa", tbProp = {6, 1, 1135, 1, 0, 0}, nCount = 1},
+	}
+	SKN_XacNhan("GhÐp Ngò S¾c Hoa", tbMat, "GhepNguSac")
+end
+-- ==================== HÀM X? LÝ LOGIC ====================
+
+function GhepVong(nType, nCount)
+	local tbData = {
+		{nIdSen = 1126, nIdVong = 1131, szVong = "Vßng Kim Liªn"},
+		{nIdSen = 1127, nIdVong = 1132, szVong = "Vßng Méc Liªn"},
+		{nIdSen = 1128, nIdVong = 1133, szVong = "Vßng Thñy Liªn"},
+		{nIdSen = 1129, nIdVong = 1134, szVong = "Vßng Háa Liªn"},
+		{nIdSen = 1130, nIdVong = 1135, szVong = "Vßng Thæ Liªn"}
+	}
+	
+	local nIdSen = tbData[nType].nIdSen
+	local nIdVong = tbData[nType].nIdVong
+	local szVong = tbData[nType].szVong
+	local nNeedSen = nCount * 5
+	local nNeedMoney = nCount * 30000
+
+	if CalcFreeItemCellCount() < floor(nCount/10) + 1 then Msg2Player("Hµnh trang kh«ng ®ñ chç trèng!") return end
+	if CalcEquiproomItemCount(6, 1, nIdSen, -1) < nNeedSen then Msg2Player("Kh«ng cã ®ñ " .. nNeedSen .. " c¸i Hoa Sen!") return end
+	if GetCash() < nNeedMoney then Msg2Player("Kh«ng cã ®ñ " .. (nNeedMoney/10000) .. " v¹n l­îng!") return end
+
+	Pay(nNeedMoney)
+	ConsumeEquiproomItem(nNeedSen, 6, 1, nIdSen, -1)
+	for i = 1, nCount do AddItem(6, 1, nIdVong, 1, 0, 0) end
+	
+	Msg2Player("<color=yellow>GhÐp thµnh c«ng " .. nCount .. " " .. szVong .. "!<color>")
+end
+
+function DangVong(nType, nCount)
+	local tbData = {
+		{nIdVong = 1131, szVong = "Vßng Kim Liªn"},
+		{nIdVong = 1132, szVong = "Vßng Méc Liªn"},
+		{nIdVong = 1133, szVong = "Vßng Thñy Liªn"},
+		{nIdVong = 1134, szVong = "Vßng Háa Liªn"},
+		{nIdVong = 1135, szVong = "Vßng Thæ Liªn"}
+	}
+	
+	local nIdVong = tbData[nType].nIdVong
+	local szVong = tbData[nType].szVong
+	local nExpPerItem = 3000000
+	local nTotalAdd = nExpPerItem * nCount
+
+	local TSK_EXP_THANG7 = 1326
+	local TSK_NAM_EVENT = 1327
+	local MAX_EXP_EVENT = 1500000000
+	
+	local nYear = tonumber(GetLocalDate("%Y"))
+	if GetTask(TSK_NAM_EVENT) ~= nYear then
+		SetTask(TSK_EXP_THANG7, 0)
+		SetTask(TSK_NAM_EVENT, nYear)
+	end
+
+	local nExpDaNhan = GetTask(TSK_EXP_THANG7)
+	if nExpDaNhan >= MAX_EXP_EVENT then Msg2Player("§· ®¹t giíi h¹n nhËn 1.5 Tû EXP sù kiÖn mïa nµy!") return end
+	if nExpDaNhan + nTotalAdd > MAX_EXP_EVENT then Msg2Player("Sè l­îng d©ng sÏ lµm v­ît giíi h¹n 1.5 Tû EXP. H·y chän Ýt h¬n!") return end
+	if CalcFreeItemCellCount() < 2 then Msg2Player("CÇn Ýt nhÊt 2 « trèng ®Ó nhËn th­ëng!") return end
+	if CalcEquiproomItemCount(6, 1, nIdVong, -1) < nCount then Msg2Player("Kh«ng cã ®ñ " .. nCount .. " " .. szVong .. "!") return end
+
+	ConsumeEquiproomItem(nCount, 6, 1, nIdVong, -1)
+	tl_addPlayerExp(nTotalAdd)
+	SetTask(TSK_EXP_THANG7, nExpDaNhan + nTotalAdd)
+
+	for i = 1, nCount do NhanThuong() end
+	Msg2Player("<color=green>D©ng thµnh c«ng " .. nCount .. " " .. szVong .. ", nhËn ®­îc " .. (nTotalAdd/10000) .. " v¹n Kinh NghiÖm!<color>")
+end
+
+function NhanThuong()
+	local tbQua = {
+		{"Lam Thñy Tinh", 50, 1, 238},
+		{"Tö Thñy Tinh", 50, 1, 239},
+		{"Lôc Thñy Tinh", 50, 1, 240},
+		{"Tiªn Th¶o Lé", 6500, 2, 71},
+		{"Vâ L©m MËt TÞch", 10, 2, 26},
+		{"TÈy Tñy Kinh", 10, 2, 22},
+		{"An Bang B¨ng Tinh Th¹ch H¹ng Liªn", 1, 3, 164},
+		{"An Bang Cóc Hoa Th¹ch ChØ hoµn", 1, 3, 165},
+		{"An Bang §iÒn Hoµng Th¹ch Ngäc Béi", 1, 3, 166},
+		{"An Bang Kª HuyÕt Th¹ch Giíi ChØ", 1, 3, 167}
+	}
+	
+	local nSeed = random(1, 10000)
+	local nTotal = 0
+	
+	for i = 1, getn(tbQua) do
+		nTotal = nTotal + tbQua[i][2]
+		if nSeed <= nTotal then
+			local nType = tbQua[i][3]
+			local nItem = tbQua[i][4]
+			local szName = tbQua[i][1]
+			
+			if nType == 1 then AddEventItem(nItem)
+			elseif nType == 2 then AddItem(6, 1, nItem, 1, 0, 0)
+			elseif nType == 3 then AddGoldItem(0, nItem) end
+			
+			if nType == 3 or (nType == 2 and (nItem == 26 or nItem == 22)) then
+				AddGlobalNews("Chóc mõng ["..GetName().."] h÷u duyªn khi d©ng Vßng Hoa Sen ®· nhËn ®­îc "..szName.."!")
+			end
+			break
+		end
+	end
+end
+
+function GhepNguSac(nCount)
+	if CalcFreeItemCellCount() < floor(nCount/10) + 1 then Msg2Player("Hµnh trang kh«ng ®ñ chç trèng!") return end
+	if CalcEquiproomItemCount(6, 1, 1131, -1) < nCount then Msg2Player("Kh«ng ®ñ Vßng Kim Liªn!") return end
+	if CalcEquiproomItemCount(6, 1, 1132, -1) < nCount then Msg2Player("Kh«ng ®ñ Vßng Méc Liªn!") return end
+	if CalcEquiproomItemCount(6, 1, 1133, -1) < nCount then Msg2Player("Kh«ng ®ñ Vßng Thñy Liªn!") return end
+	if CalcEquiproomItemCount(6, 1, 1134, -1) < nCount then Msg2Player("Kh«ng ®ñ Vßng Háa Liªn!") return end
+	if CalcEquiproomItemCount(6, 1, 1135, -1) < nCount then Msg2Player("Kh«ng ®ñ Vßng Thæ Liªn!") return end
+
+	ConsumeEquiproomItem(nCount, 6, 1, 1131, -1)
+	ConsumeEquiproomItem(nCount, 6, 1, 1132, -1)
+	ConsumeEquiproomItem(nCount, 6, 1, 1133, -1)
+	ConsumeEquiproomItem(nCount, 6, 1, 1134, -1)
+	ConsumeEquiproomItem(nCount, 6, 1, 1135, -1)
+	
+	for i = 1, nCount do AddItem(6, 1, 2836, 1, 0, 0) end
+	Msg2Player("<color=yellow>GhÐp thµnh c«ng " .. nCount .. " b¸u vËt Ngò S¾c Hoa Liªn!<color>")
+	AddGlobalNews("Hçn thÕ vô l­îng, ng­¬i ch¬i ["..GetName().."] ®· tinh luyÖn thµnh c«ng b¸u vËt Ngò S¾c Hoa Liªn!")
+end
+
+function KetThuc() end

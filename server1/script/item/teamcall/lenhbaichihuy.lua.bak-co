@@ -1,0 +1,86 @@
+-- ============================================================
+-- Vat pham 6/1/5165 - LENH BAI CHI HUY
+-- Chi Doi truong moi giu duoc; mo thang bang dieu khien Goi Dong Doi.
+-- ============================================================
+Include("\\script\\lib\\common.lua")
+Include("\\script\\dailogsys\\g_dialog.lua")
+Include("\\script\\dailogsys\\dailogsay.lua")
+Include("\\script\\item\\teamcall\\teamcall_control.lua")
+Include("\\script\\item\\teamcall\\leader_token.lua")
+
+function main(nItemIndex)
+	if (LeaderToken_IsLeader() ~= 1) then
+		Msg2Player("<color=red>ChØ §éi tr­ëng míi dïng ®­îc LÖnh Bµi ChØ Huy.<color>");
+		LeaderToken_Revoke();
+		return 1;
+	end;
+	LenhBaiChiHuy_Menu();
+	return 1;
+end;
+
+function LenhBaiChiHuy_Menu()
+	local nSize = GetTeamSize();
+	if (nSize == nil) then nSize = 0; end;
+	local szState = "§ang t¾t";
+	if (TeamCall_GetEnabled() == 1) then
+		szState = "§ang bËt - ph¹m vi " .. TeamCall_GetDistance() .. " «";
+	end;
+
+	local szTitle =
+		"<color=yellow>LÖnh Bµi ChØ Huy<color>\n" ..
+		"Thµnh viªn trong ®éi: <color=green>" .. nSize .. "<color>\n" ..
+		"Gäi tù ®éng: <color=pink>" .. szState .. "<color>\n\n" ..
+		"Thµnh viªn ë xa qu¸ ph¹m vi sÏ ®­îc kÐo vÒ bªn ng­¬i.";
+
+	local tbOpt = {
+		{"Gäi ®ång ®éi vÒ ngay", LenhBaiChiHuy_CallNow},
+		{"BËt gäi tù ®éng", LenhBaiChiHuy_EnableAsk},
+		{"T¾t gäi tù ®éng", LenhBaiChiHuy_Disable},
+		{"§ãng"},
+	};
+	CreateNewSayEx(szTitle, tbOpt);
+end;
+
+function LenhBaiChiHuy_CallNow()
+	if (LeaderToken_IsLeader() ~= 1) then
+		LeaderToken_Revoke();
+		return 0
+	end;
+	local nRet = TeamCall_CallNow();
+	if (nRet == nil or nRet < 0) then
+		Msg2Player("<color=red>Kh«ng gäi ®­îc. KiÓm tra l¹i tæ ®éi.<color>");
+	else
+		Msg2Player("<color=yellow>§· kÐo " .. nRet .. " ®ång ®éi vÒ.<color>");
+	end;
+end;
+
+function LenhBaiChiHuy_EnableAsk()
+	if (LeaderToken_IsLeader() ~= 1) then
+		LeaderToken_Revoke();
+		return 0
+	end;
+	AskClientForNumber("LenhBaiChiHuy_EnableDo", TEAM_CALL_MIN_DISTANCE, TEAM_CALL_MAX_DISTANCE,
+		"Ph¹m vi bao nhiªu «? (10 - 100)");
+end;
+
+function LenhBaiChiHuy_EnableDo(nDistance)
+	if (LeaderToken_IsLeader() ~= 1) then
+		LeaderToken_Revoke();
+		return 0
+	end;
+	local nRet = TeamCall_EnablePermanent(nDistance, 0);
+	if (nRet == 1) then
+		Msg2Player("<color=yellow>§· bËt gäi tù ®éng, ph¹m vi " .. TeamCall_GetDistance() .. " «.<color>");
+	elseif (nRet == -1) then
+		Msg2Player("<color=red>Tæ ®éi ch­a ®ñ ng­êi.<color>");
+	elseif (nRet == -2) then
+		Msg2Player("<color=red>Ph¹m vi ph¶i tõ 10 ®Õn 100 «.<color>");
+	else
+		Msg2Player("<color=red>Kh«ng bËt ®­îc (m· " .. nRet .. ").<color>");
+	end;
+end;
+
+function LenhBaiChiHuy_Disable()
+	TeamCall_DisablePermanent();
+	Msg2Player("<color=yellow>§· t¾t gäi tù ®éng.<color>");
+end;

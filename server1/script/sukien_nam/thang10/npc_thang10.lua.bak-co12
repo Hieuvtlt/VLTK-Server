@@ -1,0 +1,343 @@
+Include("\\script\\lib\\common.lua")
+Include("\\script\\dailogsys\\g_dialog.lua")
+Include("\\script\\dailogsys\\dailogsay.lua")
+
+-- ================= HÀM CHÍNH =================
+function main()
+	local nMonth = tonumber(GetLocalDate("%m"))
+	
+	if nMonth ~= 10 then
+		local szMsg_Close = "<color=yellow>H»ng Nga:<color>\nTr¨ng r»m ®· tµn, mïa Trung Thu ®· kÕt thóc. HÑn gÆp l¹i §¹i hiÖp vµo th¸ng 10 n¨m sau!"
+		local tbOpt_Close = {
+			{"Tho¸t", KetThuc}
+		}
+		CreateNewSayEx(szMsg_Close, tbOpt_Close)
+		return 1
+	end
+
+	local szMsg = "<color=yellow>H»ng Nga:<color>\nTr¨ng r»m s¸ng tá nh­ g­¬ng, ng­êi ng­êi n« nøc ®ãn TÕt Trung Thu. Ng­êi muèn thùc hiÖn giao dÞch g×?"
+	local tbOpt = {
+		{"Lµm B¸nh Trung Thu", Menu_LamBanh},
+		{"GhÐp Hép B¸nh Trung Thu", Menu_GhepHop},
+		{"Mua Nguyªn LiÖu Trung Thu", Menu_MuaNguyenLieu},
+		{"Tho¸t", KetThuc}
+	}
+	CreateNewSayEx(szMsg, tbOpt)
+	return 1
+end
+
+function Menu_SuKien_Thang() main() end
+
+-- ================= CÁC MENU CH?N S? LU?NG =================
+function Menu_LamBanh()
+	local tbOpt = {
+		{"B¸nh §Ëu Xanh", Menu_BanhDauXanh},
+		{"B¸nh H¹t Sen", Menu_BanhHatSen},
+		{"B¸nh Gµ N­íng", Menu_BanhGaNuong},
+		{"B¸nh Heo Quay", Menu_BanhHeoQuay},
+		{"Quay l¹i", main}
+	}
+	CreateNewSayEx("Lµm b¸nh cÇn: 1 Bét, 1 §­êng, 1 Trøng vµ 1 Nguyªn liÖu chÝnh. Chän lo¹i b¸nh:", tbOpt)
+end
+
+function Menu_BanhDauXanh()
+	local tbOpt = {
+		{"Lµm 1 c¸i", LamBanhDX_1}, {"Lµm 10 c¸i", LamBanhDX_10},
+		{"Lµm 50 c¸i", LamBanhDX_50}, {"Lµm 100 c¸i", LamBanhDX_100}, {"Quay l¹i", Menu_LamBanh}
+	}
+	CreateNewSayEx("CÇn: Bét + §­êng + Trøng + §Ëu Xanh. Chän sè l­îng:", tbOpt)
+end
+
+function Menu_BanhHatSen()
+	local tbOpt = {
+		{"Lµm 1 c¸i", LamBanhHS_1}, {"Lµm 10 c¸i", LamBanhHS_10},
+		{"Lµm 50 c¸i", LamBanhHS_50}, {"Lµm 100 c¸i", LamBanhHS_100}, {"Quay l¹i", Menu_LamBanh}
+	}
+	CreateNewSayEx("CÇn: Bét + §­êng + Trøng + Tói H¹t Sen. Chän sè l­îng:", tbOpt)
+end
+
+function Menu_BanhGaNuong()
+	local tbOpt = {
+		{"Lµm 1 c¸i", LamBanhGN_1}, {"Lµm 10 c¸i", LamBanhGN_10},
+		{"Lµm 50 c¸i", LamBanhGN_50}, {"Lµm 100 c¸i", LamBanhGN_100}, {"Quay l¹i", Menu_LamBanh}
+	}
+	CreateNewSayEx("CÇn: Bét + §­êng + Trøng + Tói ThÞt Gµ. Chän sè l­îng:", tbOpt)
+end
+
+function Menu_BanhHeoQuay()
+	local tbOpt = {
+		{"Lµm 1 c¸i", LamBanhHQ_1}, {"Lµm 10 c¸i", LamBanhHQ_10},
+		{"Lµm 50 c¸i", LamBanhHQ_50}, {"Lµm 100 c¸i", LamBanhHQ_100}, {"Quay l¹i", Menu_LamBanh}
+	}
+	CreateNewSayEx("CÇn: Bét + §­êng + Trøng + ThÞt Heo. Chän sè l­îng:", tbOpt)
+end
+
+function Menu_GhepHop()
+	local tbOpt = {
+		{"GhÐp 1 Hép", GhepHop_1}, {"GhÐp 10 Hép", GhepHop_10},
+		{"GhÐp 50 Hép", GhepHop_50}, {"GhÐp 100 Hép", GhepHop_100}, {"Quay l¹i", main}
+	}
+	CreateNewSayEx("CÇn: 4 VÞ B¸nh Trung Thu (DX, HS, GN, HQ). Chän sè l­îng:", tbOpt)
+end
+
+function Menu_MuaNguyenLieu()
+	local tbOpt = {
+		{"Mua Tói H¹t Sen (3 v¹n)", Menu_MuaHatSen},
+		{"Mua Tói ThÞt Gµ (5 v¹n)", Menu_MuaThitGa},
+		{"Mua ThÞt Heo (1 TiÒn §ång)", Menu_MuaThitHeo},
+		{"Quay l¹i", main}
+	}
+	CreateNewSayEx("Nguyªn liÖu thîng h¹ng do ChÞ H»ng ®Ých th©n chuÈn bÞ. Ng­êi muèn mua g×?", tbOpt)
+end
+
+function Menu_MuaHatSen()
+	local tbOpt = {
+		{"Mua 1 Tói", MuaHS_1}, {"Mua 10 Tói", MuaHS_10},
+		{"Mua 50 Tói", MuaHS_50}, {"Mua 100 Tói", MuaHS_100}, {"Quay l¹i", Menu_MuaNguyenLieu}
+	}
+	CreateNewSayEx("Tói H¹t Sen gi¸ 3 v¹n l­îng/tói. Chän sè l­îng:", tbOpt)
+end
+
+function Menu_MuaThitGa()
+	local tbOpt = {
+		{"Mua 1 Tói", MuaTG_1}, {"Mua 10 Tói", MuaTG_10},
+		{"Mua 50 Tói", MuaTG_50}, {"Mua 100 Tói", MuaTG_100}, {"Quay l¹i", Menu_MuaNguyenLieu}
+	}
+	CreateNewSayEx("Tói ThÞt Gµ gi¸ 5 v¹n l­îng/tói. Chän sè l­îng:", tbOpt)
+end
+
+function Menu_MuaThitHeo()
+	local tbOpt = {
+		{"Mua 1 Tói", MuaTH_1}, {"Mua 10 Tói", MuaTH_10},
+		{"Mua 50 Tói", MuaTH_50}, {"Mua 100 Tói", MuaTH_100}, {"Quay l¹i", Menu_MuaNguyenLieu}
+	}
+	CreateNewSayEx("ThÞt Heo gi¸ 1 TiÒn §ång/tói. Chän sè l­îng:", tbOpt)
+end
+
+
+-- ================= HÀM H? TR? KI?M TRA =================
+function CheckNguyenLieuChung(nCount)
+	if CalcEquiproomItemCount(6, 1, 1503, -1) < nCount then return 0 end -- Bot
+	if CalcEquiproomItemCount(6, 1, 1504, -1) < nCount then return 0 end -- Duong
+	if CalcEquiproomItemCount(6, 1, 1505, -1) < nCount then return 0 end -- Trung
+	return 1
+end
+
+function ConsumeNguyenLieuChung(nCount)
+	ConsumeEquiproomItem(nCount, 6, 1, 1503, -1)
+	ConsumeEquiproomItem(nCount, 6, 1, 1504, -1)
+	ConsumeEquiproomItem(nCount, 6, 1, 1505, -1)
+end
+
+function CheckBonBanh(nCount)
+	if CalcEquiproomItemCount(6, 1, 1510, -1) < nCount then return 0 end 
+	if CalcEquiproomItemCount(6, 1, 1511, -1) < nCount then return 0 end 
+	if CalcEquiproomItemCount(6, 1, 1512, -1) < nCount then return 0 end 
+	if CalcEquiproomItemCount(6, 1, 1513, -1) < nCount then return 0 end 
+	return 1
+end
+
+function ConsumeBonBanh(nCount)
+	ConsumeEquiproomItem(nCount, 6, 1, 1510, -1)
+	ConsumeEquiproomItem(nCount, 6, 1, 1511, -1)
+	ConsumeEquiproomItem(nCount, 6, 1, 1512, -1)
+	ConsumeEquiproomItem(nCount, 6, 1, 1513, -1)
+end
+
+-- ================= LOGIC N?U BÁNH & GHÉP H?P =================
+function TienHanh_LamBanhDX(nCount)
+	if CheckNguyenLieuChung(nCount) == 0 then
+		Msg2Player("Kh«ng ®ñ " .. nCount .. " bé (Bét + §­êng + Trøng)!")
+		return
+	end
+	if CalcEquiproomItemCount(6, 1, 1506, -1) < nCount then
+		Msg2Player("Kh«ng ®ñ " .. nCount .. " §Ëu Xanh!")
+		return
+	end
+	if CalcFreeItemCellCount() < 5 then
+		Msg2Player("Hµnh trang cÇn Ýt nhÊt 5 « trèng!")
+		return
+	end
+	
+	ConsumeNguyenLieuChung(nCount)
+	ConsumeEquiproomItem(nCount, 6, 1, 1506, -1)
+	
+	for i = 1, nCount do AddItem(6, 1, 1510, 1, 0, 0) end
+	Msg2Player("Lµm thµnh c«ng " .. nCount .. " B¸nh §Ëu Xanh!")
+end
+
+function TienHanh_LamBanhHS(nCount)
+	if CheckNguyenLieuChung(nCount) == 0 then
+		Msg2Player("Kh«ng ®ñ " .. nCount .. " bé (Bét + §­êng + Trøng)!")
+		return
+	end
+	if CalcEquiproomItemCount(6, 1, 1507, -1) < nCount then
+		Msg2Player("Kh«ng ®ñ " .. nCount .. " Tói H¹t Sen!")
+		return
+	end
+	if CalcFreeItemCellCount() < 5 then
+		Msg2Player("Hµnh trang cÇn Ýt nhÊt 5 « trèng!")
+		return
+	end
+	
+	ConsumeNguyenLieuChung(nCount)
+	ConsumeEquiproomItem(nCount, 6, 1, 1507, -1)
+	
+	for i = 1, nCount do AddItem(6, 1, 1511, 1, 0, 0) end
+	Msg2Player("Lµm thµnh c«ng " .. nCount .. " B¸nh H¹t Sen!")
+end
+
+function TienHanh_LamBanhGN(nCount)
+	if CheckNguyenLieuChung(nCount) == 0 then
+		Msg2Player("Kh«ng ®ñ " .. nCount .. " bé (Bét + §­êng + Trøng)!")
+		return
+	end
+	if CalcEquiproomItemCount(6, 1, 1508, -1) < nCount then
+		Msg2Player("Kh«ng ®ñ " .. nCount .. " Tói ThÞt Gµ!")
+		return
+	end
+	if CalcFreeItemCellCount() < 5 then
+		Msg2Player("Hµnh trang cÇn Ýt nhÊt 5 « trèng!")
+		return
+	end
+	
+	ConsumeNguyenLieuChung(nCount)
+	ConsumeEquiproomItem(nCount, 6, 1, 1508, -1)
+	
+	for i = 1, nCount do AddItem(6, 1, 1512, 1, 0, 0) end
+	Msg2Player("Lµm thµnh c«ng " .. nCount .. " B¸nh Gµ N­íng!")
+end
+
+function TienHanh_LamBanhHQ(nCount)
+	if CheckNguyenLieuChung(nCount) == 0 then
+		Msg2Player("Kh«ng ®ñ " .. nCount .. " bé (Bét + §­êng + Trøng)!")
+		return
+	end
+	if CalcEquiproomItemCount(6, 1, 1509, -1) < nCount then
+		Msg2Player("Kh«ng ®ñ " .. nCount .. " ThÞt Heo!")
+		return
+	end
+	if CalcFreeItemCellCount() < 5 then
+		Msg2Player("Hµnh trang cÇn Ýt nhÊt 5 « trèng!")
+		return
+	end
+	
+	ConsumeNguyenLieuChung(nCount)
+	ConsumeEquiproomItem(nCount, 6, 1, 1509, -1)
+	
+	for i = 1, nCount do AddItem(6, 1, 1513, 1, 0, 0) end
+	Msg2Player("Lµm thµnh c«ng " .. nCount .. " B¸nh Heo Quay!")
+end
+
+function TienHanh_GhepHop(nCount)
+	if CheckBonBanh(nCount) == 0 then
+		Msg2Player("Hµnh trang kh«ng cã ®ñ " .. nCount .. " bé B¸nh Trung Thu (4 VÞ)!")
+		return
+	end
+	if CalcFreeItemCellCount() < 5 then
+		Msg2Player("Hµnh trang cÇn Ýt nhÊt 5 « trèng ®Ó ghÐp ®å!")
+		return
+	end
+	
+	ConsumeBonBanh(nCount)
+	
+	for i = 1, nCount do AddItem(6, 1, 1514, 1, 0, 0) end
+	Msg2Player("GhÐp thµnh c«ng " .. nCount .. " Hép B¸nh Trung Thu!")
+end
+
+-- ================= LOGIC BÁN V?T PH?M (TR? TI?N) =================
+function TienHanh_MuaHatSen(nCount)
+	local nCost = nCount * 30000
+	
+	if GetCash() < nCost then
+		Msg2Player("Ng­êi kh«ng cã ®ñ " .. (nCount * 3) .. " v¹n l­îng!")
+		return
+	end
+	if CalcFreeItemCellCount() < 5 then
+		Msg2Player("Hµnh trang cÇn Ýt nhÊt 5 « trèng!")
+		return
+	end
+	
+	Pay(nCost)
+	
+	for i = 1, nCount do AddItem(6, 1, 1507, 1, 0, 0) end
+	Msg2Player("Mua thµnh c«ng " .. nCount .. " Tói H¹t Sen!")
+end
+
+function TienHanh_MuaThitGa(nCount)
+	local nCost = nCount * 50000
+	
+	if GetCash() < nCost then
+		Msg2Player("Ng­êi kh«ng cã ®ñ " .. (nCount * 5) .. " v¹n l­îng!")
+		return
+	end
+	if CalcFreeItemCellCount() < 5 then
+		Msg2Player("Hµnh trang cÇn Ýt nhÊt 5 « trèng!")
+		return
+	end
+	
+	Pay(nCost)
+	
+	for i = 1, nCount do AddItem(6, 1, 1508, 1, 0, 0) end
+	Msg2Player("Mua thµnh c«ng " .. nCount .. " Tói ThÞt Gµ!")
+end
+
+function TienHanh_MuaThitHeo(nCount)
+	if CalcEquiproomItemCount(4, 417, 1, -1) < nCount then
+		Msg2Player("Ng­êi kh«ng cã ®ñ " .. nCount .. " TiÒn §ång!")
+		return
+	end
+	if CalcFreeItemCellCount() < 5 then
+		Msg2Player("Hµnh trang cÇn Ýt nhÊt 5 « trèng!")
+		return
+	end
+	
+	ConsumeEquiproomItem(nCount, 4, 417, 1, -1)
+	
+	for i = 1, nCount do AddItem(6, 1, 1509, 1, 0, 0) end
+	Msg2Player("Mua thµnh c«ng " .. nCount .. " ThÞt Heo b»ng TiÒn §ång!")
+end
+
+
+-- ================= WRAPPERS G?I HÀM =================
+function LamBanhDX_1() TienHanh_LamBanhDX(1) end
+function LamBanhDX_10() TienHanh_LamBanhDX(10) end
+function LamBanhDX_50() TienHanh_LamBanhDX(50) end
+function LamBanhDX_100() TienHanh_LamBanhDX(100) end
+
+function LamBanhHS_1() TienHanh_LamBanhHS(1) end
+function LamBanhHS_10() TienHanh_LamBanhHS(10) end
+function LamBanhHS_50() TienHanh_LamBanhHS(50) end
+function LamBanhHS_100() TienHanh_LamBanhHS(100) end
+
+function LamBanhGN_1() TienHanh_LamBanhGN(1) end
+function LamBanhGN_10() TienHanh_LamBanhGN(10) end
+function LamBanhGN_50() TienHanh_LamBanhGN(50) end
+function LamBanhGN_100() TienHanh_LamBanhGN(100) end
+
+function LamBanhHQ_1() TienHanh_LamBanhHQ(1) end
+function LamBanhHQ_10() TienHanh_LamBanhHQ(10) end
+function LamBanhHQ_50() TienHanh_LamBanhHQ(50) end
+function LamBanhHQ_100() TienHanh_LamBanhHQ(100) end
+
+function GhepHop_1() TienHanh_GhepHop(1) end
+function GhepHop_10() TienHanh_GhepHop(10) end
+function GhepHop_50() TienHanh_GhepHop(50) end
+function GhepHop_100() TienHanh_GhepHop(100) end
+
+function MuaHS_1() TienHanh_MuaHatSen(1) end
+function MuaHS_10() TienHanh_MuaHatSen(10) end
+function MuaHS_50() TienHanh_MuaHatSen(50) end
+function MuaHS_100() TienHanh_MuaHatSen(100) end
+
+function MuaTG_1() TienHanh_MuaThitGa(1) end
+function MuaTG_10() TienHanh_MuaThitGa(10) end
+function MuaTG_50() TienHanh_MuaThitGa(50) end
+function MuaTG_100() TienHanh_MuaThitGa(100) end
+
+function MuaTH_1() TienHanh_MuaThitHeo(1) end
+function MuaTH_10() TienHanh_MuaThitHeo(10) end
+function MuaTH_50() TienHanh_MuaThitHeo(50) end
+function MuaTH_100() TienHanh_MuaThitHeo(100) end
+
+function KetThuc() end

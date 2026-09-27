@@ -1,0 +1,85 @@
+Include("\\script\\lib\\common.lua")
+Include("\\script\\task\\task_addplayerexp.lua")
+
+function main(nItemIdx)
+	local nMonth = tonumber(GetLocalDate("%m"))
+	
+	-- D?I S? 9 THÀNH S? 4 KHI CH?Y CHÍNH TH?C
+	if nMonth ~= 4 then
+		Msg2Player("<color=red>B¸nh Giç Tæ ®· hÕt h¹n sö dông!<color>") 
+		return 1 -- Tr? v? 1 d? không b? m?t bánh
+	end
+	
+	local nG, nD, nP = GetItemProp(nItemIdx)
+	local TSK_TONG_EXP = 1318 
+	local TSK_NAM_EVENT = 1319
+	local MAX_EXP = 1500000000
+	local nYear = tonumber(GetLocalDate("%Y"))
+
+	if GetTask(TSK_NAM_EVENT) ~= nYear then
+		SetTask(TSK_TONG_EXP, 0) 
+		SetTask(TSK_NAM_EVENT, nYear) 
+	end
+
+	local nExpDaNhan = GetTask(TSK_TONG_EXP)
+	
+	-- CH?N GI?I H?N EXP VÀ B?O TOÀN BÁNH
+	if nExpDaNhan >= MAX_EXP then
+		Msg2Player("<color=red>Th¸ng nµy ®· nhËn tèi ®a 1.5 Tû EXP, kh«ng thÓ ¨n thªm!<color>") 
+		return 1 -- Tr? v? 1 d? gi? l?i bánh trong hành trang
+	end
+
+	if nP == 1395 and CalcFreeItemCellCount() < 1 then
+		Msg2Player("Hµnh trang cÇn Ýt nhÊt 1 « trèng!") 
+		return 1 -- Tr? v? 1 d? gi? l?i bánh
+	elseif nP == 1396 and CalcFreeItemCellCount() < 2 then
+		Msg2Player("Hµnh trang cÇn Ýt nhÊt 2 « trèng!") 
+		return 1 -- Tr? v? 1 d? gi? l?i bánh
+	end
+	
+	-- Ch? khi qua h?t các vòng ki?m tra trên, m?i ti?n hành tr? dúng 1 cái bánh
+	if ConsumeEquiproomItem(1, nG, nD, nP, -1) ~= 1 then
+		Msg2Player("HÖ thèng bËn, kh«ng thÓ sö dông!") 
+		return 1
+	end
+
+	local nAddExp = 0
+	local szName = ""
+
+	if nP == 1395 then
+		nAddExp = 5000000
+		szName = "B¸nh Chay §Æc BiÖt"
+		
+		local nRand = random(1, 100)
+		if nRand <= 25 then
+			AddItem(6, 1, 5130, 1, 0, 0)
+			Msg2Player("<color=yellow>NhËn thªm C«ng Tr¹ng LÖnh!<color>")
+		elseif nRand <= 50 then
+			AddItem(6, 1, 5129, 1, 0, 0)
+			Msg2Player("<color=yellow>NhËn thªm Hu©n C«ng Ch­¬ng!<color>")
+		elseif nRand <= 75 then
+			AddItem(6, 1, 124, 1, 0, 0)
+			Msg2Player("<color=yellow>NhËn thªm Phóc Duyªn Lé (§¹i)!<color>")
+		end
+		
+	elseif nP == 1396 then
+		nAddExp = 3000000
+		szName = "B¸nh Chay Th­êng"
+		AddItem(6, 0, 6, 1, 0, 0) 
+		AddItem(6, 0, 3, 1, 0, 0) 
+		Msg2Player("<color=yellow>NhËn thªm Phi Tèc vµ §¹i Lùc Hoµn!<color>")
+		
+	elseif nP == 1397 then
+		nAddExp = 1000000
+		szName = "B¸nh Chay Ch­a ChÝn"
+	else
+		return 1
+	end
+
+	if nExpDaNhan + nAddExp > MAX_EXP then nAddExp = MAX_EXP - nExpDaNhan end
+	tl_addPlayerExp(nAddExp)
+	SetTask(TSK_TONG_EXP, nExpDaNhan + nAddExp)
+	
+	Msg2Player("<color=pink>Sö dông " .. szName .. " nhËn ®­îc " .. (nAddExp/10000) .. " v¹n Kinh NghiÖm!<color>")
+	return 1
+end

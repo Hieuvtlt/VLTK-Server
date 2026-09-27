@@ -1,0 +1,26 @@
+Id	Title	Time	EVENT_MOVE	EVENT_ATTACK	EVENT_SITE	EVENT_RIDE	EVENT_USEITEM	EVENT_ARRANGEITEM	EVENT_DROPITEM	EVENT_CHANGEEQUIP	EVENT_TRADE	EVENT_CHANGEFIGHTSTATE	EVENT_ATTACKED	EVENT_DEATH	EVENT_REVIVE	EVENT_BUYITEM	EVENT_SELLITEM	EVENT_TALK	comment
+1	§ang thu thËp…	3	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	Qu¶ Huy Hoµng
+2	§ang thu thËp…	5	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	Qu¶ Hoµng Kim
+3	§ang thu thËp…	2	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	Qu¶ Huy Hoµng
+4	§ang nhÆt…	2	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	Hép b¸nh ch­ng
+5	§ang më…	10	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	Më thuèc
+6	§ang thu thËp…	8	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	Qu¶ Hoµng Kim
+7	§ang quay sè…	5	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	Quay sè nhËn th­ëng
+8	§ang chµo cê…	5	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	Nghi thøc chµo cê
+9	§ang trÞ liÖu	5	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	NhiÖm vô cÊp 150 C¸i Bang
+10	§ang l·nh ngé	5	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	§é tu luyÖn kü n¨ng cÊp 150
+11	§ang më…	2	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	më tinh luyÖn th¹ch
+12	§ang nhÆt…	3	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	Thu thËp 3 gi©y
+13	§ang ¨n…	2	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	¡n B¸nh Trung Thu.
+14	§ang trång...	3	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	C©y trång
+15	§ang nhÆt…	5	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	Kim tiÒn v« sè
+16	§ang më …	5	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	ÑÌ»¨±¬Öñ
+17	§ang thao t¸c …	5	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	ÑÌ»¨±¬Öñ
+18	ÉÏÏãÖÐ...	3	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	2013ÄêÔªÏü»î¶¯µãµÆÁý
+19	´¹µöÖÐ...	3	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	2013ÄêÎåÔÂ»î¶¯
+20	¿¾ÓãÖÐ...	3	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	2013ÄêÎåÔÂ»î¶¯
+21	§ang c©u c¸...	3	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	C©u c¸
+22	ÄÃÈ¡Á¹²è...	3	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	2013Äê¶ËÎç»î¶¯
+1000	§ang thu ho¹ch…	5	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	ho¹t ®éng thu thËp Ng«i Sao H¹nh Phóc
+23	§ang tÈy luyÖn…	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	ho¹t ®éng boss kiÕm thiªn lý b¹ch
+24	§ang n©ng cÊp…	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	ho¹t ®éng n©ng cÊp chiÕn m·

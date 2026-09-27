@@ -1,0 +1,104 @@
+Include("\\script\\lib\\common.lua")
+Include("\\script\\lib\\awardtemplet.lua")
+Include("\\script\\task\\task_addplayerexp.lua")
+
+-- ================= B?NG PH?N THU?NG (DÃ B? 2 LO?I HOÀN) =================
+tb_QuaTrungThu = {
+	[1]  = {szName="Kim Quang B¸t KÝnh Chi Méng", nQuality=1, tbProp={0, 197}, nRate = 0.06},
+	[2]  = {szName="Kim Quang Nh· §iÓn Chi Hån", nQuality=1, tbProp={0, 202}, nRate = 0.06},
+	[3]  = {szName="Thiªn S¬n TuyÕt Liªn", tbProp={6,1,1431,1,0,0}, nRate = 0.03},
+	[4]  = {szName="Kim Quang TrÝch Tinh Hoµn", nQuality=1, tbProp={0, 194}, nRate = 0.06},
+	[5]  = {szName="Kim Quang §­êng Nghª Gi¸p", nQuality=1, tbProp={0, 195}, nRate = 0.06},
+	[6]  = {szName="Kim Quang Lôc Phi Thñy Háa ThÇn Phï", nQuality=1, tbProp={0, 196}, nRate = 0.06},
+	[7]  = {szName="Kim Quang B¹ch Kim Yªu §¸i", nQuality=1, tbProp={0, 198}, nRate = 0.06},
+	[8]  = {szName="Kim Quang Thiªn T©m Hé UyÓn", nQuality=1, tbProp={0, 199}, nRate = 0.06},
+	[9]  = {szName="Kim Quang Ngò S¾c Ngäc Béi", nQuality=1, tbProp={0, 200}, nRate = 0.06},
+	[10] = {szName="Kim Quang Thiªn T©m Ngoa", nQuality=1, tbProp={0, 201}, nRate = 0.06},
+	[11] = {szName="Vâ L©m MËt TÞch", tbProp={6, 1, 26, 1, 0, 0}, nRate = 1.5},
+	[12] = {szName="TÈy Tñy Kinh", tbProp={6, 1, 22, 1, 0, 0}, nRate = 1.5},
+	[13] = {szName="Cèng NguyÖt Qu¶ Dung", tbProp={6, 1, 128, 1, 0, 0}, nRate = 1.5},
+	[14] = {szName="Phông NguyÖt Qu¶ Dung", tbProp={6, 1, 127, 1, 0, 0}, nRate = 1.5},
+	
+	-- TRANG B? D?NG SÁT
+	[15] = {szName="Trang bÞ §éng S¸t", nQuality=1, tbProp={0, 143}, nRate = 0.015},
+	[16] = {szName="Trang bÞ §éng S¸t", nQuality=1, tbProp={0, 144}, nRate = 0.015},
+	[17] = {szName="Trang bÞ §éng S¸t", nQuality=1, tbProp={0, 145}, nRate = 0.015},
+	[18] = {szName="Trang bÞ §éng S¸t", nQuality=1, tbProp={0, 146}, nRate = 0.015},
+	
+	-- TRANG B? D?NH QU?C & AN BANG
+	[19] = {szName="Trang bÞ §Þnh Quèc", nQuality=1, tbProp={0, 159}, nRate = 0.012},
+	[20] = {szName="Trang bÞ §Þnh Quèc", nQuality=1, tbProp={0, 160}, nRate = 0.012},
+	[21] = {szName="Trang bÞ §Þnh Quèc", nQuality=1, tbProp={0, 161}, nRate = 0.012},
+	[22] = {szName="Trang bÞ §Þnh Quèc", nQuality=1, tbProp={0, 162}, nRate = 0.012},
+	[23] = {szName="Trang bÞ §Þnh Quèc", nQuality=1, tbProp={0, 163}, nRate = 0.012},
+	[24] = {szName="Trang bÞ An Bang", nQuality=1, tbProp={0, 164}, nRate = 0.012},
+	[25] = {szName="Trang bÞ An Bang", nQuality=1, tbProp={0, 165}, nRate = 0.012},
+	[26] = {szName="Trang bÞ An Bang", nQuality=1, tbProp={0, 166}, nRate = 0.012},
+	[27] = {szName="Trang bÞ An Bang", nQuality=1, tbProp={0, 167}, nRate = 0.012},
+	[28] = {szName="Trang bÞ An Bang", nQuality=1, tbProp={0, 168}, nRate = 0.012},
+	
+	-- TRANG B? NHU TÌNH & HI?P C?T
+	[29] = {szName="Trang bÞ Nhu T×nh", nQuality=1, tbProp={0, 186}, nRate = 0.015},
+	[30] = {szName="Trang bÞ Nhu T×nh", nQuality=1, tbProp={0, 187}, nRate = 0.015},
+	[31] = {szName="Trang bÞ Nhu T×nh", nQuality=1, tbProp={0, 188}, nRate = 0.015},
+	[32] = {szName="Trang bÞ Nhu T×nh", nQuality=1, tbProp={0, 189}, nRate = 0.015},
+	[33] = {szName="Trang bÞ HiÖp Cèt", nQuality=1, tbProp={0, 190}, nRate = 0.015},
+	[34] = {szName="Trang bÞ HiÖp Cèt", nQuality=1, tbProp={0, 191}, nRate = 0.015},
+	[35] = {szName="Trang bÞ HiÖp Cèt", nQuality=1, tbProp={0, 192}, nRate = 0.015},
+	[36] = {szName="Trang bÞ HiÖp Cèt", nQuality=1, tbProp={0, 193}, nRate = 0.015},
+}
+
+-- T? D?NG CHÈN 119 DÒNG HOÀNG KIM (Dã d?n s? th? t?)
+local nIndex = 37
+for nId = 5314, 5432 do
+	tb_QuaTrungThu[nIndex] = {szName="Trang bÞ Hoµng Kim", nQuality=1, tbProp={0, nId}, nRate = 0.00006}
+	nIndex = nIndex + 1
+end
+
+function main(nItemIdx)
+	local TSK_TONG_EXP = 1324
+	local TSK_NAM_EVENT = 1325
+	local MAX_EXP = 1500000000
+	local nMonth = tonumber(GetLocalDate("%m"))
+	local nYear = tonumber(GetLocalDate("%Y"))
+
+	-- KI?M TRA H?N S? D?NG
+	if nMonth ~= 10 then
+		Msg2Player("<color=red>Hép B¸nh Trung Thu ®· hÕt h¹n, bÞ «i thiu vµ ®· bÞ vøt bá!<color>")
+		return 1
+	end
+
+	local nNamCu = GetTask(TSK_NAM_EVENT)
+	if nNamCu ~= nYear then
+		SetTask(TSK_TONG_EXP, 0) 
+		SetTask(TSK_NAM_EVENT, nYear) 
+	end
+
+	local nExpDaNhan = GetTask(TSK_TONG_EXP)
+	if nExpDaNhan >= MAX_EXP then
+		Msg2Player("<color=red>§¹i hiÖp ®· nhËn tèi ®a 1.5 Tû Kinh NghiÖm tõ Hép B¸nh, kh«ng thÓ dïng thªm!<color>")
+		return 1
+	end
+
+	if CalcFreeItemCellCount() < 2 then
+		Msg2Player("Hµnh trang cÇn Ýt nhÊt 2 « trèng ®Ó nhËn th­ëng!")
+		return 1
+	end
+
+	local nG, nD, nP = GetItemProp(nItemIdx)
+	if ConsumeEquiproomItem(1, nG, nD, nP, -1) ~= 1 then
+		Msg2Player("HÖ thèng bËn, kh«ng thÓ sö dông vËt phÈm lóc nµy!")
+		return 1
+	end
+
+	-- C?NG 10 TRI?U EXP
+	local nAddExp = 10000000
+	if nExpDaNhan + nAddExp > MAX_EXP then nAddExp = MAX_EXP - nExpDaNhan end
+	
+	tl_addPlayerExp(nAddExp)
+	SetTask(TSK_TONG_EXP, nExpDaNhan + nAddExp)
+	
+	tbAwardTemplet:GiveAwardByList(tb_QuaTrungThu, "Hép B¸nh Trung Thu")
+	Msg2Player("<color=yellow>Sö dông thµnh c«ng, nhËn ®­îc 1000 v¹n Kinh NghiÖm vµ phÇn quµ bÊt ngê!<color>")
+	return 1
+end

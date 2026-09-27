@@ -1,0 +1,129 @@
+Include("\\script\\lib\\common.lua")
+Include("\\script\\dailogsys\\g_dialog.lua")
+Include("\\script\\dailogsys\\dailogsay.lua")
+
+function main()
+	local nMonth = tonumber(GetLocalDate("%m"))
+	if nMonth ~= 3 then
+		local szMsg_Close = "<color=pink>Thî C¾m Hoa:<color>\nMïa hoa th¸ng 3 ®· kÕt thóc. HÑn gÆp l¹i §¹i hiÖp vµo n¨m sau!"
+		CreateNewSayEx(szMsg_Close, {{"Tho¸t", KetThuc}})
+		return 1
+	end
+
+	local szMsg = "<color=pink>Thî C¾m Hoa:<color>\nNg­êi muèn chuÈn bÞ quµ tÆng g× cho th¸ng 3 nµy?"
+	local tbOpt = {
+		{"Mua D©y Cét Hoa (B»ng V¹n)", Menu_MuaDay},
+		{"Mua Giá §ùng Hoa (1 TiÒn §ång)", Menu_MuaGio},
+		{"Gãi Bã Hoa Hång", Menu_GhepBo},
+		{"C¾m Giá Hoa Hång VÜnh Cöu", Menu_GhepGio},
+		{"Tho¸t", KetThuc}
+	}
+	CreateNewSayEx(szMsg, tbOpt)
+	return 1
+end
+
+function Menu_SuKien_Thang3() main() end
+
+function Menu_MuaDay()
+	local tbOpt = {
+		{"Mua 10 c¸i (30 v¹n)", function() MuaDay(10) end},
+		{"Mua 50 c¸i (150 v¹n)", function() MuaDay(50) end},
+		{"Mua 100 c¸i (300 v¹n)", function() MuaDay(100) end},
+		{"Quay l¹i", main}
+	}
+	CreateNewSayEx("1 D©y Cét Hoa gi¸ 3 v¹n l­îng. Chän sè l­îng:", tbOpt)
+end
+
+function Menu_MuaGio()
+	local tbOpt = {
+		{"Mua 10 c¸i (10 TiÒn §ång)", function() MuaGio(10) end},
+		{"Mua 50 c¸i (50 TiÒn §ång)", function() MuaGio(50) end},
+		{"Mua 100 c¸i (100 TiÒn §ång)", function() MuaGio(100) end},
+		{"Quay l¹i", main}
+	}
+	CreateNewSayEx("1 Giá §ùng Hoa gi¸ 1 TiÒn §ång. Chän sè l­îng:", tbOpt)
+end
+
+function Menu_GhepBo()
+	local tbOpt = {
+		{"Gãi 1 Bã", function() GhepBo(1) end},
+		{"Gãi 10 Bã", function() GhepBo(10) end},
+		{"Gãi 50 Bã", function() GhepBo(50) end},
+		{"Gãi 100 Bã", function() GhepBo(100) end},
+		{"Quay l¹i", main}
+	}
+	CreateNewSayEx("CÇn: 4 lo¹i Hoa Hång vµ 1 D©y Cét Hoa. Chän sè l­îng:", tbOpt)
+end
+
+function Menu_GhepGio()
+	local tbOpt = {
+		{"C¾m 1 Giá", function() GhepGio(1) end},
+		{"C¾m 10 Giá", function() GhepGio(10) end},
+		{"C¾m 50 Giá", function() GhepGio(50) end},
+		{"C¾m 100 Giá", function() GhepGio(100) end},
+		{"Quay l¹i", main}
+	}
+	CreateNewSayEx("CÇn: 4 lo¹i Hoa Hång vµ 1 Giá §ùng Hoa. Chän sè l­îng:", tbOpt)
+end
+
+function MuaDay(nCount)
+	local nCost = nCount * 30000
+	if GetCash() < nCost then
+		Msg2Player("Kh«ng ®ñ " .. (nCost/10000) .. " v¹n l­îng!") return
+	end
+	if CalcFreeItemCellCount() < floor(nCount/10) + 1 then
+		Msg2Player("Hµnh trang kh«ng ®ñ chç trèng!") return
+	end
+	Pay(nCost)
+	for i = 1, nCount do AddItem(6, 1, 5150, 1, 0, 0) end
+	Msg2Player("Mua thµnh c«ng " .. nCount .. " D©y Cét Hoa!")
+end
+
+function MuaGio(nCount)
+	if CalcEquiproomItemCount(4, 417, 1, -1) < nCount then
+		Msg2Player("Kh«ng ®ñ " .. nCount .. " TiÒn §ång!") return
+	end
+	if CalcFreeItemCellCount() < floor(nCount/10) + 1 then
+		Msg2Player("Hµnh trang kh«ng ®ñ chç trèng!") return
+	end
+	ConsumeEquiproomItem(nCount, 4, 417, 1, -1)
+	for i = 1, nCount do AddItem(6, 1, 5151, 1, 0, 0) end
+	Msg2Player("Mua thµnh c«ng " .. nCount .. " Giá §ùng Hoa!")
+end
+
+function CheckHoa(nCount)
+	if CalcEquiproomItemCount(6, 1, 5146, -1) < nCount then return 0 end
+	if CalcEquiproomItemCount(6, 1, 5147, -1) < nCount then return 0 end
+	if CalcEquiproomItemCount(6, 1, 5148, -1) < nCount then return 0 end
+	if CalcEquiproomItemCount(6, 1, 5149, -1) < nCount then return 0 end
+	return 1
+end
+
+function ConsumeHoa(nCount)
+	ConsumeEquiproomItem(nCount, 6, 1, 5146, -1)
+	ConsumeEquiproomItem(nCount, 6, 1, 5147, -1)
+	ConsumeEquiproomItem(nCount, 6, 1, 5148, -1)
+	ConsumeEquiproomItem(nCount, 6, 1, 5149, -1)
+end
+
+function GhepBo(nCount)
+	if CheckHoa(nCount) == 0 then Msg2Player("Kh«ng cã ®ñ " .. nCount .. " bé 4 lo¹i Hoa Hång!") return end
+	if CalcEquiproomItemCount(6, 1, 5150, -1) < nCount then Msg2Player("Kh«ng ®ñ D©y Cét Hoa!") return end
+	if CalcFreeItemCellCount() < 2 then Msg2Player("Hµnh trang cÇn Ýt nhÊt 2 « trèng!") return end
+	ConsumeHoa(nCount)
+	ConsumeEquiproomItem(nCount, 6, 1, 5150, -1)
+	for i = 1, nCount do AddItem(6, 1, 5152, 1, 0, 0) end
+	Msg2Player("Gãi thµnh c«ng " .. nCount .. " Bã Hoa Hång!")
+end
+
+function GhepGio(nCount)
+	if CheckHoa(nCount) == 0 then Msg2Player("Kh«ng cã ®ñ " .. nCount .. " bé 4 lo¹i Hoa Hång!") return end
+	if CalcEquiproomItemCount(6, 1, 5151, -1) < nCount then Msg2Player("Kh«ng ®ñ Giá §ùng Hoa!") return end
+	if CalcFreeItemCellCount() < 2 then Msg2Player("Hµnh trang cÇn Ýt nhÊt 2 « trèng!") return end
+	ConsumeHoa(nCount)
+	ConsumeEquiproomItem(nCount, 6, 1, 5151, -1)
+	for i = 1, nCount do AddItem(6, 1, 5153, 1, 0, 0) end
+	Msg2Player("C¾m thµnh c«ng " .. nCount .. " Giá Hoa Hång VÜnh Cöu!")
+end
+
+function KetThuc() end

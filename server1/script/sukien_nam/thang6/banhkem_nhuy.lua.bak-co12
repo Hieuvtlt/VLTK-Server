@@ -1,0 +1,71 @@
+Include("\\script\\lib\\common.lua")
+Include("\\script\\lib\\awardtemplet.lua")
+Include("\\script\\task\\task_addplayerexp.lua")
+
+tb_QuaBanhNhuY = {
+	[1]  = {szName="Tö Thñy Tinh", tbProp={4, 239, 1, 1, 0, 0}, nRate=0},
+	[2]  = {szName="Lam Thñy Tinh", tbProp={4, 238, 1, 1, 0, 0}, nRate=0},
+	[3]  = {szName="Lôc Thñy Tinh", tbProp={4, 240, 1, 1, 0, 0}, nRate=0},
+	[4]  = {szName="Tinh Hång B¶o Th¹ch", tbProp={4, 353, 1, 1, 0, 0}, nRate=0},
+	[5]  = {szName="Hu©n C«ng Ch­¬ng", tbProp={6, 1, 5129, 1, 0, 0}, nRate=25},
+	[6]  = {szName="C«ng Tr¹ng LÖnh", tbProp={6, 1, 5130, 1, 0, 0}, nRate=25},
+	[7]  = {szName="HuyÒn tinh kho¸ng th¹ch cÊp 3", tbProp={6, 1, 147, 3, 0, 0}, nRate=0},
+	[8]  = {szName="HuyÒn tinh kho¸ng th¹ch cÊp 4", tbProp={6, 1, 147, 4, 0, 0}, nRate=0},
+	[9]  = {szName="HuyÒn tinh kho¸ng th¹ch cÊp 5", tbProp={6, 1, 147, 5, 0, 0}, nRate=0},
+	[10] = {szName="VËt phÈm ngÉu nhiªn 1", tbProp={6, 1, 33, 1, 0, 0}, nRate=0}, 
+	[11] = {szName="VËt phÈm ngÉu nhiªn 2", tbProp={6, 1, 45, 1, 0, 0}, nRate=0}, 
+	[12] = {szName="M¶nh trang bÞ Hoµng Kim", tbProp={6, 1, 5128, 1, 0, 0}, nRate=0},
+	[13] = {szName="Phi Tèc Hoµn", tbProp={6, 0, 6, 1, 0, 0}, nRate=50},
+	[14] = {szName="§¹i Lùc Hoµn", tbProp={6, 0, 3, 1, 0, 0}, nRate=50},
+	[15] = {szName="Phóc Duyªn Lé (§¹i)", tbProp={6, 1, 124, 1, 0, 0}, nRate=25}
+}
+
+function main(nItemIdx)
+	local TSK_TONG_EXP = 1401
+	local TSK_NAM_EVENT = 1402
+	local MAX_EXP = 1000000000 -- 1 Ty EXP
+	local nMonth = tonumber(GetLocalDate("%m"))
+	local nYear = tonumber(GetLocalDate("%Y"))
+
+	if nMonth ~= 6 then
+		Msg2Player("<color=red>B¸nh Kem ®· hÕt h¹n, bÞ háng vµ ®· bÞ vøt bá!<color>")
+		return 1
+	end
+
+	local nNamCu = GetTask(TSK_NAM_EVENT)
+	if nNamCu ~= nYear then
+		SetTask(TSK_TONG_EXP, 0) 
+		SetTask(TSK_NAM_EVENT, nYear) 
+	end
+
+	local nExpDaNhan = GetTask(TSK_TONG_EXP)
+	if nExpDaNhan >= MAX_EXP then
+		Msg2Player("<color=red>§¹i hiÖp ®· nhËn tèi ®a 1 Tû Kinh NghiÖm mïa nµy, kh«ng thÓ ¨n thªm!<color>")
+		return 1
+	end
+
+	if CalcFreeItemCellCount() < 2 then
+		Msg2Player("Hµnh trang cÇn Ýt nhÊt 2 « trèng ®Ó nhËn th­ëng!")
+		return 1
+	end
+
+	local nG, nD, nP = GetItemProp(nItemIdx)
+	if ConsumeEquiproomItem(1, nG, nD, nP, -1) ~= 1 then
+		Msg2Player("HÖ thèng bËn, kh«ng thÓ sö dông vËt phÈm lóc nµy!")
+		return 1
+	end
+
+	local nAddExp = 3000000
+	if nExpDaNhan + nAddExp > MAX_EXP then nAddExp = MAX_EXP - nExpDaNhan end
+	
+	tl_addPlayerExp(nAddExp)
+	SetTask(TSK_TONG_EXP, nExpDaNhan + nAddExp)
+	
+	tb_QuaBanhNhuY[10].tbProp[3] = random(33, 43)
+	tb_QuaBanhNhuY[11].tbProp[3] = random(45, 62)
+	
+	tbAwardTemplet:GiveAwardByList(tb_QuaBanhNhuY, "B¸nh Kem Nh­ Ý")
+	
+	Msg2Player("<color=yellow>Th­ëng thøc thµnh c«ng, nhËn ®­îc " .. (nAddExp/10000) .. " v¹n Kinh NghiÖm!<color>")
+	return 1
+end

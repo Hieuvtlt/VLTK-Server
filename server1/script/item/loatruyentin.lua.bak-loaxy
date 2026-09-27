@@ -1,0 +1,29 @@
+Include("\\script\\global\\tieudaotu_story.lua")
+
+function main(nItemIndex)
+	if GetTask(TDT_TSK_STORY) ~= 3 then
+		Msg2Player("<color=red>Ch­a tíi lóc dïng thø nµy.<color>")
+		return 0
+	end
+	if TDT_LoaConHan() == 1 then
+		Msg2Player("<color=red>Tin ®· tung råi. Cßn " .. TDT_ConLai() .. " phót.<color>")
+		return 0
+	end
+	local nMap, nX, nY = GetWorldPos()
+	if nMap ~= TDT_MAP_THANH then
+		Msg2Player("<color=red>Ph¶i h« ë ngo¹i « Ba L¨ng huyÖn th× chóng nã míi tin.<color>")
+		return 0
+	end
+	local dx = (nX - TDT_TAM_X) / 8
+	local dy = (nY - TDT_TAM_Y) / 16
+	local d2 = dx*dx + dy*dy
+	if d2 < TDT_XA * TDT_XA then
+		Msg2Player("<color=red>Cßn qu¸ gÇn thµnh. C¸ch hiÖn t¹i: " .. floor(sqrt(d2)) .. ", cÇn trªn " .. TDT_XA .. ".<color>")
+		return 0
+	end
+	SetTask(TDT_TSK_LOA, TDT_Phut())
+	TDT_TrieuBoss()
+	AddGlobalNews("<color=yellow>Cã kÎ h« lín ë ngo¹i « Ba L¨ng huyÖn r»ng Tiªu Dao Tö ®ang Èn th©n t¹i ®ã!<color>")
+	Msg2Player("<color=yellow>Ba tªn ®Ö tö ®· rêi sµo huyÖt. Ng­¬i cã " .. TDT_PHUT_LOA .. " phót.<color>")
+	return 1
+end

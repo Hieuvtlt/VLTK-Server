@@ -1,0 +1,251 @@
+Num	Name	Quality	Genre	Detail	Particular	Level	GoodsFive	Magiclevel	TaskValue
+40	S¸ch kü n¨ng cÊp 90	0	6	1	2426	0	1	0	10000
+120	Tiªn Th¶o Lé 	0	6	1	71	0	1	0	10000
+160	Tiªn Th¶o Lé 	0	6	1	71	0	1	0	10000
+200	Tiªn Th¶o Lé 	0	6	1	71	0	1	0	10000
+240	Cµ Rèt §Æc BiÖt	0	6	1	5120	0	1	0	10000
+280	Cèng NguyÖt Phï Dung	0	6	1	128	0	1	0	10000
+320	Phông NguyÖt Qu¶ Dung	0	6	1	127	0	1	0	10000
+360	Cµ Rèt §Æc BiÖt	0	6	1	5120	0	1	0	10000
+400	R­¬ng §å phæ Hoµng Kim	0	6	1	5001	0	1	0	10000
+440	Phông NguyÖt Qu¶ Dung	0	6	1	127	0	1	0	10000
+480	Cèng NguyÖt Phï Dung	0	6	1	128	0	1	0	10000
+520	Phông NguyÖt Qu¶ Dung	0	6	1	127	0	1	0	10000
+560	Cèng NguyÖt Phï Dung	0	6	1	128	0	1	0	10000
+600	Phông NguyÖt Qu¶ Dung	0	6	1	127	0	1	0	10000
+640	Cèng NguyÖt Phï Dung	0	6	1	128	0	1	0	10000
+680	Phông NguyÖt Qu¶ Dung	0	6	1	127	0	1	0	10000
+720	Cèng NguyÖt Phï Dung	0	6	1	128	0	1	0	10000
+760	Phông NguyÖt Qu¶ Dung	0	6	1	127	0	1	0	10000
+800	R­¬ng §å phæ Hoµng Kim	0	6	1	5001	0	1	0	10000
+840	Cèng NguyÖt Phï Dung	0	6	1	128	0	1	0	10000
+880	Phông NguyÖt Qu¶ Dung	0	6	1	127	0	1	0	10000
+920	Cèng NguyÖt Phï Dung	0	6	1	128	0	1	0	10000
+960	Phông NguyÖt Qu¶ Dung	0	6	1	127	0	1	0	10000
+1000	§Þnh Quèc Tö §»ng Hé uyÓn	1	162	0	0	0	1	0	10000
+1040	Phông NguyÖt Qu¶ Dung	0	6	1	127	0	1	0	10000
+1080	Cèng NguyÖt Phï Dung	0	6	1	128	0	1	0	10000
+1120	Phông NguyÖt Qu¶ Dung	0	6	1	127	0	1	0	10000
+1160	Cèng NguyÖt Phï Dung	0	6	1	128	0	1	0	10000
+1200	R­¬ng §å phæ Hoµng Kim	0	6	1	5001	0	1	0	10000
+1240	Cèng NguyÖt Phï Dung	0	6	1	128	0	1	0	10000
+1280	Phông NguyÖt Qu¶ Dung	0	6	1	127	0	1	0	10000
+1320	Phông NguyÖt Qu¶ Dung	0	6	1	127	0	1	0	10000
+1360	Cèng NguyÖt Phï Dung	0	6	1	128	0	1	0	10000
+1400	Phông NguyÖt Qu¶ Dung	0	6	1	127	0	1	0	10000
+1440	Cèng NguyÖt Phï Dung	0	6	1	128	0	1	0	10000
+1480	Phông NguyÖt Qu¶ Dung	0	6	1	127	0	1	0	10000
+1520	§Þnh Quèc Ng©n Tµm Yªu ®¸i	1	163	0	0	0	1	0	10000
+1560	Phông NguyÖt Qu¶ Dung	0	6	1	127	0	1	0	10000
+1600	R­¬ng §å phæ Hoµng Kim	0	6	1	5001	0	1	0	10000
+1640	Cèng NguyÖt Phï Dung	0	6	1	128	0	1	0	10000
+1680	Cèng NguyÖt Phï Dung	0	6	1	128	0	1	0	10000
+1720	Cèng NguyÖt Phï Dung	0	6	1	128	0	1	0	10000
+1760	Cµ Rèt §Æc BiÖt	0	6	1	5120	0	1	0	10000
+1800	Cµ Rèt §Æc BiÖt	0	6	1	5120	0	1	0	10000
+1840	Cµ Rèt §Æc BiÖt	0	6	1	5120	0	1	0	10000
+1880	[Cùc phÈm] §éng S¸t PhØ Thóy Ngäc H¹ng Khuyªn	1	497	0	0	0	1	0	10000
+1920	Cµ Rèt §Æc BiÖt	0	6	1	5120	0	1	0	10000
+1960	Cµ Rèt §Æc BiÖt	0	6	1	5120	0	1	0	10000
+2000	R­¬ng §å phæ Hoµng Kim	0	6	1	5001	0	1	0	10000
+2040	§Þnh Quèc XÝch Quyªn NhuyÔn Ngoa	1	161	0	0	0	1	0	10000
+2080	Cµ Rèt §Æc BiÖt	0	6	1	5120	0	1	0	10000
+2120	Cµ Rèt §Æc BiÖt	0	6	1	5120	0	1	0	10000
+2160	Cµ Rèt §Æc BiÖt	0	6	1	5120	0	1	0	10000
+2200	[Cùc phÈm] §éng S¸t B¹ch Ngäc Cµn Kh«n Béi	1	495	0	0	0	1	0	10000
+2240	Cµ Rèt §Æc BiÖt	0	6	1	5120	0	1	0	10000
+2280	Cµ Rèt §Æc BiÖt	0	6	1	5120	0	1	0	10000
+2320	Cµ Rèt §Æc BiÖt	0	6	1	5120	0	1	0	10000
+2360	Cµ Rèt §Æc BiÖt	0	6	1	5120	0	1	0	10000
+2400	R­¬ng §å phæ Hoµng Kim	0	6	1	5001	0	1	0	10000
+2440	Cµ Rèt §Æc BiÖt	0	6	1	5120	0	1	0	10000
+2480	Cµ Rèt §Æc BiÖt	0	6	1	5120	0	1	0	10000
+2520	§Þnh Quèc Thanh Sa Tr­êng Sam	1	159	0	0	0	1	0	10000
+2560	Cµ Rèt §Æc BiÖt	0	6	1	5120	0	1	0	10000
+2600	Cµ Rèt §Æc BiÖt	0	6	1	5120	0	1	0	10000
+2640	[Cùc phÈm] §éng S¸t B¹ch Kim Tó Phông Giíi	1	496	0	0	0	1	0	10000
+2680	Cµ Rèt §Æc BiÖt	0	6	1	5120	0	1	0	10000
+2720	Cµ Rèt §Æc BiÖt	0	6	1	5120	0	1	0	10000
+2760	Cµ Rèt §Æc BiÖt	0	6	1	5120	0	1	0	10000
+2800	R­¬ng §å phæ Hoµng Kim	0	6	1	5001	0	1	0	10000
+2840	Cµ Rèt §Æc BiÖt	0	6	1	5120	0	1	0	10000
+2880	[Cùc phÈm] §éng S¸t B¹ch Kim §iªu Long Giíi	1	494	0	0	0	1	0	10000
+2920	Cµ Rèt §Æc BiÖt	0	6	1	5120	0	1	0	10000
+2960	Cµ Rèt §Æc BiÖt	0	6	1	5120	0	1	0	10000
+3000	§Þnh Quèc ¤ Sa Ph¸t Qu¸n	1	160	0	0	0	1	0	10000
+3040	Cµ Rèt §Æc BiÖt	0	6	1	5120	0	1	0	10000
+3080	Ngò Hµnh Kú Th¹ch	0	6	1	5127	0	1	0	10000
+3120	Cµ Rèt §Æc BiÖt	0	6	1	5120	0	1	0	10000
+3160	Ngò Hµnh Kú Th¹ch	0	6	1	5127	0	1	0	10000
+3200	R­¬ng §å phæ Hoµng Kim	0	6	1	5001	0	1	0	10000
+3240	Cµ Rèt §Æc BiÖt	0	6	1	5120	0	1	0	10000
+3280	[Hoµn Mü] An Bang Kª HuyÕt Th¹ch Giíi ChØ	1	213	0	0	0	1	0	10000
+3320	Ngò Hµnh Kú Th¹ch	0	6	1	5127	0	1	0	10000
+3360	Cµ Rèt §Æc BiÖt	0	6	1	5120	0	1	0	10000
+3400	Cµ Rèt §Æc BiÖt	0	6	1	5120	0	1	0	10000
+3440	Ngò Hµnh Kú Th¹ch	0	6	1	5127	0	1	0	10000
+3480	Cµ Rèt §Æc BiÖt	0	6	1	5120	0	1	0	10000
+3520	[Hoµn Mü] An Bang §iÒn Hoµng Th¹ch Ngäc Béi	1	212	0	0	0	1	0	10000
+3560	Cµ Rèt §Æc BiÖt	0	6	1	5120	0	1	0	10000
+3600	R­¬ng §å phæ Hoµng Kim	0	6	1	5001	0	1	0	10000
+3640	Ngò Hµnh Kú Th¹ch	0	6	1	5127	0	1	0	10000
+3680	[Hoµn Mü] An Bang Cóc Hoa Th¹ch ChØ Hoµn	1	211	0	0	0	1	0	10000
+3720	Cµ Rèt §Æc BiÖt	0	6	1	5120	0	1	0	10000
+3760	Ngò Hµnh Kú Th¹ch	0	6	1	5127	0	1	0	10000
+3800	[Hoµn Mü] An Bang B¨ng Tinh Th¹ch H¹ng Liªn	1	210	0	0	0	1	0	10000
+3840	Cµ Rèt §Æc BiÖt	0	6	1	5120	0	1	0	10000
+3880	Ngò Hµnh Kú Th¹ch	0	6	1	5127	0	1	0	10000
+3920	Nhu T×nh C©n Quèc Nghª Th­êng	1	5430	0	0	0	1	0	10000
+3960	V« Danh ChØ Hoµn	1	5443	0	0	0	1	0	10000
+4000	V« Danh Giíi ChØ 	1	5454	0	0	0	1	0	10000
+4040	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+4080	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+4120	Hoµng Ph­îng NhÊt Ngäc	0	6	1	5122	0	1	0	10000
+4160	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+4200	Hoµng Ph­îng NhÊt Ngäc	0	6	1	5122	0	1	0	10000
+4240	Cµn Kh«n Liªn Hoa	0	6	1	5123	0	1	0	10000
+4280	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+4320	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+4360	Hoµng Ph­îng NhÊt Ngäc	0	6	1	5122	0	1	0	10000
+4400	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+4440	Hoµng Ph­îng NhÊt Ngäc	0	6	1	5122	0	1	0	10000
+4480	Cµn Kh«n Liªn Hoa	0	6	1	5123	0	1	0	10000
+4520	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+4560	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+4600	Hoµng Ph­îng NhÊt Ngäc	0	6	1	5122	0	1	0	10000
+4640	Cµn Kh«n Liªn Hoa	0	6	1	5123	0	1	0	10000
+4680	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+4720	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+4760	Hoµng Ph­îng NhÊt Ngäc	0	6	1	5122	0	1	0	10000
+4800	Cµn Kh«n Liªn Hoa	0	6	1	5123	0	1	0	10000
+4840	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+4880	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+4920	Hoµng Ph­îng NhÊt Ngäc	0	6	1	5122	0	1	0	10000
+4960	Hoµng Ph­îng NhÊt Ngäc	0	6	1	5122	0	1	0	10000
+5000	Cµn Kh«n Liªn Hoa	0	6	1	5123	0	1	0	10000
+5040	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+5080	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+5120	Hoµng Ph­îng NhÊt Ngäc	0	6	1	5122	0	1	0	10000
+5160	Hoµng Ph­îng NhÊt Ngäc	0	6	1	5122	0	1	0	10000
+5200	Cµn Kh«n Liªn Hoa	0	6	1	5123	0	1	0	10000
+5240	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+5280	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+5320	Hoµng Ph­îng NhÊt Ngäc	0	6	1	5122	0	1	0	10000
+5360	Hoµng Ph­îng NhÊt Ngäc	0	6	1	5122	0	1	0	10000
+5400	Cµn Kh«n Liªn Hoa	0	6	1	5123	0	1	0	10000
+5440	Cµn Kh«n Liªn Hoa	0	6	1	5123	0	1	0	10000
+5480	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+5520	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+5560	Hoµng Ph­îng NhÊt Ngäc	0	6	1	5122	0	1	0	10000
+5600	Hoµng Ph­îng NhÊt Ngäc	0	6	1	5122	0	1	0	10000
+5640	Cµn Kh«n Liªn Hoa	0	6	1	5123	0	1	0	10000
+5680	Cµn Kh«n Liªn Hoa	0	6	1	5123	0	1	0	10000
+5720	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+5760	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+5800	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+5840	Hoµng Ph­îng NhÊt Ngäc	0	6	1	5122	0	1	0	10000
+5880	Hoµng Ph­îng NhÊt Ngäc	0	6	1	5122	0	1	0	10000
+5920	Cµn Kh«n Liªn Hoa	0	6	1	5123	0	1	0	10000
+5960	Cµn Kh«n Liªn Hoa	0	6	1	5123	0	1	0	10000
+6000	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+6040	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+6080	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+6120	Hoµng Ph­îng NhÊt Ngäc	0	6	1	5122	0	1	0	10000
+6160	Hoµng Ph­îng NhÊt Ngäc	0	6	1	5122	0	1	0	10000
+6200	Cµn Kh«n Liªn Hoa	0	6	1	5123	0	1	0	10000
+6240	Cµn Kh«n Liªn Hoa	0	6	1	5123	0	1	0	10000
+6280	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+6320	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+6360	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+6400	Hoµng Ph­îng NhÊt Ngäc	0	6	1	5122	0	1	0	10000
+6440	Hoµng Ph­îng NhÊt Ngäc	0	6	1	5122	0	1	0	10000
+6480	Hoµng Ph­îng NhÊt Ngäc	0	6	1	5122	0	1	0	10000
+6520	Cµn Kh«n Liªn Hoa	0	6	1	5123	0	1	0	10000
+6560	Cµn Kh«n Liªn Hoa	0	6	1	5123	0	1	0	10000
+6600	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+6640	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+6680	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+6720	Hoµng Ph­îng NhÊt Ngäc	0	6	1	5122	0	1	0	10000
+6760	Hoµng Ph­îng NhÊt Ngäc	0	6	1	5122	0	1	0	10000
+6800	Hoµng Ph­îng NhÊt Ngäc	0	6	1	5122	0	1	0	10000
+6840	Cµn Kh«n Liªn Hoa	0	6	1	5123	0	1	0	10000
+6880	Cµn Kh«n Liªn Hoa	0	6	1	5123	0	1	0	10000
+6920	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+6960	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+7000	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+7040	Hoµng Ph­îng NhÊt Ngäc	0	6	1	5122	0	1	0	10000
+7080	Hoµng Ph­îng NhÊt Ngäc	0	6	1	5122	0	1	0	10000
+7120	Hoµng Ph­îng NhÊt Ngäc	0	6	1	5122	0	1	0	10000
+7160	Cµn Kh«n Liªn Hoa	0	6	1	5123	0	1	0	10000
+7200	Cµn Kh«n Liªn Hoa	0	6	1	5123	0	1	0	10000
+7240	Cµn Kh«n Liªn Hoa	0	6	1	5123	0	1	0	10000
+7280	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+7320	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+7360	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+7400	Hoµng Ph­îng NhÊt Ngäc	0	6	1	5122	0	1	0	10000
+7440	Hoµng Ph­îng NhÊt Ngäc	0	6	1	5122	0	1	0	10000
+7480	Hoµng Ph­îng NhÊt Ngäc	0	6	1	5122	0	1	0	10000
+7520	Cµn Kh«n Liªn Hoa	0	6	1	5123	0	1	0	10000
+7560	Cµn Kh«n Liªn Hoa	0	6	1	5123	0	1	0	10000
+7600	Cµn Kh«n Liªn Hoa	0	6	1	5123	0	1	0	10000
+7640	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+7680	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+7720	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+7760	Thiªn Kú Th¶o	0	6	1	5121	0	1	0	10000
+7800	Hoµng Ph­îng NhÊt Ngäc	0	6	1	5122	0	1	0	10000
+7840	Hoµng Ph­îng NhÊt Ngäc	0	6	1	5122	0	1	0	10000
+7880	Hoµng Ph­îng NhÊt Ngäc	0	6	1	5122	0	1	0	10000
+7920	Cµn Kh«n Liªn Hoa	0	6	1	5123	0	1	0	10000
+7960	Cµn Kh«n Liªn Hoa	0	6	1	5123	0	1	0	10000
+8000	Cµn Kh«n Liªn Hoa	0	6	1	5123	0	1	0	10000
+2960	Vâ L©m MËt TÞch	0	6	1	26	0	1	0	10000
+2840	Vâ L©m MËt TÞch	0	6	1	26	0	1	0	10000
+3040	Vâ L©m MËt TÞch	0	6	1	26	0	1	0	10000
+2320	TÈy Tñy Kinh	0	6	1	22	0	1	0	10000
+3720	Vâ L©m MËt TÞch	0	6	1	26	0	1	0	10000
+3120	Vâ L©m MËt TÞch	0	6	1	26	0	1	0	10000
+2480	TÈy Tñy Kinh	0	6	1	22	0	1	0	10000
+2400	M¶nh Trang BÞ Hoµng Kim	0	6	1	5128	0	1	0	10000
+400	Phông NguyÖt Qu¶ Dung	0	6	1	127	0	1	0	10000
+2240	TÈy Tñy Kinh	0	6	1	22	0	1	0	10000
+3480	Vâ L©m MËt TÞch	0	6	1	26	0	1	0	10000
+120	Cèng NguyÖt Phï Dung	0	6	1	128	0	1	0	10000
+3400	Vâ L©m MËt TÞch	0	6	1	26	0	1	0	10000
+3560	Vâ L©m MËt TÞch	0	6	1	26	0	1	0	10000
+3240	Vâ L©m MËt TÞch	0	6	1	26	0	1	0	10000
+3840	§¹i Thµnh BÝ KÝp 120	0	6	1	2425	0	1	0	10000
+1920	TÈy Tñy Kinh	0	6	1	22	0	1	0	10000
+1480	M¶nh Trang BÞ Hoµng Kim	0	6	1	5128	0	1	0	10000
+1400	M¶nh Trang BÞ Hoµng Kim	0	6	1	5128	0	1	0	10000
+360	Cèng NguyÖt Phï Dung	0	6	1	128	0	1	0	10000
+2440	TÈy Tñy Kinh	0	6	1	22	0	1	0	10000
+2760	Vâ L©m MËt TÞch	0	6	1	26	0	1	0	10000
+2600	Vâ L©m MËt TÞch	0	6	1	26	0	1	0	10000
+2280	TÈy Tñy Kinh	0	6	1	22	0	1	0	10000
+240	Phông NguyÖt Qu¶ Dung	0	6	1	127	0	1	0	10000
+1640	M¶nh Trang BÞ Hoµng Kim	0	6	1	5128	0	1	0	10000
+1840	TÈy Tñy Kinh	0	6	1	22	0	1	0	10000
+1720	M¶nh Trang BÞ Hoµng Kim	0	6	1	5128	0	1	0	10000
+2160	TÈy Tñy Kinh	0	6	1	22	0	1	0	10000
+2920	Vâ L©m MËt TÞch	0	6	1	26	0	1	0	10000
+2800	M¶nh Trang BÞ Hoµng Kim	0	6	1	5128	0	1	0	10000
+2560	TÈy Tñy Kinh	0	6	1	22	0	1	0	10000
+3360	Vâ L©m MËt TÞch	0	6	1	26	0	1	0	10000
+2680	Vâ L©m MËt TÞch	0	6	1	26	0	1	0	10000
+2360	TÈy Tñy Kinh	0	6	1	22	0	1	0	10000
+3600	M¶nh Trang BÞ Hoµng Kim	0	6	1	5128	0	1	0	10000
+160	Phông NguyÖt Qu¶ Dung	0	6	1	127	0	1	0	10000
+3200	M¶nh Trang BÞ Hoµng Kim	0	6	1	5128	0	1	0	10000
+1200	M¶nh Trang BÞ Hoµng Kim	0	6	1	5128	0	1	0	10000
+1960	TÈy Tñy Kinh	0	6	1	22	0	1	0	10000
+1560	M¶nh Trang BÞ Hoµng Kim	0	6	1	5128	0	1	0	10000
+200	Cèng NguyÖt Phï Dung	0	6	1	128	0	1	0	10000
+2720	Vâ L©m MËt TÞch	0	6	1	26	0	1	0	10000
+2120	TÈy Tñy Kinh	0	6	1	22	0	1	0	10000
+1800	TÈy Tñy Kinh	0	6	1	22	0	1	0	10000
+1600	M¶nh Trang BÞ Hoµng Kim	0	6	1	5128	0	1	0	10000
+2080	TÈy Tñy Kinh	0	6	1	22	0	1	0	10000
+1680	M¶nh Trang BÞ Hoµng Kim	0	6	1	5128	0	1	0	10000
+2000	M¶nh Trang BÞ Hoµng Kim	0	6	1	5128	0	1	0	10000
+1760	TÈy Tñy Kinh	0	6	1	22	0	1	0	10000
+800	M¶nh Trang BÞ Hoµng Kim	0	6	1	5128	0	1	0	10000

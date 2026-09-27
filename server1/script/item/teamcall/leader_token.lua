@@ -1,0 +1,158 @@
+-- ============================================================
+-- LENH BAI CHI HUY - chi ton tai khi nhan vat dang lam Doi truong.
+-- Doi truong  -> tu dong nhan lenh bai (khoa, khong giao dich duoc).
+-- Mat chuc    -> lenh bai bien mat + tat luon Goi Dong Doi dang chay.
+-- Khong dung SetTask: trang thai nam trong RAM, dung dung cach teamcall_control.
+-- ============================================================
+Include("\\script\\lib\\awardtemplet.lua")
+Include("\\script\\item\\teamcall\\teamcall_control.lua")
+Include("\\script\\global\\nobitaxd\\config\\cfg_server.lua")
+
+LEADER_TOKEN_ITEM_ID  = 5165
+LEADER_TOKEN_F_ACTIVE = 54    -- 3 giay  (dang trong to doi)
+LEADER_TOKEN_F_IDLE   = 162   -- 9 giay  (khong to doi, khong giu lenh bai)
+
+if (not LEADER_TOKEN_WATCH) then LEADER_TOKEN_WATCH = {}; end;
+
+function LeaderToken_IsLeader()
+	if (IsCaptain() ~= 1) then return 0; end;
+	local n = GetTeamSize();
+	if (n == nil or n < 2) then return 0; end;
+	return 1;
+end;
+
+function LeaderToken_Count()
+	local n = CalcEquiproomItemCount(6, 1, LEADER_TOKEN_ITEM_ID, -1);
+	if (n == nil or n <= 0) then
+		n = CalcEquiproomItemCount(6, 1, LEADER_TOKEN_ITEM_ID, 1);
+	end;
+	if (n == nil) then return 0; end;
+	return n;
+end;
+
+function LeaderToken_Grant()
+	if (LeaderToken_Count() > 0) then return 1; end;
+	if (CalcFreeItemCellCount() < 1) then
+		Msg2Player("<color=red>Hµnh trang Æ«y! D‰n 1 ´ trËng Æ” nhÀn L÷nh Bµi Chÿ Huy.<color>");
+		return 0;
+	end;
+
+	-- Dung dung duong cap phat ma moi phan thuong khac tren server deu di qua.
+	-- AddItem tho tung tra ve chi so hop le nhung vat pham khong vao tui.
+	tbAwardTemplet:GiveAwardByList(
+		{{szName = "L÷nh Bµi Chÿ Huy",
+		  tbProp = {6, 1, LEADER_TOKEN_ITEM_ID, 1, 0, 0},
+		  nCount = 1,
+		  nBindState = -2},},
+		"LeaderToken", 1);
+
+	-- xac nhan vat pham THUC SU vao tui
+	if (LeaderToken_Count() <= 0) then return -1; end;
+	return 1;
+end;
+function LeaderToken_Revoke()
+	-- tat Goi Dong Doi dang ap dung truoc, roi moi thu hoi lenh bai
+	TeamCall_StopTimer();
+	local n = LeaderToken_Count();
+	if (n <= 0) then return 0; end;
+	if (CalcEquiproomItemCount(6, 1, LEADER_TOKEN_ITEM_ID, -1) > 0) then
+		ConsumeEquiproomItem(n, 6, 1, LEADER_TOKEN_ITEM_ID, -1);
+	else
+		ConsumeEquiproomItem(n, 6, 1, LEADER_TOKEN_ITEM_ID, 1);
+	end;
+	Msg2Player("<color=red>Kh´ng cﬂn lµ ßÈi tr≠Îng: L÷nh Bµi Chÿ Huy bi’n m t, G‰i ßÂng ßÈi Æ∑ tæt.<color>");
+	return 1;
+end;
+
+-- Chay TRONG ngu canh nguoi choi. Tra ve so khung hinh cho lan kiem ke tiep, 0 = ngung theo doi.
+function LeaderToken_Check(szName, nStamp)
+	if (PlayerIndex == nil or PlayerIndex <= 0) then return 0; end;
+	if (GetName() ~= szName) then return 0; end;
+	if (TeamCall_Final_GetLoginStamp() ~= nStamp) then return 0; end;
+
+	local nHave = LeaderToken_Count();
+
+	if (LeaderToken_IsLeader() == 1) then
+		if (nHave <= 0) then
+			local tbW = LEADER_TOKEN_WATCH[PlayerIndex];
+			local nFail = 0;
+			if (tbW ~= nil and tbW.failed ~= nil) then nFail = tbW.failed; end;
+			if (nFail >= 3) then
+				-- da thu 3 lan khong vao tui: ngung thu lai, tranh spam thong bao
+				return LEADER_TOKEN_F_IDLE;
+			end;
+			if (LeaderToken_Grant() ~= 1) then
+				if (tbW ~= nil) then tbW.failed = nFail + 1; end;
+				if (nFail + 1 >= 3) then
+					Msg2Player("<color=red>Kh´ng c p Æ≠Óc L÷nh Bµi Chÿ Huy. B∏o Qu∂n trﬁ ki”m tra vÀt ph»m 5165.<color>");
+				end;
+			else
+				if (tbW ~= nil) then tbW.failed = 0; end;
+			end;
+		end;
+		return LEADER_TOKEN_F_ACTIVE;
+	end;
+
+	if (nHave > 0) then LeaderToken_Revoke(); end;
+
+	local nSize = GetTeamSize();
+	if (nSize ~= nil and nSize > 0) then return LEADER_TOKEN_F_ACTIVE; end;
+	return LEADER_TOKEN_F_IDLE;
+end;
+
+function LeaderToken_Schedule(nPlayerIndex, nFrames)
+	local tb = LEADER_TOKEN_WATCH[nPlayerIndex];
+	if (tb == nil or tb.active ~= 1) then return 0; end;
+	local nId = AddTimer(nFrames, "LeaderToken_Tick", nPlayerIndex);
+	if (nId == nil or nId <= 0) then
+		LEADER_TOKEN_WATCH[nPlayerIndex] = nil;
+		return 0;
+	end;
+	tb.timerId = nId;
+	return 1;
+end;
+
+-- Callback cua AddTimer: KHONG co ngu canh nguoi choi, phai dung CallPlayerFunction.
+function LeaderToken_Tick(nPlayerIndex, nIgnoredTimerId)
+	local tb = LEADER_TOKEN_WATCH[nPlayerIndex];
+	if (tb == nil or tb.active ~= 1) then return 0; end;
+	tb.timerId = 0;
+
+	-- chong truong hop PlayerIndex bi cap lai cho nguoi khac
+	local szName = CallPlayerFunction(nPlayerIndex, GetName);
+	if (szName == nil or szName ~= tb.name) then
+		LEADER_TOKEN_WATCH[nPlayerIndex] = nil;
+		return 0;
+	end;
+
+	local nNext = CallPlayerFunction(nPlayerIndex, LeaderToken_Check, tb.name, tb.stamp);
+	if (nNext == nil or nNext <= 0) then
+		LEADER_TOKEN_WATCH[nPlayerIndex] = nil;
+		return 0;
+	end;
+
+	LeaderToken_Schedule(nPlayerIndex, nNext);
+	return 0;
+end;
+
+function LeaderToken_OnLogin()
+	if CFG_LenhBaiChiHuy ~= 1 then return 0; end;
+	if (PlayerIndex == nil or PlayerIndex <= 0) then return 0; end;
+	local tbOld = LEADER_TOKEN_WATCH[PlayerIndex];
+	if (tbOld ~= nil and tbOld.timerId ~= nil and tbOld.timerId > 0) then
+		DelTimer(tbOld.timerId);
+	end;
+	local szName = GetName();
+	local nStamp = TeamCall_Final_GetLoginStamp();
+	LEADER_TOKEN_WATCH[PlayerIndex] = {
+		active  = 1,
+		name    = szName,
+		stamp   = nStamp,
+		timerId = 0,
+		failed  = 0,
+	};
+	-- don sach ngay: dang nhap ma khong phai Doi truong thi go lenh bai con sot
+	LeaderToken_Check(szName, nStamp);
+	LeaderToken_Schedule(PlayerIndex, LEADER_TOKEN_F_ACTIVE);
+	return 0;
+end;

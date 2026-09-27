@@ -1,0 +1,44 @@
+Include("\\script\\lib\\common.lua")
+Include("\\script\\dailogsys\\g_dialog.lua")
+Include("\\script\\dailogsys\\dailogsay.lua")
+Include("\\script\\global\\tieudaotu_story.lua")
+
+-- QUAN TRONG: script vat pham tra ve 0 = TIEU HAO, 1 = GIU LAI.
+-- Loa phai song den het chuong 3 nen moi nhanh o day deu return 1.
+-- Viec tieu hao Loa nam o TDT_C3 khi da du 3 bi pho.
+function main(nItemIndex)
+	if GetTask(TDT_TSK_STORY) ~= 3 then
+		Msg2Player("<color=red>Ch­a tíi lóc dïng thø nµy.<color>")
+		return 1
+	end
+
+	-- dang con han: chi xem lai danh sach, KHONG trieu lai boss
+	if TDT_LoaConHan() == 1 then
+		TDT_HienDanhSach(1)
+		return 1
+	end
+
+	-- tin da nguoi: chi dung dung toa do moi tung tin lai duoc
+	local nMap, nX, nY = GetWorldPos()
+	local bDungCho = 0
+	if nMap == TDT_MAP_THANH then
+		local dx = (nX - TDT_LOA_X) / 8
+		local dy = (nY - TDT_LOA_Y) / 16
+		if dx*dx + dy*dy <= TDT_LOA_R * TDT_LOA_R then bDungCho = 1 end
+	end
+	if bDungCho == 0 then
+		if GetTask(TDT_TSK_LOA) > 0 then
+			TDT_HienDanhSach(0)     -- da tung tin, nay het gio
+		else
+			TDT_HienDanhSach(-1)    -- chua tung tin lan nao
+		end
+		return 1
+	end
+
+	SetTask(TDT_TSK_LOA, TDT_Phut())
+	TDT_TrieuBoss()
+	AddGlobalNews("<color=yellow>Cã kÎ h« lín ë Ba L¨ng huyÖn r»ng Tiªu Dao Tö ®ang Èn th©n t¹i ®ã!<color>")
+	Msg2Player("<color=yellow>TiÕng loa vang kh¾p Ba L¨ng huyÖn. Ba tªn ®Ö tö ®· rêi sµo huyÖt!<color>")
+	TDT_HienDanhSach(1)
+	return 1
+end

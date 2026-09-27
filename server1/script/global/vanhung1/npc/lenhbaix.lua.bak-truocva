@@ -1,0 +1,2961 @@
+print("[CNHT] 1-nap file lenhbaix.lua")
+IL("TITLE");
+IncludeLib("ITEM");
+IncludeLib("TIMER");
+IncludeLib("FILESYS");
+IncludeLib("SETTING");
+IncludeLib("TASKSYS")
+IncludeLib("PARTNER");
+IncludeLib("BATTLE");
+IncludeLib("RELAYLADDER")
+IncludeLib("TONG") 
+IncludeLib("LEAGUE")
+Include("\\script\\lib\\log.lua")
+Include("\\script\\activitysys\\playerfunlib.lua")
+Include("\\script\\global\\fuyuan.lua")
+Include("\\script\\misc\\eventsys\\type\\npc.lua");
+Include("\\script\\lib\\remoteexc.lua")
+Include("\\script\\lib\\common.lua");
+Include("\\script\\lib\\awardtemplet.lua")
+Include("\\script\\dailogsys\\dailogsay.lua");
+Include("\\script\\activitysys\\functionlib.lua") 
+Include("\\script\\activitysys\\npcdailog.lua");
+Include("\\script\\task\\newtask\\newtask_head.lua")
+Include("\\script\\task\\newtask\\branch\\branch_head.lua")
+Include("\\script\\task\\newtask\\branch\\branch_prize.lua")
+Include("\\script\\task\\partner\\education\\swordking_people.lua")
+Include("\\script\\task\\newtask\\branch\\branch_problem.lua")
+Include("\\script\\task\\newtask\\education_setnpcpos.lua")
+Include("\\script\\global\\titlefuncs.lua")
+Include("\\script\\global\\nobitaxd\\item\\startgame.lua")
+Include("\\script\\global\\nobitaxd\\item\\diadovolam.lua")
+Include("\\script\\gm_tool\\dispose_item.lua");
+Include("\\script\\global\\vanhung\\event\\thongtinevent.lua");
+Include("\\script\\global\\vanhung\\hotro\\thucuoi.lua");
+Include("\\script\\global\\vanhung\\hotro\\chungnhulebao.lua");
+Include("\\script\\global\\vanhung\\hotro\\chusalebao.lua");
+Include("\\script\\global\\vanhung\\hotro\\daeptrangbi.lua");
+Include("\\script\\global\\vanhung\\hotro\\huyenthietlebao.lua");
+Include("\\script\\global\\vanhung\\hotro\\khongtuoclebao.lua");
+Include("\\script\\global\\vanhung\\hotro\\nhantrangbivatpham.lua");
+Include("\\script\\global\\vanhung\\hotro\\matnganlebao.lua");
+-- [20/09/2026] Bu quai toan ban do - ghep tu script/item/vsd/lenhbaivsd.lua
+Include("\\script\\item\\vsd\\adaptive_train_density_ai.lua")
+Include("\\script\\item\\vsd\\adaptive_train_density_control.lua")
+Include("\\script\\item\\vsd\\adaptive_train_density_mode2_control.lua")
+Include("\\script\\item\\vsd\\adaptive_train_density_mode3_control.lua")
+Include("\\script\\item\\vsd\\adaptive_train_density_menu.lua")
+Include("\\script\\global\\vanhung\\hotro\\phudunglebao.lua");
+Include("\\script\\global\\vanhung\\hotro\\trangbitim.lua");
+Include("\\script\\global\\vanhung\\item\\doigioitinh.lua");
+Include("\\script\\global\\gm\\lib_data_table.lua");
+Include("\\script\\global\\gm\\lib_data_table_filelua.lua");
+Include("\\script\\global\\特殊用地\\梦境\\npc\\路人_叛僧.lua"); -- t葃 t駓, c閚g 甶觤 nhanh
+Include("\\script\\global\\gm\\ex_lib_head.lua");
+Include("\\script\\global\\gm\\functions_points.lua"); -- l蕐 c竎 lo筰 甶觤
+Include("\\script\\global\\nobitaxd\\vdk\\simcity\\controllers\\thanhthi.lua")
+Include("\\script\\global\\nobitaxd\\vdk\\simcity\\head.lua")
+Include("\\script\\global\\nobitaxd\\vdk\\simcity\\controllers\\main.lua")
+Include("\\script\\global\\nobitaxd\\vdk\\simcity\\controllers\\keoxe.lua")
+Include("\\script\\global\\nobitaxd\\vdk\\simcity\\controllers\\vatnuoi.lua")
+
+TITLEDIALOG = "T猲 nh﹏ v藅: <color=green>%s<color>\n".."T猲 t礽 kho秐: <color=green>%s<color>\n".."T鋋 : <color=green>%d, %d/%d<color>" 
+szPlayer = "Чi Hi謕"
+if GetSex() == 1 then
+	szPlayer = "N?Hi謕"
+end
+
+
+tbSkillBook90 = {
+	shaolin = {56,57,58},
+	tianwang = {37,38,39},
+	tangmen = {27,28,45,46},
+	wudu = {47,48,49},
+	emei = {42,43,59},
+	cuiyan = {40,41},
+	gaibang = {54,55},
+	tianren = {35,36,53},
+	wudang = {33,34},
+	kunlun = {50,51,52},
+}
+
+tbAllSkill = {
+	shaolin = {
+		[1] = {10,14},
+		[2] = {4,6,8},
+		[3] = {15},
+		[4] = {16},
+		[5] = {20},
+		[6] = {11,19,271},
+		[7] = {21,273},
+		[9] = {318,319,321},
+	},
+	tianwang = {
+		[1] = {29,30,34},
+		[2] = {23,24,26},
+		[3] = {33},
+		[4] = {31,35,37},
+		[5] = {40},
+		[6] = {42},
+		[7] = {32,36,41,324},
+		[9] = {322,323,325},
+	},
+	tangmen = {
+		[1] = {45},
+		[2] = {43,347},
+		[3] = {303},
+		[4] = {47,50,54,343},
+		[5] = {345},
+		[6] = {349},
+		[7] = {48,58,249,341},
+		[9] = {302,339,342,351},
+	},
+	wudu = {
+		[1] = {63,65},
+		[2] = {60,62,67},
+		[3] = {66,70},
+		[4] = {64,68,69,384},
+		[5] = {73,356},
+		[6] = {72},
+		[7] = {71,74,75},
+		[9] = {353,355,390},
+	},
+	emei = {
+		[1] = {80,85},
+		[2] = {77,79},
+		[3] = {93},
+		[4] = {82,89,385},
+		[5] = {86},
+		[6] = {92},
+		[7] = {88,91,252,282},
+		[9] = {328,332,380},
+	},
+	cuiyan = {
+		[1] = {99,102},
+		[2] = {95,97},
+		[3] = {269},
+		[4] = {105,113},
+		[5] = {100},
+		[6] = {109},
+		[7] = {108,111,114},
+		[9] = {336,337},
+	},
+	gaibang = {
+		[1] = {119,122},
+		[2] = {115,116},
+		[3] = {129},
+		[4] = {124,274},
+		[5] = {277},
+		[6] = {125,128},
+		[7] = {130,360},
+		[9] = {357,359},
+	},
+	tianren = {
+		[1] = {135,145},
+		[2] = {131,132,136},
+		[3] = {137},
+		[4] = {138,140,141},
+		[5] = {364},
+		[6] = {143},
+		[7] = {142,148,150},
+		[9] = {361,362,391},
+	},
+	wudang = {
+		[1] = {153,155},
+		[2] = {151,152},
+		[3] = {159},
+		[4] = {158,164},
+		[5] = {160},
+		[6] = {157},
+		[7] = {165,166,267},
+		[9] = {365,368},
+	},
+	kunlun = {
+		[1] = {169,179},
+		[2] = {167,168,171,392},
+		[3] = {174},
+		[4] = {172,173,178,393},
+		[5] = {175,181},
+		[6] = {90,176},
+		[7] = {182,275,630},
+		[9] = {372,375,394},
+	},
+}
+
+function main()
+	print("[CNHT] 2-main() duoc goi")
+	dofile("script/global/vanhung1/npc/lenhbaix.lua")
+	print("[CNHT] 3-qua dofile")
+		local strFaction = GetFaction()
+		local nW,nX,nY = GetWorldPos();
+		local tbSay = {format(TITLEDIALOG, GetName(), GetAccount() ,nW,nX,nY)};
+--			tinsert(tbSay, "Nh薾 ph莕 thng th╪g c蕄/MenuThuongLevel");
+			tinsert(tbSay, "Nh薾 V遪g s竛g h錳 m竨, mana/VongSangHoTro");
+			tinsert(tbSay, "B?qu竔 to祅 b秐 /AdaptiveTrain_Menu");			
+			tinsert(tbSay, "G鋓 ho箃 ng Game nhanh/goihoatdongmaychu");	
+			tinsert(tbSay, "H?tr?l祄 Nhi謒 v?nhanh/diadovolam");                      
+            tinsert(tbSay, "T総, B藅 Bot AI/main_trieuman");
+			tinsert(tbSay, "C閚g 觤 Nhanh/add_prop");
+			tinsert(tbSay, "M?r閚g rng/moruong");
+			tinsert(tbSay, "Di chuy觧 v?Ba L╪g Huy謓/GotoBLH");
+			tinsert(tbSay, "T葃 t駓 nhanh/TayTuyNhanh");
+			tinsert(tbSay, "H駓 V藅 Ph萴/DisposeItem");
+			tinsert(tbSay, "Thay i danh hi謚/change_title");
+			tinsert(tbSay, "фi t猲 nh﹏ v藅/DoiTenNV");
+			tinsert(tbSay, "K誸 th骳 i tho筰./no")	;		
+		print("[CNHT] 4-sap goi CreateTaskSay, so muc="..getn(tbSay))
+		CreateTaskSay(tbSay)
+	return 1;
+end
+----V遪g S竛g H?Tr?-----
+function VongSangHoTro()
+	AddSkillState(314,60,1,10*60*60*18) -- 60 l?60 ph髏 --12 level skill
+	local _,nX32,nY32 = GetWorldPos()
+	CastSkill(1204, 1, nX32*32, nY32*32)
+	Msg2Player("Nh薾 tr筺g th竔 h錳 ph鬰 m竨 v?mana trong v遪g 24 gi? nv ch誸 s?bi課 m蕋 !")
+end
+----V遪g S竛g - Danh Hi謚------
+function vongsang(nindex)
+Title_AddTitle(nindex, 1, 4302359);
+Title_ActiveTitle(nindex);
+SetTask(1122, nindex);
+end
+
+--------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------
+--						L蕐 V藅 Ph萴						--
+
+--------------------------------------------------------------
+-------------Trang B?------------------------------------------------------------------
+function trangbi()
+szTitle = "Xin ch祇 <color=red>"..GetName().."<color> \nNgi mu鑞 nh薾 g?n祇?."
+local tbOpt =
+	{
+		{"Nguy猲 li謚 衟  t輒",trangbitim},
+		{"Nh薾 ng鵤 8x",ThuCuoi},
+		{"Tr?L筰",Event},
+		{"Tho竧"},
+	}
+	CreateNewSayEx(szTitle, tbOpt)
+end
+
+function DoiTenNV()
+	AskClientForString("danhten", "", 1, 100, "Xin nh藀 t猲 mu鑞 i");
+end
+
+function danhten(strings)
+	RenameRole(strings)
+end
+
+function partner_getdust1()
+partner_givetodo()
+end
+
+
+function trangbitim()
+szTitle = "Xin ch祇 <color=red>"..GetName().."<color> \nNgi mu鑞 nh薾 g?n祇?."
+local tbOpt =
+	{
+		{"Ц Hi謓 1 c?s絥 thu閏 t輓h",Hien1},
+		{"Ц 萵 1 c?s絥 thu閏 t輓h",An1},
+		{"Ц Hi謓 2 c?s絥 thu閏 t輓h",Hien2},
+		{"Ц 萵 2 c?s絥 thu閏 t輓h",An2},
+		{"Ц Hi謓 3 c?s絥 thu閏 t輓h",Hien3},
+		{"Ц 萵 3 c?s絥 thu閏 t輓h",An3},
+		{"Ц kh玭g thu閏 t輓h",DaChuaThuocTinh},
+		{"Ph玦 T輒 6 D遪g",AddEquipPurpleNoParam},
+		{"Tho竧"},
+	}
+	CreateNewSayEx(szTitle, tbOpt)
+end
+-------------Tao ITEM-------------------------------------------------------------------
+function TaoItem() 
+g_AskClientStringEx("6,1,222,0,0,0",1,9000,"Nh藀 V祇 Item Code:",{TaoItemID}) 
+end
+
+function TaoItemID(szItem,ncount)
+	local szICode = lib:Split(szItem, ",");
+	local n = getn(szICode);
+	if (n ~= 1) then
+	if (n < 6) then Talk(1, "", format("Sai Item Code. Thi誹 trng y猽 c莡 <color=yellow>%s<color>",n)); return end
+	if (n > 7) then Talk(1, "", format("Sai Item Code. Qu?nhi襲 trng d?li謚 <color=yellow>%s<color>",n)); return end
+	local itclass = tonumber(szICode[1]); 
+	local ittype = tonumber(szICode[2]); 
+	local itid = tonumber(szICode[3]); 
+	local itlv = tonumber(szICode[4]); 
+	local itseri = tonumber(szICode[5]); 
+	local itluck = tonumber(szICode[6]); 
+	local itmagic = tonumber(szICode[7]); 
+	if (itlv < 0) then Talk(1, "", format("C蕄  man  kh玭g 頲 th蕄 qu?<color=yellow>%s<color>",itlv)); return end
+	if (itlv > 10) then Talk(1, "", format("Ch?h?tr?n c蕄 10. Hi謓 t筰 nh藀 v祇 <color=yellow>%s<color>",itlv)); return end
+	if (itmagic == nil) then itmagic=0; end
+	AddItem(itclass,ittype,itid,itlv,itseri,itluck,itmagic);
+	else
+	local EquipId = tonumber(szICode[1]); 
+	AddGoldItem(0, EquipId);
+	end
+end
+
+
+
+
+function DoiTenNV()
+	AskClientForString("danhten", "", 1, 100, "Xin nh藀 t猲 mu鑞 i");
+end
+
+function danhten(strings)
+	RenameRole(strings)
+end
+
+function partner_getdust1()
+partner_givetodo()
+end
+
+function DisposeItem()
+GiveItemUI("H駓 v藅 ph萴", "Чi hi謕 h穣 c萵 tr鋘g trong vi謈 h駓 v藅 ph萴, v藅 ph萴  h駓 kh玭g th?l蕐 l筰 頲!", "DisposeConfirm", "onCancel", 1);
+end
+
+function DisposeConfirm(nCount)
+	for i=1, nCount do
+		local nItemIndex = GetGiveItemUnit(i)
+		local strItem = GetItemName(nItemIndex)
+		RemoveItemByIndex(nItemIndex)
+		--WriteLog(date("%Y%m%d %H%M%S").."\t".." GM H駓 Item "..GetAccount().."\t"..GetName().."\t".." Hu?item "..strItem)
+	end
+	Msg2Player("Thao t竎 h駓 v藅 ph萴 th祅h c玭g")
+	Talk(1, "", "Thao t竎 th祅h c玭g, xin ki觤 tra l筰!");
+end
+
+
+
+--------------------H?tr?skill------------------------------
+function HoTroSkill()
+	local nIndex = floor(GetLevel()/10)
+	local szFaction = GetFaction()
+	if tbAllSkill[szFaction] == nil then
+		return
+	end
+	if nIndex >= 1 then
+		for i=1, min(9,nIndex) do
+			if tbAllSkill[szFaction][i] ~= nil then
+				for j=1, getn(tbAllSkill[szFaction][i]) do
+					if i ==9 then
+						if HaveMagic(tbAllSkill[szFaction][i][j]) == -1 then
+							AddMagic(tbAllSkill[szFaction][i][j],1)
+						end
+					else
+						if HaveMagic(tbAllSkill[szFaction][i][j]) == -1 then
+							AddMagic(tbAllSkill[szFaction][i][j])
+						end
+					end
+				end
+			end
+		end
+	end
+	Talk(1,"","V?h鋍  頲 truy襫 th?")
+end
+--------------------------------------------------------------
+--			 		T総 m?event					--
+--------------------------------------------------------------
+function Event()
+if LoaiEvent == 1 then
+szTitle = "Xin ch祇 <color=red>"..GetName().."<color> \nEvent hi謓 t筰 l?<color=yellow>Trung Thu<color>\nV祇 trang web <color=yellow>192.168.1.200<color>  bi誸 th猰 chi ti誸."
+elseif LoaiEvent == 2 then
+szTitle = "Xin ch祇 <color=red>"..GetName().."<color> \nEvent hi謓 t筰 l?<color=yellow>Gh衟 Ph竜<color>\nV祇 trang web <color=yellow>192.168.1.200<color>  bi誸 th猰 chi ti誸."
+elseif LoaiEvent == 3 then
+szTitle = "Xin ch祇 <color=red>"..GetName().."<color> \nEvent hi謓 t筰 l?<color=yellow>Gi竛g Sinh<color>\nV祇 trang web <color=yellow>192.168.1.200<color>  bi誸 th猰 chi ti誸."
+elseif LoaiEvent == 4 then
+szTitle = "Xin ch祇 <color=red>"..GetName().."<color> \nEvent hi謓 t筰 l?<color=yellow>Sinh Nh藅 VLTK 3 tu鎖<color>\nV祇 trang web <color=yellow>192.168.1.200<color>  bi誸 th猰 chi ti誸."
+else
+szTitle = "Xin ch祇 <color=red>"..GetName().."<color> \nEvent hi謓 t筰 l?<color=yellow>Hi謓 t筰 b筺  t総 event<color>."
+end
+local tbOpt =
+	{
+		{"Thay i event",thaydoievent},
+		{"Nh薾 nguy猲 li謚 event",nguyenlieuevent},
+		{"Tr?L筰",main},
+		{"Tho竧"},
+	}
+	CreateNewSayEx(szTitle, tbOpt)
+end
+
+function thaydoievent()
+if LoaiEvent == 1 then
+szTitle = "Xin ch祇 <color=red>"..GetName().."<color> \nEvent hi謓 t筰 l?<color=yellow>Trung Thu<color>\nN誹 mu鑞 thay i th祅h event kh竎, xin vui l遪g ch鋘 b猲 di."
+elseif LoaiEvent == 2 then
+szTitle = "Xin ch祇 <color=red>"..GetName().."<color> \nEvent hi謓 t筰 l?<color=yellow>Gh衟 Ph竜<color>\nN誹 mu鑞 thay i th祅h event kh竎, xin vui l遪g ch鋘 b猲 di."
+elseif LoaiEvent == 3 then
+szTitle = "Xin ch祇 <color=red>"..GetName().."<color> \nEvent hi謓 t筰 l?<color=yellow>Gi竛g Sinh<color>\nN誹 mu鑞 thay i th祅h event kh竎, xin vui l遪g ch鋘 b猲 di."
+elseif LoaiEvent == 4 then
+szTitle = "Xin ch祇 <color=red>"..GetName().."<color> \nEvent hi謓 t筰 l?<color=yellow>Sinh Nh藅 VLTK 3 tu鎖<color>\nN誹 mu鑞 thay i th祅h event kh竎, xin vui l遪g ch鋘 b猲 di."
+else
+szTitle = "Xin ch祇 <color=red>"..GetName().."<color> \nEvent hi謓 t筰 l?<color=yellow>Hi謓 t筰 b筺  t総 event<color>\nN誹 mu鑞 thay i th祅h event kh竎, xin vui l遪g ch鋘 b猲 di."
+end
+local tbOpt =
+	{
+		{"Event Trung Thu",thaydoieventtrungthu},
+		{"Event Gh衟 Ph竜",thaydoieventghepphao},
+		{"Event Gi竛g Sinh",thaydoieventgiangsinh},
+		{"Event Sinh Nh苩 VLTK 3 Tu鎖",thaydoieventsinhnhatvltk3tuoi},
+		{"T総 Event",thaydoitatevent},
+		{"Tr?L筰",EventPGaming},
+		{"Tho竧"},
+	}
+	CreateNewSayEx(szTitle, tbOpt)
+end
+
+function thaydoieventtrungthu()
+if LoaiEvent == 1 then
+Talk(1,"","Hi謓 t筰 產ng l?event Trung Thu, n猲 kh玭g c莕 i u <pic=1>")
+return 1
+end
+local OpenFileEvent = openfile("script/global/pgaming/event/thongtinevent.lua", "w")
+write(OpenFileEvent, "LoaiEvent = 1")
+closefile(OpenFileEvent)
+Talk(4,"","Ch箉 l筰 server  thay i event nh?,"L璾 ? T総 <color=yellow>s3relay<color> trc nh?r錳 m韎 t総 Server.","C?th?tham kh秓 l筰 tr猲 k猲h <color=yellow>Youtube PGaming<color> n誹 qu猲 nh?<pic=1>")
+end
+
+function thaydoieventghepphao()
+if LoaiEvent == 2 then
+Talk(1,"","Hi謓 t筰 產ng l?event Gh衟 Ph竜, n猲 kh玭g c莕 i u <pic=1>")
+return 1
+end
+local OpenFileEvent = openfile("script/global/pgaming/event/thongtinevent.lua", "w")
+write(OpenFileEvent, "LoaiEvent = 2")
+closefile(OpenFileEvent)
+Talk(4,"","Ch箉 l筰 server  thay i event nh?,"L璾 ? T総 <color=yellow>s3relay<color> trc nh?r錳 m韎 t総 Server.","C?th?tham kh秓 l筰 tr猲 k猲h <color=yellow>Youtube PGaming<color> n誹 qu猲 nh?<pic=1>")
+end
+
+function thaydoieventgiangsinh()
+if LoaiEvent == 3 then
+Talk(1,"","Hi謓 t筰 產ng l?event Gi竛g Sinh, n猲 kh玭g c莕 i u <pic=1>")
+return 1
+end
+local OpenFileEvent = openfile("script/global/pgaming/event/thongtinevent.lua", "w")
+write(OpenFileEvent, "LoaiEvent = 3")
+closefile(OpenFileEvent)
+Talk(4,"","Ch箉 l筰 server  thay i event nh?,"L璾 ? T総 <color=yellow>s3relay<color> trc nh?r錳 m韎 t総 Server.","C?th?tham kh秓 l筰 tr猲 k猲h <color=yellow>Youtube PGaming<color> n誹 qu猲 nh?<pic=1>")
+end
+
+function thaydoieventsinhnhatvltk3tuoi()
+if LoaiEvent == 4 then
+Talk(1,"","Hi謓 t筰 產ng l?event Sinh Nh藅 VLTK 3 tu鎖, n猲 kh玭g c莕 i u <pic=1>")
+return 1
+end
+local OpenFileEvent = openfile("script/global/pgaming/event/thongtinevent.lua", "w")
+write(OpenFileEvent, "LoaiEvent = 4")
+closefile(OpenFileEvent)
+Talk(4,"","Ch箉 l筰 server  thay i event nh?,"L璾 ? T総 <color=yellow>s3relay<color> trc nh?r錳 m韎 t総 Server.","C?th?tham kh秓 l筰 tr猲 k猲h <color=yellow>Youtube PGaming<color> n誹 qu猲 nh?<pic=1>")
+end
+
+function thaydoitatevent()
+if LoaiEvent == 5 then
+Talk(1,"","Hi謓 t筰 event  t総, n猲 kh玭g c莕 i u <pic=1>")
+return 1
+end
+local OpenFileEvent = openfile("script/global/pgaming/event/thongtinevent.lua", "w")
+write(OpenFileEvent, "LoaiEvent = 5")
+closefile(OpenFileEvent)
+Talk(4,"","Ch箉 l筰 server  thay i event nh?,"L璾 ? T総 <color=yellow>s3relay<color> trc nh?r錳 m韎 t総 Server.","C?th?tham kh秓 l筰 tr猲 k猲h <color=yellow>Youtube PGaming<color> n誹 qu猲 nh?<pic=1>")
+end
+
+function nguyenlieuevent()
+		local strFaction = GetFaction()
+		local nW,nX,nY = GetWorldPos();
+		local tbSay = {format(TITLEDIALOG, GetName(), GetAccount() ,nW,nX,nY)};	
+			if LoaiEvent == 1 then
+			tinsert(tbSay, "Nh薾 T骾 b閠/nguyenlieutrungthu1");
+			tinsert(tbSay, "Nh薾 T骾 阯g/nguyenlieutrungthu2");
+			tinsert(tbSay, "Nh薾 T骾 tr鴑g/nguyenlieutrungthu3");
+			tinsert(tbSay, "Nh薾 T骾 u xanh/nguyenlieutrungthu4");
+			tinsert(tbSay, "Nh薾 T骾 h箃 sen/nguyenlieutrungthu5");
+			tinsert(tbSay, "Nh薾 T骾 th辴 g?nguyenlieutrungthu6");
+			tinsert(tbSay, "Nh薾 T骾 th辴 heo/nguyenlieutrungthu7");
+			tinsert(tbSay, "Nh薾 B竛h u xanh/nguyenlieutrungthu8");
+			tinsert(tbSay, "Nh薾 B竛h h箃 sen/nguyenlieutrungthu9");
+			tinsert(tbSay, "Nh薾 B竛h Trung Thu g?nng/nguyenlieutrungthu10");
+			tinsert(tbSay, "Nh薾 B竛h Trung Thu heo quay/nguyenlieutrungthu111");
+			tinsert(tbSay, "Nh薾 H閜 b竛h Trung Thu/nguyenlieutrungthu121");
+			tinsert(tbSay, "Trang Sau/trungthutrang2");
+			elseif LoaiEvent == 2 then
+			tinsert(tbSay, "Nh薾 Bao l?x?nguyenlieuphao1");
+			tinsert(tbSay, "Nh薾 Ph竜 ti觰/nguyenlieuphao2");
+			tinsert(tbSay, "Nh薾 Ph竜 trung/nguyenlieuphao3");
+			tinsert(tbSay, "Nh薾 Ph竜 i/nguyenlieuphao4");
+			tinsert(tbSay, "Nh薾 phong ph竜 ti觰 c bi謙/nguyenlieuphao5");
+			tinsert(tbSay, "Nh薾 Phong ph竜 trung c bi謙/nguyenlieuphao6");
+			tinsert(tbSay, "Nh薾 Phong ph竜 i c bi謙/nguyenlieuphao7");
+			tinsert(tbSay, "Nh薾 phong ph竜 ti觰 thng/nguyenlieuphao8");
+			tinsert(tbSay, "Nh薾 Phong ph竜 trung thng/nguyenlieuphao9");
+			tinsert(tbSay, "Nh薾 Phong ph竜 i thng/nguyenlieuphao10");	
+			tinsert(tbSay, "Trang Sau/ghepphaotrang2");
+			elseif LoaiEvent == 3 then
+			tinsert(tbSay, "Nh薾 H閜 qu?gi竛g sinh/nguyenlieugiangsinh1");
+			tinsert(tbSay, "Nh薾 Hoa Tuy誸/nguyenlieugiangsinh2");
+			tinsert(tbSay, "Nh薾 C?R鑤/nguyenlieugiangsinh3");
+			tinsert(tbSay, "Nh薾 C祅h th玭g/nguyenlieugiangsinh4");
+			tinsert(tbSay, "Nh薾 N鉵 gi竛g sinh/nguyenlieugiangsinh5");
+			tinsert(tbSay, "Nh薾 Kh╪ cho祅g (xanh)/nguyenlieugiangsinh6");
+			tinsert(tbSay, "Nh薾 Kh╪ cho祅g ()/nguyenlieugiangsinh7");
+			tinsert(tbSay, "Nh薾 C﹜ th玭g/nguyenlieugiangsinh8");
+			tinsert(tbSay, "Nh薾 Ngi tuy誸 cho祅g kh╪ xanh (c bi謙)/nguyenlieugiangsinh9");
+			tinsert(tbSay, "Nh薾 Ngi tuy誸 cho祅g kh╪  (c bi謙)/nguyenlieugiangsinh10");
+			tinsert(tbSay, "Nh薾 Ngi tuy誸 c bi謙/nguyenlieugiangsinh111");
+			tinsert(tbSay, "Trang Sau/giangsinhtrang2");
+			elseif LoaiEvent == 4 then
+			tinsert(tbSay, "Nh薾 T骾 Чi H?Xu﹏/nguyenlieusinhnhat1");
+			tinsert(tbSay, "Nh薾 T骾 Чi H?H?nguyenlieusinhnhat2");
+			tinsert(tbSay, "Nh薾 T骾 Чi H?Thu/nguyenlieusinhnhat3");
+			tinsert(tbSay, "Nh薾 T骾 Чi H?Йng/nguyenlieusinhnhat4");
+			tinsert(tbSay, "Nh薾 Ch?M鮪g/nguyenlieusinhnhat5");
+			tinsert(tbSay, "Nh薾 Ch?VLTK/nguyenlieusinhnhat6");
+			tinsert(tbSay, "Nh薾 Ch?3/nguyenlieusinhnhat7");
+			tinsert(tbSay, "Nh薾 Ch?Tu鎖/nguyenlieusinhnhat8");
+			tinsert(tbSay, "Nh薾 Ch?Phong/nguyenlieusinhnhat9");
+			tinsert(tbSay, "Nh薾 Ch?H醓/nguyenlieusinhnhat10");
+			tinsert(tbSay, "Nh薾 Ch?Li猲/nguyenlieusinhnhat111");
+			tinsert(tbSay, "Trang Sau/sinhnhattrang2");
+			elseif LoaiEvent == 5 then
+			end
+			tinsert(tbSay, "K誸 th骳 i tho筰./no")			
+		CreateTaskSay(tbSay)
+	return 1;
+end
+
+function sinhnhattrang2()
+		local strFaction = GetFaction()
+		local nW,nX,nY = GetWorldPos();
+		local tbSay = {format(TITLEDIALOG, GetName(), GetAccount() ,nW,nX,nY)};	
+			tinsert(tbSay, "Nh薾 Ch?Th祅h/nguyenlieusinhnhat121");
+			tinsert(tbSay, "Nh薾 Чi H?L?Bao/nguyenlieusinhnhat131");
+			tinsert(tbSay, "Nh薾 B竛h Kem Nh??nguyenlieusinhnhat141");
+			tinsert(tbSay, "Nh薾 B竛h Kem C竧 Tng/nguyenlieusinhnhat151");
+			tinsert(tbSay, "Nh薾 B?Ph莕 Thng 1/nguyenlieusinhnhat161");
+			tinsert(tbSay, "Nh薾 B?Ph莕 Thng 2/nguyenlieusinhnhat171");
+			tinsert(tbSay, "Nh薾 B?Ph莕 Thng 3/nguyenlieusinhnhat181");
+			tinsert(tbSay, "Tr?l筰/nguyenlieuevent");
+			tinsert(tbSay, "K誸 th骳 i tho筰./no")			
+		CreateTaskSay(tbSay)
+	return 1;
+end
+
+function giangsinhtrang2()
+		local strFaction = GetFaction()
+		local nW,nX,nY = GetWorldPos();
+		local tbSay = {format(TITLEDIALOG, GetName(), GetAccount() ,nW,nX,nY)};	
+			tinsert(tbSay, "Ngi tuy誸 cho祅g kh╪ xanh (thng)/nguyenlieugiangsinh121");
+			tinsert(tbSay, "Ngi tuy誸 cho祅g kh╪  (thng/nguyenlieugiangsinh131");
+			tinsert(tbSay, "Ngi tuy誸 thng/nguyenlieugiangsinh141");
+			tinsert(tbSay, "B竛h b?/nguyenlieugiangsinh151");
+			tinsert(tbSay, "B竛h kem/nguyenlieugiangsinh161");
+			tinsert(tbSay, "G?l玦/nguyenlieugiangsinh171");
+			tinsert(tbSay, "B?nguy猲 li謚 gh衟 ngi tuy誸 kh╪ cho祅g xanh c bi謙/nguyenlieugiangsinh181");
+			tinsert(tbSay, "B?nguy猲 li謚 gh衟 ngi tuy誸 kh╪ cho祅g  c bi謙/nguyenlieugiangsinh191");
+			tinsert(tbSay, "B?nguy猲 li謚 gh衟 ngi tuy誸 c bi謙/nguyenlieugiangsinh201");
+			tinsert(tbSay, "Tr?l筰/nguyenlieuevent");
+			tinsert(tbSay, "K誸 th骳 i tho筰./no")			
+		CreateTaskSay(tbSay)
+	return 1;
+end
+
+function ghepphaotrang2()
+		local strFaction = GetFaction()
+		local nW,nX,nY = GetWorldPos();
+		local tbSay = {format(TITLEDIALOG, GetName(), GetAccount() ,nW,nX,nY)};	
+			tinsert(tbSay, "Nh薾 b?nguy猲 li謚 gh衟 Phong Ph竜 Ti觰/nguyenlieuphao111");
+			tinsert(tbSay, "Nh薾 b?nguy猲 li謚 gh衟 Phong Ph竜 Trung/nguyenlieuphao121");
+			tinsert(tbSay, "Tr?l筰/nguyenlieuevent");
+			tinsert(tbSay, "K誸 th骳 i tho筰./no")			
+		CreateTaskSay(tbSay)
+	return 1;
+end
+
+function trungthutrang2()
+		local strFaction = GetFaction()
+		local nW,nX,nY = GetWorldPos();
+		local tbSay = {format(TITLEDIALOG, GetName(), GetAccount() ,nW,nX,nY)};	
+			tinsert(tbSay, "Nh薾 b?nguy猲 li謚 gh衟 b竛h u xanh/nguyenlieutrungthu131");
+			tinsert(tbSay, "Nh薾 b?nguy猲 li謚 gh衟 b竛h h箃 sen/nguyenlieutrungthu141");
+			tinsert(tbSay, "Nh薾 b?nguy猲 li謚 gh衟 b竛h Trung Thu g?nng/nguyenlieutrungthu151");
+			tinsert(tbSay, "Nh薾 b?nguy猲 li謚 gh衟 b竛h Trung Thu heo quay/nguyenlieutrungthu161");
+			tinsert(tbSay, "Nh薾 b?nguy猲 li謚 i H閜 b竛h Trung Thu/nguyenlieutrungthu171");
+			tinsert(tbSay, "Nh薾 b?tranh V﹏ Du/nguyenlieutrungthu181");
+			tinsert(tbSay, "Nh薾 b?tranh Ti猲 V?nguyenlieutrungthu191");
+			tinsert(tbSay, "Tr?l筰/nguyenlieuevent");
+			tinsert(tbSay, "K誸 th骳 i tho筰./no")			
+		CreateTaskSay(tbSay)
+	return 1;
+end
+
+function nguyenlieusinhnhat1()
+AskClientForNumber("nguyenlieusinhnhat11",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieusinhnhat11(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1748,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieusinhnhat2()
+AskClientForNumber("nguyenlieusinhnhat22",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieusinhnhat22(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1749,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieusinhnhat3()
+AskClientForNumber("nguyenlieusinhnhat33",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieusinhnhat33(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1750,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieusinhnhat4()
+AskClientForNumber("nguyenlieusinhnhat44",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieusinhnhat44(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1751,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieusinhnhat5()
+AskClientForNumber("nguyenlieusinhnhat55",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieusinhnhat55(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1752,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieusinhnhat6()
+AskClientForNumber("nguyenlieusinhnhat66",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieusinhnhat66(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1753,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieusinhnhat7()
+AskClientForNumber("nguyenlieusinhnhat77",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieusinhnhat77(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1754,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieusinhnhat8()
+AskClientForNumber("nguyenlieusinhnhat88",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieusinhnhat88(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1755,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieusinhnhat9()
+AskClientForNumber("nguyenlieusinhnhat99",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieusinhnhat99(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1756,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieusinhnhat10()
+AskClientForNumber("nguyenlieusinhnhat1010",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieusinhnhat1010(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1757,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieusinhnhat111()
+AskClientForNumber("nguyenlieusinhnhat1111",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieusinhnhat1111(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1758,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieusinhnhat121()
+AskClientForNumber("nguyenlieusinhnhat1212",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieusinhnhat1212(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1759,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieusinhnhat131()
+AskClientForNumber("nguyenlieusinhnhat1313",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieusinhnhat1313(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1760,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieusinhnhat141()
+AskClientForNumber("nguyenlieusinhnhat1414",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieusinhnhat1414(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1761,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieusinhnhat151()
+AskClientForNumber("nguyenlieusinhnhat1515",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieusinhnhat1515(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1762,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieusinhnhat161()
+AskClientForNumber("nguyenlieusinhnhat1616",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieusinhnhat1616(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1756,1,0,0},nCount = num}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1757,1,0,0},nCount = num}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1758,1,0,0},nCount = num}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1759,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieusinhnhat171()
+AskClientForNumber("nguyenlieusinhnhat1717",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieusinhnhat1717(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1752,1,0,0},nCount = num*3}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1753,1,0,0},nCount = num*3}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1754,1,0,0},nCount = num*3}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1755,1,0,0},nCount = num*3}, "test", 1);
+end
+
+function nguyenlieusinhnhat181()
+AskClientForNumber("nguyenlieusinhnhat1818",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieusinhnhat1818(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1752,1,0,0},nCount = num*3}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1753,1,0,0},nCount = num*3}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1754,1,0,0},nCount = num*3}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1755,1,0,0},nCount = num*3}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1760,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieugiangsinh1()
+AskClientForNumber("nguyenlieugiangsinh11",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieugiangsinh11(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1311,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieugiangsinh2()
+AskClientForNumber("nguyenlieugiangsinh22",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieugiangsinh22(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1312,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieugiangsinh3()
+AskClientForNumber("nguyenlieugiangsinh33",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieugiangsinh33(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1313,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieugiangsinh4()
+AskClientForNumber("nguyenlieugiangsinh44",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieugiangsinh44(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1314,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieugiangsinh5()
+AskClientForNumber("nguyenlieugiangsinh55",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieugiangsinh55(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1315,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieugiangsinh6()
+AskClientForNumber("nguyenlieugiangsinh66",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieugiangsinh66(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1316,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieugiangsinh7()
+AskClientForNumber("nguyenlieugiangsinh77",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieugiangsinh77(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1317,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieugiangsinh8()
+AskClientForNumber("nguyenlieugiangsinh88",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieugiangsinh88(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1318,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieugiangsinh9()
+AskClientForNumber("nguyenlieugiangsinh99",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieugiangsinh99(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1319,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieugiangsinh10()
+AskClientForNumber("nguyenlieugiangsinh1010",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieugiangsinh1010(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1320,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieugiangsinh111()
+AskClientForNumber("nguyenlieugiangsinh1111",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieugiangsinh1111(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1321,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieugiangsinh121()
+AskClientForNumber("nguyenlieugiangsinh1212",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieugiangsinh1212(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1322,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieugiangsinh131()
+AskClientForNumber("nguyenlieugiangsinh1313",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieugiangsinh1313(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1323,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieugiangsinh141()
+AskClientForNumber("nguyenlieugiangsinh1414",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieugiangsinh1414(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1324,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieugiangsinh151()
+AskClientForNumber("nguyenlieugiangsinh1515",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieugiangsinh1515(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1325,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieugiangsinh161()
+AskClientForNumber("nguyenlieugiangsinh1616",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieugiangsinh1616(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1326,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieugiangsinh171()
+AskClientForNumber("nguyenlieugiangsinh1717",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieugiangsinh1717(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1327,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieugiangsinh181()
+AskClientForNumber("nguyenlieugiangsinh1818",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieugiangsinh1818(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1312,1,0,0},nCount = num*10}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1313,1,0,0},nCount = num}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1314,1,0,0},nCount = num*2}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1315,1,0,0},nCount = num}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1316,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieugiangsinh191()
+AskClientForNumber("nguyenlieugiangsinh1919",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieugiangsinh1919(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1312,1,0,0},nCount = num*10}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1313,1,0,0},nCount = num}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1314,1,0,0},nCount = num*2}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1315,1,0,0},nCount = num}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1317,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieugiangsinh201()
+AskClientForNumber("nguyenlieugiangsinh2020",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieugiangsinh2020(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1312,1,0,0},nCount = num*10}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1313,1,0,0},nCount = num}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1314,1,0,0},nCount = num*2}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1315,1,0,0},nCount = num}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1318,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieuphao1()
+AskClientForNumber("nguyenlieuphao11",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieuphao11(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1350,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieuphao2()
+AskClientForNumber("nguyenlieuphao22",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieuphao22(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1351,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieuphao3()
+AskClientForNumber("nguyenlieuphao33",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieuphao33(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1352,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieuphao4()
+AskClientForNumber("nguyenlieuphao44",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieuphao44(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1353,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieuphao5()
+AskClientForNumber("nguyenlieuphao55",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieuphao55(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1354,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieuphao6()
+AskClientForNumber("nguyenlieuphao66",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieuphao66(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1355,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieuphao7()
+AskClientForNumber("nguyenlieuphao77",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieuphao77(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1356,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieuphao8()
+AskClientForNumber("nguyenlieuphao88",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieuphao88(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1357,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieuphao9()
+AskClientForNumber("nguyenlieuphao99",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieuphao99(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1358,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieuphao10()
+AskClientForNumber("nguyenlieuphao1010",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieuphao1010(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1359,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieuphao111()
+AskClientForNumber("nguyenlieuphao1111",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieuphao1111(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1351,1,0,0},nCount = num*10}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1352,1,0,0},nCount = num*2}, "test", 1);
+end
+
+function nguyenlieuphao121()
+AskClientForNumber("nguyenlieuphao1212",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieuphao1212(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1352,1,0,0},nCount = num*10}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1353,1,0,0},nCount = num*2}, "test", 1);
+end
+
+function nguyenlieutrungthu1()
+AskClientForNumber("nguyenlieutrungthu11",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieutrungthu11(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1503,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieutrungthu2()
+AskClientForNumber("nguyenlieutrungthu22",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieutrungthu22(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1504,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieutrungthu3()
+AskClientForNumber("nguyenlieutrungthu33",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieutrungthu33(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1505,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieutrungthu4()
+AskClientForNumber("nguyenlieutrungthu44",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieutrungthu44(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1506,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieutrungthu5()
+AskClientForNumber("nguyenlieutrungthu55",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieutrungthu55(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1507,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieutrungthu6()
+AskClientForNumber("nguyenlieutrungthu66",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieutrungthu66(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1508,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieutrungthu7()
+AskClientForNumber("nguyenlieutrungthu77",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieutrungthu77(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1509,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieutrungthu8()
+AskClientForNumber("nguyenlieutrungthu88",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieutrungthu88(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1510,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieutrungthu9()
+AskClientForNumber("nguyenlieutrungthu99",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieutrungthu99(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1511,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieutrungthu10()
+AskClientForNumber("nguyenlieutrungthu1010",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieutrungthu1010(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1512,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieutrungthu111()
+AskClientForNumber("nguyenlieutrungthu1111",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieutrungthu1111(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1513,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieutrungthu121()
+AskClientForNumber("nguyenlieutrungthu1212",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieutrungthu1212(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1514,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieutrungthu131()
+AskClientForNumber("nguyenlieutrungthu1313",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieutrungthu1313(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1503,1,0,0},nCount = num*2}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1504,1,0,0},nCount = num*2}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1505,1,0,0},nCount = num*2}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1506,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieutrungthu141()
+AskClientForNumber("nguyenlieutrungthu1414",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieutrungthu1414(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1503,1,0,0},nCount = num*2}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1504,1,0,0},nCount = num*2}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1505,1,0,0},nCount = num*2}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1507,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieutrungthu151()
+AskClientForNumber("nguyenlieutrungthu1515",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieutrungthu1515(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1503,1,0,0},nCount = num*3}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1504,1,0,0},nCount = num*3}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1505,1,0,0},nCount = num*3}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1508,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieutrungthu161()
+AskClientForNumber("nguyenlieutrungthu1616",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieutrungthu1616(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1503,1,0,0},nCount = num*4}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1504,1,0,0},nCount = num*4}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1505,1,0,0},nCount = num*4}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1509,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieutrungthu171()
+AskClientForNumber("nguyenlieutrungthu1717",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieutrungthu1717(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1510,1,0,0},nCount = num}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1511,1,0,0},nCount = num}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1512,1,0,0},nCount = num}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1513,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieutrungthu181()
+AskClientForNumber("nguyenlieutrungthu1818",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieutrungthu1818(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1207,1,0,0},nCount = num}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1208,1,0,0},nCount = num}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1209,1,0,0},nCount = num}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1210,1,0,0},nCount = num}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1211,1,0,0},nCount = num}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1212,1,0,0},nCount = num}, "test", 1);
+end
+
+function nguyenlieutrungthu191()
+AskClientForNumber("nguyenlieutrungthu1919",0,1999,"Nh藀 S?Lng:") 
+end
+function nguyenlieutrungthu1919(num)
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1213,1,0,0},nCount = num}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1214,1,0,0},nCount = num}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1215,1,0,0},nCount = num}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1216,1,0,0},nCount = num}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1217,1,0,0},nCount = num}, "test", 1);
+		tbAwardTemplet:GiveAwardByList({tbProp = {6,1,1218,1,0,0},nCount = num}, "test", 1);
+end
+--------------------------------------------------------------
+--			 		H?tr?l祄 nv nhanh						--
+--------------------------------------------------------------
+function hotrolamnv()
+local szTitle = "Xin ch祇 <color=red>"..GetName().."<color>"
+local tbOpt =
+	{
+		{"H?tr?l祄 nhi謒 v?Ho祅g Kim",helpgoldquest},
+		{"H?tr?l祄 nhi謒 v?M玭 Ph竔",help_quest},
+		{"Tr?L筰",main},
+		{"Tho竧"},
+	}
+	CreateNewSayEx(szTitle, tbOpt)
+end
+--------------------------------------------------------------
+--			 		S鯽 Th莕 H祅h Ph?					--
+--------------------------------------------------------------
+function fixthanhanhphu()
+	DisabledUseTownP(0)
+	Msg2Player("Tr筺g th竔 s?d鬾g th?a ph?v?th莕 h祅h ph?c馻 Qu?nh﹏ s? tr?v?ban u!<enter> Nh鱪g Map ch?nh kh玭g s?d鬾g th莕 h祅h ph?kh玭g th?s?d鬾g t輓h n╪g n祔")
+end
+--------------------------------------------------------------
+--			 		Thay фi Tr筺g Th竔						--
+--------------------------------------------------------------
+function trangthai()
+local szTitle = "Xin ch祇 <color=red>"..GetName().."<color>"
+local tbOpt =
+	{
+		{"Luy謓 C玭g",luyencong},
+		{"Ch輓h Ph竔",chinhphai},
+		{"Trung L藀",trunglap},
+		{"T?Ph竔",taphai},
+		{"S竧 Th?,satthu},
+		{"Tr?L筰",main},
+		{"Tho竧"},
+	}
+	CreateNewSayEx(szTitle, tbOpt)
+end
+function luyencong()
+SetCurCamp(0)
+SetCamp(0)
+end
+function chinhphai()
+SetCurCamp(1)
+SetCamp(1)
+end
+function trunglap()
+SetCurCamp(3)
+SetCamp(3) 
+end
+function taphai()
+SetCurCamp(2)
+SetCamp(2) 
+end
+function satthu()
+SetCurCamp(4)
+SetCamp(4) 
+end
+--------------------------------------------------------------
+--			 		H?Tr?L祄 nv m玭 ph竔					--
+--------------------------------------------------------------
+tb_HelpQuest = {
+	[0] = {--Thieu lam OK
+		[1] = {
+			[1] = {"S?頲 phong l? H?Vi謓 V?T╪g. H鋍 頲 v?c玭g: Thi誹 L﹎ o Ph竝, C玭 ph竝, Quy襫 ph竝. N琲 ti誴 nh薾 nhi謒 v? T?Nh﹏ Phng Trng.<enter><color=red>Bc 1<color>: дn Phng Trng Thi襫 ph遪g (230/184), g苝 T?Nh﹏ Phng Trng, ti誴 nh薾 nhi謒 v?<enter><color=red>Bc 2<color>: V祇 trong Чt Ma Л阯g (210/188), ph輆 sau pho tng trong Чt Ma Л阯g c?1 con h蝝 nh? v祇 trong  nh b筰 nh鱪g t猲 C?Quan Nh﹏ (192/197), (203/200), (216/201) n khi l蕐 頲 Kim Li猲 Hoa.<enter><color=red>Bc 3<color>: Mang Kim Li猲 Hoa v?giao cho T?Nh﹏ Phng Trng , ho祅 th祅h nhi謒 v?},
+			[2] = {"G苝 T?Nh﹏ Phng Trng","дn Phng Trng Thi襫 ph遪g (230/184), g苝 T?Nh﹏ Phng Trng, ti誴 nh薾 nhi謒 v?,0,1,109,1598,3178},
+			[3] = {"Цnh b筰 nh鱪g t猲 C?Quan Nh﹏","V祇 trong Чt Ma Л阯g, ph輆 sau pho tng trong Чt Ma Л阯g c?1 con h蝝 nh? v祇 trong  nh b筰 nh鱪g t猲 C?Quan Nh﹏ n khi l蕐 頲 Kim Li猲 Hoa.",1,1,111,1544,3162},
+			[4] = {"G苝 T?Nh﹏ Phng Trng","Mang Kim Li猲 Hoa v?giao cho T?Nh﹏ Phng Trng , ho祅 th祅h nhi謒 v?,0,1,109,1598,3178},
+		},
+		[2] = {
+			[1] = {"S?頲 phong l? H?T?Kim Cang. H鋍 頲 v?c玭g: B蕋 чng Minh Vng. N琲 ti誴 nh薾 nhi謒 v? Huy襫 Bi..<enter><color=red>Bc 1<color>: дn Чt Ma Л阯g (210/188), t譵 g苝 Huy襫 Bi, ti誴 nh薾 nhi謒 v?<enter><color=red>Bc 2<color>: дn Bi謓 Kinh Ph?-> T﹜ Ph鬰 Ng璾 S琻 t譵 n╩ t猲 Man Di (280/185), (269/184), (264/185), (262/183), (277/187). Sau khi nh  5 con ?5 a ch?tr猲 s?c?d遪g ch?hi謓 l猲: <color=yellow>B筺  d箉 d?頲 5 t猲 Man Di, ch髇g h鴄 t?nay s?kh玭g qu藋 ph?n鱝...<color>.<enter><color=red>Bc 3<color>: Tr?l筰 Чt Ma Л阯g g苝 Huy襫 Bi ph鬰 m謓h, ho祅 th祅h nhi謒 v?},
+			[2] = {"G苝 Huy襫 Bi","дn Чt Ma Л阯g (210/188), t譵 g苝 Huy襫 Bi, ti誴 nh薾 nhi謒 v?",0,1,105,1599,3191},
+			[3] = {"Цnh b筰 Man Di th?nh蕋 ?Ph鬰 Ng璾 S琻 T﹜","Цnh b筰 Man Di th?nh蕋 ?Ph鬰 Ng璾 S琻 T﹜",1,1,41,2235,2970},
+			[4] = {"Цnh b筰 Man Di th?hai ?Ph鬰 Ng璾 S琻 T﹜","Цnh b筰 Man Di th?hai ?Ph鬰 Ng璾 S琻 T﹜",1,1,41,2160,2943},
+			[5] = {"Цnh b筰 Man Di th?ba ?Ph鬰 Ng璾 S琻 T﹜","Цnh b筰 Man Di th?ba ?Ph鬰 Ng璾 S琻 T﹜",1,0,41,264,185},
+			[6] = {"Цnh b筰 Man Di th?t??Ph鬰 Ng璾 S琻 T﹜ (Ngay g莕 con th?3)","Цnh b筰 Man Di th?t??Ph鬰 Ng璾 S琻 T﹜ (Ngay g莕 con th?3)",1,1,41,2094,2926},
+			[7] = {"Цnh b筰 Man Di th?n╩ ?Ph鬰 Ng璾 S琻 T﹜","Цnh b筰 Man Di th?n╩ ?Ph鬰 Ng璾 S琻 T﹜",1,1,41,2210,3010},
+			[8] = {"Tr?v?ph鬾g m謓h Huy襫 Bi","Tr?l筰 Чt Ma Л阯g g苝 Huy襫 Bi ph鬰 m謓h, ho祅 th祅h nhi謒 v?,0,1,105,1599},
+		},
+		[3] = {
+			[1] = {"S?頲 phong l? H?Ph竝 La H竛. H鋍 頲 v?c玭g: La H竛 Tr薾. N琲 ti誴 nh薾 nhi謒 v? Huy襫 Gi竎.<enter><color=red>Bc 1<color>: дn h?Ph鉵g sinh t譵 g苝 Huy襫 Gi竎 <color=yellow>(220/193)<color>, ti誴 nh薾 nhi謒 v?<enter><color=red>Bc 2<color>: дn r鮪g th竝 b猲 ngo礽 ch颽, ph竧 hi謓 nh鱪g k?c?h祅h tung m?竚. Цnh b筰 M筩h Anh <color=yellow>(238/200), (231/204)<color>, cho n khi n祇 bi誸 頲 b鋘 ch髇g ch輓h l?gi竛 甶謕 c馻 Kim qu鑓, ng ng c馻 b鋘 ch髇g  nh c緋 th祅h c玭g <color=yellow>B竧 Nh?Ba La M藅  T﹎ Kinh<color> hi謓 gi? ch箉 n Kim Quang ng ?Ki誱 C竎 T﹜ B綾.<enter><color=red>Bc 3<color>: дn Phng Tng Ph?-> Ki誱 C竎 Th鬰 Чo -> Kim Quang чng, nh b鋘 Tr閙 kinh <color=yellow>(218/182), (179/186), (198/196)<color> n khi l蕐 l蕐 l筰 頲 <color=yellow>B竧 Nh?Ba La M藅  T﹎ Kinh<color>.<enter><color=red>Bc 4<color>: Tr?l筰 Thi誹 L﹎, n h?Ph鉵g sinh, mang kinh giao cho Huy襫 Gi竎, ho祅 th祅h nhi謒 v?},
+			[2] = {"дn H?Ph鉵g Sinh g苝 Huy襫 Gi竎","дn h?Ph鉵g sinh t譵 g苝 Huy襫 Gi竎 <color=yellow>(220/193)<color>, ti誴 nh薾 nhi謒 v?",0,0,103,220,193},
+			[3] = {"Цnh b筰 M筩h Anh","Цnh b筰 M筩h Anh",1,1,103,1908,3210},
+			[4] = {"Цnh b筰 b鋘 tr閙 kinh ?Kim Quang чng",	"дn r鮪g th竝 b猲 ngo礽 ch颽, ph竧 hi謓 nh鱪g k?c?h祅h tung m?竚. Цnh b筰 M筩h Anh",1,0,4,218,182},
+			[5] = {"Tr?l筰 g苝 Huy襫 Gi竎","Tr?l筰 Thi誹 L﹎, n h?Ph鉵g sinh, mang kinh giao cho Huy襫 Gi竎, ho祅 th祅h nhi謒 v?,0,0,103,220,193},
+		},
+		[4] = {
+			[1] = {"S?頲 phong l? Truy襫 Kinh La H竛. H鋍 頲 v?c玭g: S?T?H鑞g. N琲 ti誴 nh薾 nhi謒 v? T?Nh﹏ Phng Trng.<enter><color=red>Bc 1<color>: дn Phng Trng Thi襫 ph遪g <color=yellow>(230/184)<color> t譵 g苝 <color=green>T?Nh﹏ Phng trng<color>, ti誴 nh薾 nhi謒 v?<enter><color=red>Bc 2<color>: дn Thi誹 L﹎ M藅 Th蕋 <color=yellow>(168/166)<color> ?ph輆 B綾 Ch颽 Thi誹 L﹎, tr?l阨 3 c﹗ h醝  v祇 頲 trong M藅 Th蕋 <color=yellow>(th?t?tr?l阨 l?1 - 2 - 1)<color>.<enter><color=red>Bc 3<color>: Цnh <color=green>Kim Cang Nh﹏<color> <color=yellow>(213/205), (203/198), (204/205), (208/201)<color>  l蕐 頲 kh萿 quy誸.<enter><color=red>Bc 4<color>: дn cu鑙 hang ng <color=yellow>(230/207)<color> s?nh譶 th蕐 m閠 th筩h th蕋, nh蕄 v祇 phi課 , c ng kh萿 quy誸 s?c?th?c飊g <color=green>Nh?T╪g<color> i tho筰, ph秈 ch??nghe th?t?n╩ c﹗ n鉯 c馻 <color=green>Nh?T╪g<color> (c竎 b筺 n猲 ghi l筰).<enter><color=red>Bc 5<color>: Tr?l筰 Phng trng Thi襫 ph遪g, g苝 <color=green>T?Nh﹏ Phng Trng<color>, thu藅 l筰 th?t?n╩ c﹗ n鉯 c馻 <color=green>Nh?T╪g<color>:<enter>\t\t- N誹 nh?th?t?ch輓h x竎, ho祅 th祅h nhi謒 v?<enter>\t\t- N誹 nh?th?t?b?sai, <color=green>T?Nh﹏ Phng trng<color> : <color=yellow>Ta kh玭g hi觰 頲 ?ngh躠 n╩ c﹗ n祔, c?ph秈 ngi  b?l莔 l蒼 th?t?kh玭g?<color> B筺 ph秈 th鵦 hi謓 l筰 nhi謒 v?},
+			[2] = {"дn g苝 T?Nh﹏ Phng Trng.","дn g苝 T?Nh﹏ Phng Trng.",0,1,109,1598,3178},
+			[3] = {"дn Thi誹 L﹎ m藅 th蕋","дn Thi誹 L﹎ M藅 Th蕋 ?ph輆 B綾 Ch颽 Thi誹 L﹎, tr?l阨 3 c﹗ h醝  v祇 頲 trong M藅 Th蕋",1,0,103,168,166},
+			[4] = {"Цnh b筰 kim cang nh﹏ th?nh蕋","Цnh b筰 kim cang nh﹏ th?nh蕋",1,0,113,213,206},
+			[5] = {"Цnh b筰 kim cang nh﹏ th?hai","Цnh b筰 kim cang nh﹏ th?hai",1,0,113,203,199},
+			[6] = {"Цnh b筰 kim cang nh﹏ th?ba","Цnh b筰 kim cang nh﹏ th?ba",1,0,113,204,205},
+			[7] = {"Цnh b筰 kim cang nh﹏ th?t?,"Цnh b筰 kim cang nh﹏ th?t?,1,0,113,208,201},
+			[8] = {"цi tho筰 c飊g Nh?T╪g","цi tho筰 c飊g Nh?T╪g",1,0,113,230,207},
+			[9] = {"Tr?l筰 g苝 T?Nh﹏ Phng Trng","Tr?l筰 g苝 T?Nh﹏ Phng Trng",0,1,109,1598,3178},
+		},
+		[5] = {
+			[1] = {"S?頲 phong l? Ph鬰 Ma Thi猲 Vu琻g. H鋍 頲 v?c玭g: Ho祅h T秓 L鬰 H頿, Ma Ha V?Lng, Long H?Tr秓. N琲 ti誴 nh薾 nhi謒 v? Huy襫 T?<enter><color=red>Bc 1<color>: дn T祅g Kinh C竎(218/190) , g苝 Huy襫 T? ti誴 nh薾 nhi謒 v?<enter><color=red>Bc 2<color>: дn s﹏ luy謓 v?g苝 Tr鮪g T﹎ (224/178). H緉 mu鑞 b筺 ki誱 cho h緉 1 con g?quay.<enter><color=red>Bc 3<color>: дn T鰑 l莡 ?Bi謓 Kinh (210/193), b?500 lng mua g?quay mang v?giao cho Tr鮪g T﹎.<enter><color=red>Bc 4<color>: дn r鮪g th玭g, trong r鮪g l?m閠 m?cung c﹜ th玭g, trong m?cung c?r蕋 nhi襲 , c╪ c?theo s?s緋 x誴 T? Ng? Tam, s?t譵 頲 t秐g  c?gi蕌 t祅g th?(231/170), y n?ra s?l蕐 頲 <color=yellow>D辌h C﹏ Kinh<color>.<enter><color=red>Bc 5<color>: Tr?l筰 T祅g Kinh C竎, mang D辌h C﹏ Kinh giao cho Huy襫 T? ho祅 th祅h nhi謒 v?},
+			[2] = {"дn T祅g Kinh C竎 g苝 Huy襫 T?,"дn T祅g Kinh C竎 g苝 Huy襫 T?,0,1,104,1594,3183},
+			[3] = {"G苝 Tr鮪g T﹎ t筰 s﹏ luy謓 v?,"G苝 Tr鮪g T﹎ t筰 s﹏ luy謓 v?,0,0,103,224,178},
+			[4] = {"Mua g?quay t筰 t鰑 l莡 Bi謓 Kinh","Mua g?quay t筰 t鰑 l莡 Bi謓 Kinh",0,0,37,210,193},
+			[5] = {"Mang g?quay v?cho Tr鮪g T﹎","Mang g?quay v?cho Tr鮪g T﹎",0,0,103,224,178},
+			[6] = {"дn r鮪g th玭g t譵 D辌h Ch﹏ Kinh","дn r鮪g th玭g t譵 D辌h Ch﹏ Kinh",1,0,103,231,170},
+			[7] = {"Mang D辌h C﹏ Kinh cho Huy襫 T?,"Mang D辌h C﹏ Kinh cho Huy襫 T?,0,1,104,1594,3183},
+		},
+		[6] = {
+			[1] = {"S?頲 phong l? V?Lng Th輈h T玭. N琲 nh薾 nhi謒 v? Huy襫 Nan.<enter><color=red>Bc 1<color>: дn La H竛 阯g <color=yellow>(202/192)<color>, g苝 Huy襫 Nan, ti誴 nh薾 nhi謒 v?<enter><color=red>Bc 2<color>: дn La H竛 tr薾 (l鑙 甶 v祇 ph輆 sau tng Ph藅 trong La H竛 阯g), nh b筰 c竎 t猲 T╪g Binh u L躰h <color=yellow>(197/211), (211/224), (206/196), (229/208)<color>, b筺 s?l蕐 頲 Ni謒 Ch﹗, Thi襫 trng, M閏 Ng?v?B竧 Vu.<enter><color=red>Bc 3<color>: Mang 4 b秓 v藅 tr猲 v?giao cho Huy襫 Nan, ho祅 th祅h nhi謒 v?"},
+			[2] = {"дn La H竛 阯g g苝 Huy襫 Nan","дn La H竛 阯g g苝 Huy襫 Nan",0,0,103,202,192},
+			[3] = {"Цnh b筰 t╪g u l躰h","дn La H竛 tr薾 (l鑙 甶 v祇 ph輆 sau tng Ph藅 trong La H竛 阯g), nh b筰 c竎 t猲 T╪g Binh u L躰h",1,1,114,1580,3380},
+			[4] = {"Mang 4 b秓 v藅 v?cho Huy襫 Nan",0,0,103,202,192},
+		},
+
+		[7] = {
+			[1] = {"<color=red>Y猽 c莡<color>: ngi ch琲  xu蕋 s? ng c蕄 tr猲 60, ch璦 gia nh藀 bang ph竔 n祇, c?th?n g苝 trng m玭 c馻 ph竔 giao 5 v筺 lng  tr飊g ph秐 s?m玭. T? v?sau c?th?t飝 ?ra v祇 s?m玭.<enter><color=red>H鋍 頲 v?c玭g<color>: Nh?Lai Thi猲 Di謕, D辌h C﹏ Kinh.<enter>Л頲 ph遪g l祄 H?Ph竝 Trng L穙."},
+		},
+		[8] = {
+			[1] = {"<color=red>Y猽 c莡<color>: T?c蕄 <color=yellow>90<color> tr?l猲, danh v鋘g tr猲 <color=yellow>240<color> 甶觤, l?<color=yellow>Thi誹 L﹎ k?danh  t?color>, trc m総 ch璦 gia nh藀 m玭 ph竔 n祇.(Ch?)<enter><color=red>Ph莕 thng<color>: h鋍 頲 <color=yellow>Чt Ma ч Giang , Ho祅h T秓 Thi猲 Qu﹏ , V?Tng Tr秏<color>. Danh v鋘g 頲 <color=yellow>30<color> 甶觤. (T蕋 c?c竎 m玭 ph竔 kh竎 u c?th?l祄 nhi謒 v?n祔  nh薾 ph莕 thng 甶觤 danh v鋘g, nh璶g kh玭g h鋍 頲 chi猽 th鴆).<enter><color=red>Bc 1<color>: T?b蕋 k?th祅h ch輓h n祇 b筺 甶 Xa phu -> Hoa S琻 C秐h k?trng g苝 Thng B竎h L?v?L?мch Phong <color=yellow>(326/224)<color>, nh薾 nhi謒 v?<enter><color=red>Bc 2<color>: V?Thi誹 L﹎ n Чt Ma Л阯g <color=yellow>(210/188)<color> t譵 g苝 Huy襫 Bi.<enter><color=red>Bc 3<color>: Sang La H竛 阯g <color=yellow>(202/192)<color>, g苝 Huy襫 Nan.<enter><color=red>Bc 4<color>: Tr?l筰 Чt Ma Л阯g n鉯 chuy謓 v韎 Huy襫 Bi nh薾 l謓h b礽  甶 th鵦 hi謓 nhi謒 v?<enter><color=red>Bc 5<color>: Quay l筰 Hoa S琻 C秐h k?trng g苝 Thng B竎h L?v?L?мch Phong  a l謓h b礽.<enter><color=red>Bc 6<color>: Цnh b筰 Kim Qu鑓 Tng L躰h <color=yellow>(323/240)<color> r錳 g苝 Thng B竎h L?v?L?мch Phong b竜 tin.<enter><color=red>Bc 7<color>: V?Thi誹 L﹎ n Чt Ma Л阯g t譵 g苝 Huy襫 Bi b竜 tin.<enter><color=red>Bc 8<color>: Sang La H竛 阯g, g苝 Huy襫 Nan b竜 tin, ho祅 th祅h nhi謒 v?"},
+			[2] = {"L猲 Hoa S琻 C秐h K?Trng g苝 Thng B竎h L?v?L?D辌h Phong","L猲 Hoa S琻 C秐h K?Trng g苝 Thng B竎h L?v?L?D辌h Phong",0	,0,	2,	326,	224},
+			[3] = {"T譵 g苝 Huy襫 Bi","V?Thi誹 L﹎ n Чt Ma Л阯g <color=yellow>(210/188)<color> t譵 g苝 Huy襫 Bi."	,0,	1	,105,1599	,3191},
+			[4] = {"дn La H竛 阯g g苝 Huy襫 Nan","Sang La H竛 阯g <color=yellow>(202/192)<color>, g苝 Huy襫 Nan."	,0,	0	,103	,202	,192},
+			[5] = {"T譵 g苝 Huy襫 Bi nh薾 l謓h b礽.","Tr?l筰 Чt Ma Л阯g n鉯 chuy謓 v韎 Huy襫 Bi nh薾 l謓h b礽  甶 th鵦 hi謓 nhi謒 v?",0,1,105,1599,3191},
+			[6] = {"Tr?l筰 t譵 Thng B竎h L?v?L?D辌h Phong a l謓h b礽.","Quay l筰 Hoa S琻 C秐h k?trng g苝 Thng B竎h L?v?L?мch Phong  a l謓h b礽.",	0,	0,	2,	326,	224},
+			[7] = {"Ti猽 di謙 Kim Qu鑓 tng l躰h","Цnh b筰 Kim Qu鑓 Tng L躰h <color=yellow>(323/240)",	1,	0,	2,	323,	240},
+			[8] = {"Tr?l筰 t譵 Thng B竎h L?v?L?D辌h Phong b竜 tin ti猽 di謙 Kim Qu鑓 tng l躰h.","Tr?l筰 t譵 Thng B竎h L?v?L?D辌h Phong b竜 tin ti猽 di謙 Kim Qu鑓 tng l躰h",	0,	0,	2,	326,	224},
+			[9] = {"Tr?v?t譵 g苝 Huy襫 Bi b竜 tin","Tr?v?t譵 g苝 Huy襫 Bi b竜 tin",	0,	1,	105,	1599,	3191},
+			[10] = {"B竜 tin cho Huy襫 Nan","B竜 tin cho Huy襫 Nan",	0,	0,	103,	202,	192},
+		},
+		[9] = {
+			[1] = {"M藅 t辌h k?n╪g 120 c?th?i t筰 chng m玭. <enter>V藅 ph萴 c莕 thi誸  i:<enter>1 quy觧 B祅 Nhc T﹎ Kinh, 1 b?s竎h k?n╪g 90 c馻 m玭 ph竔 m譶h, 1 vi猲 Tinh H錸g B秓 Th筩h v?1 vi猲 Th駓 Tinh."},
+		},
+		[10] = {
+			[1] = {"<color=red>Bc 1<color>: дn Bi謓 Kinh ph?r錳 甶 theo hng t﹜ nam n ch颽 Thi誹 L﹎. V祇 trong ch颽 g苝 Tri T╪g Kh竎h (211/195) 玭g ta mu鑞 b筺 ch鴑g t?4 ph萴 ch蕋: X輈h m trung t﹎, h筼 nhi猲 ch輓h kh? ki猲 nh蒼 b竧 t v?v?t?v?ng?<enter><color=red>Bc 2<color>: Quay l筰 Bi謓 Kinh ph? n t譵 T﹏ Kh雐 T藅 (220/187) l蕐 頲 Qu秐g Ho綾 Hng.<enter><color=red>Bc 3<color>: G苝 Kim Qu鑓 V?S?(209/201) nh薾 頲 Ki猲 Tinh Th筩h.<enter><color=red>Bc 4<color>: дn c鎛g th祅h ph輆 B綾 T竛 g蓇 v韎 V?Binh Th祅h M玭 (198/187), h緉 s?h醝 b筺 v?l遪g trung th祅h, b筺 h穣 ch鋘 c﹗ tr?l阨 th?hai 頲 t苙g X輈h уng Kho竛g.<enter><color=red>Bc 5<color>: Mang c?3 m鉵 n祔 t苙g cho Ngi ╪ m祔 (210/186) v?頲 giao cho m閠 L?th? C莔 l?th? v?ch颽 Thi誹 L﹎ giao l筰 cho Tri T╪g Kh竎h , th?l?頲 ti誴 nh薾 l祄  t?k?danh"},
+			[2] = {"G苝 Tri Kh竎h T╪g	","дn Bi謓 Kinh ph?r錳 甶 theo hng t﹜ nam n ch颽 Thi誹 L﹎. V祇 trong ch颽 g苝 Tri T╪g Kh竎h",0	,0	,103,	211,	195},
+			[3] = {"дn Bi謓 Kinh t譵 T莕 Kh雐 T藅 l蕐 Qu秐g H綾 Hng","Quay l筰 Bi謓 Kinh ph? n t譵 T﹏ Kh雐 T藅 (220/187) l蕐 頲 Qu秐g Ho綾 Hng",	0,	0,	37,	220	,187},
+			[4] = {"G苝 Kim Qu鑓 V?S?l蕐 Kim Tinh Th筩h","G苝 Kim Qu鑓 V?S?(209/201) nh薾 頲 Ki猲 Tinh Th筩h"	,0,	0,	37,	209	,201},
+			[5] = {"N鉯 chuy謓 v韎 v?binh th祅h m玭 ph輆 b綾",	"дn c鎛g th祅h ph輆 B綾 T竛 g蓇 v韎 V?Binh Th祅h M玭 (198/187), h緉 s?h醝 b筺 v?l遪g trung th祅h, b筺 h穣 ch鋘 c﹗ tr?l阨 th?hai 頲 t苙g X輈h уng Kho竛g",0	,0,	37,	198	,187},
+			[6] = {"T譵 g苝 ngi ╪ m祔 t苙g 3 b秓 v藅","Mang c?3 m鉵 n祔 t苙g cho Ngi ╪ m祔 (210/186) v?頲 giao cho m閠 L?th?	,0	,1,	37,	1685,	2998},
+			[7] = {"Tr?v?giao th?cho Tri Kh竎h T╪g","C莔 l?th? v?ch颽 Thi誹 L﹎ giao l筰 cho Tri T╪g Kh竎h , th?l?頲 ti誴 nh薾 l祄  t?k?danh",	0,	0,	103,	211,	195},
+		},
+	},
+	[1] = {--Thien vuong OK
+		[1] = {
+			[1] = {"S?頲 phong l? Trng Th?V? H鋍 頲 v?c玭g: Thi猲 Vng Thng Ph竝, Thi猲 Vng o ph竝, Thi猲 Vng Ch飝 ph竝, N琲 ti誴 nh薾 nhi謒 v? Ti襫 S?Vng T?<enter>C竎 bc th鵦 hi謓 nhi謒 v?enter><color=red>Bc 1<color>: дn Чi 謓 (201/198) g苝 Ti襫 S?Vng T?nh薾 nhi謒 v?  t譵 3 vi猲 K?Huy誸 Th筩h.<enter><color=red>Bc 2<color>: дn S琻 чng (225/185) ph輆 ng b綾 c馻 o, t譵 nh Kim Mi猽 Vng (225/201),(196/191), X?L?Tinh (234/196), Чi Ho祅 H飊g (210/195),(209/185) cho n khi nh薾  3 vi猲 K?Huy誸 Th筩h<enter><color=red>Bc 3<color>: Mang K?Huy誸 Th筩h v?giao cho Ti襫 S?Vng T? ho祅 th祅h nhi謒 v?"},
+			[2] = {"G苝 Vng T?,"",0,1,60,1599,3185},
+			[3] = {"Цnh Kim Mi猽 Vng","",1,1,65,1810,3210},
+			[4] = {"V?g苝 Vng T?,"",0,1,60,1599,3185},
+		},
+		[2] = {
+			[1] = {"S?頲 phong l? Th?Tr筰 H穘 Tng. H鋍 頲 v?c玭g: T躰h T﹎ quy誸. N琲 ti誴 nh薾 nhi謒 v? H鱱 S?Dng H?<enter>C竎 bc th鵦 hi謓 nhi謒 v?enter><color=red>Bc 1<color>: дn ph輆 Nam T萴 Cung g苝 H鱱 S?Dng H?(218/198) nh薾 nhi謒 v?<enter><color=red>Bc 2<color>:  Ba L╪g Huy謓 -> V?L╪g S琻 -> B筩h Th駓 чng. V祇 ng nh t猲 Th?Ph?u m鬰 (203/194), (194/196), (206/201) n khi nh薾 頲 1 l?c?G蕀.<enter><color=red>Bc 3<color>: Mang c?v?giao cho H鱱 S?Dng H?(218/198), ho祅 th祅h nhi謒 v?<enter><color=red>Ch??color>: Цnh 甶 nh l筰 c?3 Th?Ph?u M鬰 n khi nh薾 頲 C?G蕀"},
+			[2] = {"G苝 Dng H?,"",0,1,59,1749,3173},
+			[3] = {"Th?ph?u m鬰 1","",1,1,71,1630,3114},
+			[4] = {"Th?ph?u m鬰 2","",1,1,71,1554,3149},
+			[5] = {"Th?ph?u m鬰 3","",1,1,71,1650,3216},
+			[6] = {"G苝 Dng H?,"",0,1,59,1749,3173},
+		},
+		[3] = {
+			[1] = {"S?頲 phong l? Chng У u L躰h. H鋍 頲 v?c玭g: B竧 Phong Tr秏, Dng Quan Tam Di謕, H祅g V﹏ Quy誸, N琲 ti誴 nh薾 nhi謒 v? T?S?C?B竎h.<enter>C竎 bc th鵦 hi謓 nhi謒 v?enter><color=red>Bc 1<color>: дn ph輆 T﹜ Qu秐g Trng g苝 T?S?C?B竎h (202/193). Nh薾 l阨 gi髉 玭g ta t譵 Thi猲 Vng L謓h.<enter><color=red>Bc 2<color>:  Ba L╪g huy謓 -> Mi猽 L躰h -> Y課 T?чng, nh b筰 B竜 T?u (191/210) cho n khi nh薾 頲 Thi猲 Vng L謓h m韎 th玦.<enter><color=red>Bc 3<color>: Mang Tr?v?giao Thi猲 Vng L謓h cho T?S?C?B竎h (202/193), ho祅 th祅h nhi謒 v?"},
+			[2] = {"G苝 C?B竎h","",0,1,59,1619,3092},
+			[3] = {"Цnh B竜 t?u l蕐 Thi猲 Vng l謓h","",1,1,77,1528,3360},
+			[4] = {"V?g苝 C?B竎h","",0,1,59,1619,3092},
+		},
+		[4] = {
+			[1] = {"S?頲 phong l? Th駓 Чo Th鑞g L躰h. H鋍 頲 v?c玭g: 筺 H錸 Th輈h, N琲 ti誴 nh薾 nhi謒 v? L?V﹏ Vi詎.<enter>C竎 bc th鵦 hi謓 nhi謒 v?enter><color=red>Bc 1<color>: дn Thi猲 Vng Чi 謓 (214/192) g苝 Thi猲 H?Ph竝 L?V﹏ Vi詎 nh薾 nhi謒 v?<enter><color=red>Bc 2<color>: дn Ba L╪g Huy謓 g苝 Ng?th莕 Y (199/200). g ta n鉯 c莕 ph秈 c?2 lo筰 dc li謚 l?v秠 th籲 l籲 l鯽 v?l玭g mai r颽 l鬰 m穙.<enter><color=red>Bc 3<color>: T?Ba L╪g Huy謓 -> V?L╪g S琻 -> Ph鬰 L璾 чng. Цnh c竎 con Th籲 L籲  (179/190), (216/190), (204/192), (188/183) l蕐 v秠 th籲 l籲 l鯽.<enter><color=red>Bc 4<color>: V?Thi猲 Vng Фo g苝 l穙 Ng?g (179/210). g 蕐 ch蕄 nh薾 cho b筺 con r颽 xanh v韎 甶襲 ki謓 b筺 ph秈 t譵 cho 玭g 蕐 v礽 con giun t v?l祄 m錳 c﹗.<enter><color=red>Bc 5<color>: Qua g苝 c藆 b?Th駓 Sinh (184/212). C藆 ta ng ?o cho b筺 v礽 con giun t n誹 b筺 t譵 cho c藆 ta m鉵 tr鴑g lu閏 c藆 ta 璦 th輈h.<enter><color=red>Bc 6<color>: G苝 Ng?Ph?H?T萿 (190/213). Nh薾 l阨 甶 mua d飉 m閠 輙 Li猲 T?<enter><color=red>Bc 7<color>: V?Ba l╪g Huy謓, n Ti謒 t筽 h鉧 (199/198) mua h箃 sen 甧m v?cho Ng?Ph?H?T萿.<enter><color=red>Bc 8<color>: L莕 lt g苝 : Ng?Ph?H?T萿 -> b?Th駓 Sinh -> l穙 Ng?g.<enter><color=red>Bc 9<color>: L蕐 頲 2 v藅 ph萴, 甧m v?Чi 謓 cho L?V﹏ Vi詎, ho祅 th祅h nhi謒 v?"},
+			[2] = {"G苝 L?V╪ Vi詎","",0,1,61,1603,3191},
+			[3] = {"Ng?th莕 y","",0,1,53,1600,3211},
+			[4] = {"Цnh th籲 l籲  l蕐 v葃 th籲 l籲 l鯽","",1,1,73,1431,3052},
+			[5] = {"G苝 Ng?玭g","",0,1,59,1429,3378},
+			[6] = {"Th駓 Sinh","",0,1,59,1479,3405},
+			[7] = {"H?T萿","",0,0,59,190,213},
+			[8] = {"T筽 h鉧 Ba L╪g Huy謓","",0,0,53,199,198},
+			[9] = {"H?T萿","",0,0,59,190,213},
+			[10] = {"Th駓 Sinh","",0,1,59,1479,3405},
+			[11] = {"G苝 Ng?玭g","",0,1,59,1429,3378},
+			[12] = {"G苝 L?V╪ Vi詎","",0,1,61,1603,3191},
+		},
+		[5] = {
+			[1] = {"S?頲 phong l? H?Фo Tng Qu﹏. H鋍 頲 v?c玭g: Kim Chung Tr竜. N琲 ti誴 nh薾 nhi謒 v? мa H?Ph竝 H?Th祅h.<enter>C竎 bc th鵦 hi謓 nhi謒 v?enter><color=red>Bc 1<color>: G苝 мa H?Ph竝 H?Th祅h (209/196) nh薾 nhi謒 v?<enter><color=red>Bc 2<color>: дn чng ёnh h?(209/196) ?ph輆 ng Thi猲 Vng Фo. V祇 t莕g 2, nh Th駓 Qu竔 (209/196) n khi n祇 lm 頲  ng?s綾.<enter><color=red>Bc 3<color>: Tr?V?trao  ng?s綾 cho мa H?Ph竝 H?Th祅h (209/196), ho祅 th祅h nhi謒 v?"},
+			[2] = {"G苝 H?Th祅h","",0,1,59,1672,3145},
+			[3] = {"Цnh Th駓 Qu竔 l蕐 Ц ng?s綾","",1,1,67,1420,3140},
+			[4] = {"G苝 H?Th祅h","",0,1,59,1672,3145},
+		},
+		[6] = {
+			[1] = {"S?頲 phong l? K譶h Thi猲 Nguy猲 So竔. N琲 ti誴 nh薾 nhi謒 v? Thi猲 Vng Bang Ch?Dng Anh.<enter>C竎 bc th鵦 hi謓 nhi謒 v?enter><color=red>Bc 1<color>: дn T萴 Cung g苝 bang ch?Dng Anh (223/196), nh薾 nhi謒 v?甶 l蕐 Thi猲 Vng Di Th?<enter><color=red>Bc 2<color>: Ra b課 t祏 (177/216), n Thanh Loa o.<enter><color=red>Bc 3<color>: Цnh m閠 trong 5 con m穘h th? C鉩 Tinh (194/195), (201/187), C?S蕌 Tinh (184/188), (186/197), Th籲 L籲 Tinh (206/194) l蕐 ch譨 kh鉧.<enter><color=red>Bc 4<color>: C?頲 ch譨 kh鉧, n m?rng tr猲 Thanh Loa o (205/186). Ph竧 hi謓 rng tr鑞g kh玭g. Di Th? b?m閠 nh鉳 ngi l蕐 甶, ch箉 v祇 Thanh Loa s琻 ng.<enter><color=red>Bc 5<color>: V祇 Thanh Loa s琻 ng nh b筰 у T?(240/199). L蕐 l筰 頲 Di Th?<enter><color=red>Bc 6<color>: Mang Di th?v?cho bang ch?Dng Anh (223/196), ho祅 th祅h nhi謒 v?"},
+			[2] = {"G苝 Dng Anh","",0,1,62,1609,3199},
+			[3] = {"Ra b課 t祏 甶 Thanh Loa Фo","",1,1,59,1416,3467},
+			[4] = {"Ti猽 di謙 C鉩 tinh ki誱 ch譨 kh鉧","",1,1,68,1552,3125},
+			[5] = {"M?rng t譵 ki誱 b鴆 th?,"",1,1,68,1643,2985},
+			[6] = {"Цnh b筰 у T?l蕐 thi猲 vng di th?,"",1,1,69,1920,3190},
+			[7] = {"Mang di th?cho bang ch?Dng Anh","",0,1,62,1609,3199},
+		},
+		[7] = {
+			[1] = {"Nhi謒 v?tr鮪g ph秐 s?m玭. Ch?c莕 n閜 5 v筺 lng l?c?th?ho祅 th祅h"},
+		},
+		[8] = {
+			[1] = {"K?n╪g 90 c?b竛 t筰 c鯽 h祅g tinh l鵦 hay k?tr﹏ c竎"},
+		},
+		[9] = {
+			[1] = {"C?b竛 t筰 k?tr﹏ c竎"},
+		},
+		[10] = {
+			[1] = {"Ch鴆 n╪g ch璦 ph竧 tri觧"},
+		},
+	},
+	[2] = { --Л阯g M玭 OK
+		[1] = {
+			[1] = {"S?頲 phong l? <color=yellow>Tr竛g nh<color>.<enter>H鋍 頲 v?c玭g: Л阯g M玭 竚 kh?, мa Di謒 H醓 <enter>C竎 bc th鵦 hi謓 nhi謒 v?enter><color=red>Bc 1:<color> дn ph遪g v?c玭g (510,317), g苝 Л阯g H筩 ti誴 nh薾 nhi謒 v?truy t譵 Ma V?Ch﹎.<enter><color=red>Bc 2:<color> дn Th祅h Й (t?Л阯g M玭 ch箉 xu鑞g c鎛g ph輆 di), t譵 Mai Nng (389,315).<enter><color=red>Bc 3:<color> дn nh?T玭 Uy觧 (394,323). C?蕐 ch蕄 nh薾 i cho b筺 Ma V?Ch﹎ l蕐 1 c竔 Nh蒼 M?N穙.<enter><color=red>Bc 4:<color> дn Ti謒 t筽 h鉧 trong Th祅h Й (386,321) d飊g 500 lng mua chi誧 Nh蒼 M?N穙 , tr?v?i cho T玭 Uy觧 l蕐 Ma V?Ch﹎.<enter><color=red>Bc 5:<color> Tr?v?Л阯g M玭, giao Ma V?Ch﹎ cho Л阯g H筩 , ho祅 th祅h nhi謒 v?"},
+			[2] = {"дn ph遪g v?c玭g g苝 Л阯g H筩","дn ph遪g v?c玭g (510,317), g苝 Л阯g H筩 ti誴 nh薾 nhi謒 v?truy t譵 Ma V?Ch﹎.",0,1,31,1607,3204},
+			[3] = {"дn Th祅h Й g苝 Mai Nng","дn Th祅h Й (t?Л阯g M玭 ch箉 xu鑞g c鎛g ph輆 di), t譵 Mai Nng (389,315).",0,1,11,3116,5053},
+			[4] = {"G苝 T玭 Uy觧 i Ma V?Ch﹎","дn nh?T玭 Uy觧 (394,323). C?蕐 ch蕄 nh薾 i cho b筺 Ma V?Ch﹎ l蕐 1 c竔 Nh蒼 M?N穙.",0,1,11,3155,5184},
+			[5] = {"Mua nh蒼 m?n穙 t筰 t筽 h鉧","дn Ti謒 t筽 h鉧 trong Th祅h Й (386,321) d飊g 500 lng mua chi誧 Nh蒼 M?N穙",0,1,11,3094,5139},
+			[6] = {"Mang nh蒼 M?N穙 i Ma V?Ch﹎ c馻 T玭 Uy觧","Tr?v?i Nh蒼 M?N穙 l蕐 Ma V?Ch﹎",0,1,11,3155,5184},
+			[7] = {"Giao Ma V?Ch﹎ cho Л阯g H筩","Tr?v?Л阯g M玭, giao Ma V?Ch﹎ cho Л阯g H筩 , ho祅 th祅h nhi謒 v?",0,1,31,1607,3204},
+		},
+		[2] = {
+			[1] = {"S?頲 phong l? <color=yellow>H?Vi謓<color>.<enter>H鋍 頲 v?c玭g: чc Th輈h C鑤<enter>N琲 ti誴 nh薾 nhi謒 v? Л阯g Nh蕋 Tr莕.<enter>C竎 bc th鵦 hi謓 nhi謒 v?enter><color=red>Bc 1:<color> дn Чi s秐h Ph遪g ngh?s?(507,319) g苝 Л阯g Nh蕋 Tr莕 , nh薾 nhi謒 v?<enter><color=red>Bc 2:<color> дn V?T﹎ C鑓 (t?Л阯g M玭 甶 sang c鎛g b猲 ph輆 ng b綾) nh b筰 2 con G蕌 Ng鵤 (526,291), (531,293) v?2 con X?L?tinh (528,294), (524,290) l蕐 頲 4 s頸 t?tr猲  ghi kh萿 quy誸.<enter><color=red>Bc 3:<color> дn trc c╪ nh??V?T﹎ C鑓 (528,291), nh蕄 v祇 khung c鯽 s?i tho筰 v韎 Л阯g U.<enter><color=red>Bc 4:<color> дn h?Ph?Th髖 ?ph輆 T﹜ Л阯g M玭, ph竧 hi謓 ra m閠 con X輈h Di謒 Ng筩 (c?s蕌) (472,324), nh b筰 n?l蕐 頲 Kim H筺g Quy襫 (X竎 su蕋 50 %).<enter><color=red>Bc 5:<color> Tr?l筰 V?T﹎ C鑓, nh蕄 v祇 c鯽 g? i tho筰 v韎 Л阯g U. B?ta y猽 c莡 b筺 mang s頸 d﹜ chuy襫 v?giao cho chng m玭 Л阯g C鮱.<enter><color=red>Bc 6:<color> дn ph遪g kh竎h (508,322) g苝 Chng m玭 Л阯g C鮱 giao Kim H筺g Quy襫 , ho祅 th祅h nhi謒 v?"},
+			[2] = {"G苝 Л阯g Nh蕋 Tr莕","дn Чi s秐h Ph遪g ngh?s?(507,319) g苝 Л阯g Nh蕋 Tr莕 , nh薾 nhi謒 v?",0,1,34,1593,3204},
+			[3] = {"Цnh b筰 G蕌 Ng鵤 - T鋋 ч 1","L蕐 頲 m閠 trong 4 s頸 t?tr猲  ghi kh萿 quy誸.",1,1,25,4211,4674},
+			[4] = {"Цnh b筰 G蕌 Ng鵤 - T鋋  2","L蕐 頲 m閠 trong 4 s頸 t?tr猲  ghi kh萿 quy誸.",1,1,25,4248,4688},
+			[5] = {"Цnh b筰 X?L?Tinh - T鋋  1","L蕐 頲 m閠 trong 4 s頸 t?tr猲  ghi kh萿 quy誸.",1,1,25,230,4724},
+			[6] = {"Цnh b筰 X?L?Tinh - T鋋  2","L蕐 頲 m閠 trong 4 s頸 t?tr猲  ghi kh萿 quy誸.",1,1,25,4197,4635},
+			[7] = {"цi tho筰 v韎 Л阯g U trong c╪ nh?g?,"дn trc c╪ nh??V?T﹎ C鑓 (528,291), nh蕄 v祇 khung c鯽 s?i tho筰 v韎 Л阯g U.",1,1,25,4227,4667},
+			[8] = {"Цnh X輈h Di謒 Ng筩 [C?S蕌 п] l蕐 Kim H筺g Quy襫","дn h?Ph?Th髖 ?ph輆 T﹜ Л阯g M玭, ph竧 hi謓 ra m閠 con X輈h Di謒 Ng筩 (c?s蕌) (472,324), nh b筰 n?l蕐 頲 Kim H筺g Quy襫 (X竎 su蕋 50 %).",1,1,25,3716,5050},
+			[9] = {"Tr?l筰 g苝 Л阯g U n鉯 chuy謓","Tr?l筰 V?T﹎ C鑓, nh蕄 v祇 c鯽 g? i tho筰 v韎 Л阯g U. B?ta y猽 c莡 b筺 mang s頸 d﹜ chuy襫 v?giao cho chng m玭 Л阯g C鮱.",1,1,25,4227,4667},
+			[10] = {"Giao Kim H筺g Quy襫 cho Л阯g C鮱","дn ph遪g kh竎h (508,322) g苝 Chng m玭 Л阯g C鮱 giao Kim H筺g Quy襫 , ho祅 th祅h nhi謒 v?",0,1,33,1617,3191},
+		},
+		[3] = {
+			[1] = {"S?頲 phong l? <color=yellow>Gi韎 Ti襫 H?V?color>.<enter>H鋍 頲 v?c玭g:<enter>Truy T﹎ Ti詎<enter>M筺 Thi猲 Hoa V?<enter>箃 H錸 Ti猽<enter>Xuy猲 T﹎ Th?<enter>N琲 ti誴 nh薾 nhi謒 v? <color=yellow>Л阯g B蕋 Nhi詍<color>.<enter>C竎 bc th鵦 hi謓 nhi謒 v?enter><color=red>Bc 1:<color> дn ph遪g T?t?ph遪g (514,318), g苝 Л阯g B蕋 Nhi詍, nh薾 nhi謒 v? Gi髉 Л阯g V﹏ s?th骳 tr?th?v?l蕐 l筰 H醓 Kh?ph?<enter><color=red>Bc 2:<color> дn Th祅h Й -> Thanh Th祅h S琻 -> B筩h V﹏ ng (356,242) nh b筰 Чi u m鬰 Cu錸g Sa (229,200), bi誸 頲 H醓 Kh?ph? b?gi蕌 trong rng. C遪 ch譨 kh鉧 b?gi蕌 t筰 m閠 n琲 n祇  trong ng.<enter><color=red>Bc 3:<color> Цnh b筰 4 t猲 ti觰 u m鬰: чc Nh?(218,200), Thi誸 T?(219,207), Qu?秐h (239,202), L辌h Quy襫 (228,197), l蕐 頲 ch譨 kh鉧 (x竎 su蕋 50%), m?rng (230,199) l蕐 頲 H醓 Kh?ph?<enter><color=red>Bc 4:<color> Tr?v?Л阯g M玭, n ph遪g H醓 dc (512,324) giao H醓 Kh?ph?cho Л阯g V﹏, ho祅 th祅h nhi謒 v?"},
+			[2] = {"G苝 Л阯g B蕋 Nhi詍","дn ph遪g T?t?ph遪g (514,318), g苝 Л阯g B蕋 Nhi詍, nh薾 nhi謒 v? Gi髉 Л阯g V﹏ s?th骳 tr?th?v?l蕐 l筰 H醓 Kh?ph?",0,1,36,1595,3189},
+			[3] = {"Цnh Чi u M鬰 Cu錸g Sa - B筩h V﹏ чng","дn Th祅h Й -> Thanh Th祅h S琻 -> B筩h V﹏ ng (356,242) nh b筰 Чi u m鬰 Cu錸g Sa (229,200), bi誸 頲 H醓 Kh?ph? b?gi蕌 trong rng. C遪 ch譨 kh鉧 b?gi蕌 t筰 m閠 n琲 n祇  trong ng.",1,1,22,1831,3200},
+			[4] = {"Цnh b筰 чc Nh?,"Цnh b筰 чc Nh?l蕐 頲 ch譨 kh鉧 (x竎 su蕋 50%)",1,1,22,1748,3201},
+			[5] = {"Цnh b筰 Thi誸 T?,"Цnh b筰 Thi誸 T?l蕐 頲 ch譨 kh鉧 (x竎 su蕋 50%)",1,1,22,1757,3313},
+			[6] = {"Цnh b筰 Qu?秐h","Цnh b筰 Qu?秐h l蕐 頲 ch譨 kh鉧 (x竎 su蕋 50%)",1,1,22,1910,3241},
+			[7] = {"Цnh b筰 L辌h Quy襫","Цnh b筰 L辌h Quy襫 l蕐 頲 ch譨 kh鉧 (x竎 su蕋 50%)",1,1,22,1833,3148},
+			[8] = {"M?Rng l蕐 h醓 Kh?Ph?,"M?Rng l蕐 h醓 Kh?Ph?,1,1,22,1841,3194},
+			[9] = {"Mang h醓 Kh?Ph?cho Л阯g V﹏","Tr?v?Л阯g M玭, n ph遪g H醓 dc (512,324) giao H醓 Kh?ph?cho Л阯g V﹏, ho祅 th祅h nhi謒 v?",0,1,30,1599,3203},
+		},
+		[4] = {
+			[1] = {"S?頲 phong l? <color=yellow>Nh藀 C竎 е T?color>.<enter>H鋍 頲 v?c玭g: H祅 B╪g Th輈h <enter>N琲 ti誴 nh薾 nhi謒 v? Л阯g D?enter>C竎 bc th鵦 hi謓 nhi謒 v?enter><color=red>Bc 1:<color> дn ph遪g Y Dc (515,322) g苝 Л阯g D? nh薾 nhi謒 v?<enter><color=red>Bc 2:<color> дn Th祅h Й -> Thanh Th祅h S琻, 甶 th糿g v?ph?t﹜ g苝 C秐h T?K?(230,245). g ta b総 b筺 ph秈 vt qua m閠 th?th竎h l?nh b筰 n╩ con gia s骳 c馻 玭g ta l? S鉯 x竚 (238,244), M穘h H?(241,259), Kim Ti襫 B竜 (224,247), Heo R鮪g (234,236), T玭g H飊g (241,238).<enter><color=red>Bc 3:<color> Sau khi nh b筰 n╩ con th? quay l筰 g苝 C秐h T?K? C秐h T?K?nh?b筺 t譵 c竎h c鴘 con g竔 玭g ta 產ng l﹎ tr鋘g b謓h.<enter><color=red>Bc 4:<color> Tr?l筰 Л阯g M玭 n ph遪g Y Dc, g苝 Л阯g D?. g ta b秓 cho b筺 bi誸 phng thu鑓 ch鱝 c╪ b謓h k?l?.<enter><color=red>Bc 5:<color> Tr?l猲 Thanh Th祅h S琻 , t筰 Thanh Dng phong (297,233) ?Йng B綾 Thanh Th祅h s琻, nh b筰 Hung Th?v?Linh 猽 (316,215), (304,227), (304,218), (308,225), (314,223), H綾 璶g (297,231) l蕐 頲 n╩ lo筰 dc li謚: da c馻 Ve s莡, gan r緉 c, v?h箃 Anh T骳, 畊玦 r誸 c, u c馻 Thi猲 t籱.<enter><color=red>Bc 6:<color> Quay l筰 g苝 C秐h T?K?. C秐h T?K?t??h鑙 h薾 v? hi觰 l莔 Л阯g D?trc y.<enter><color=red>Bc 7:<color> Tr?l筰 Л阯g M玭 n ph遪g Y Dc, b竜 l筰 k誸 qu?v韎 Л阯g D?. Ho祅 th祅h nhi謒 v?},
+			[2] = {"G苝 Л阯g D?,"дn ph遪g Y Dc (515,322) g苝 Л阯g D? nh薾 nhi謒 v?",0,1,32,1603,3210},
+			[3] = {"G苝 C秐h T?K?,"дn Th祅h Й -> Thanh Th祅h S琻, 甶 th糿g v?ph?t﹜ g苝 C秐h T?K?(230,245). g ta b総 b筺 ph秈 vt qua m閠 th?th竎h l?nh b筰 n╩ con gia s骳 c馻 玭g ta l? S鉯 x竚 (238,244), M穘h H?(241,259), Kim Ti襫 B竜 (224,247), Heo R鮪g (234,236), T玭g H飊g (241,238).",1,1,21,1846,3924},
+			[4] = {"Цnh b筰 S鉯 X竚","Цnh b筰 S鉯 X竚",1,1,21,1906,3913},
+			[5] = {"Цnh b筰 M穘h H?,"Цnh b筰 M穘h H?,1,0,21,241,259},
+			[6] = {"Цnh b筰 Kim Ti襫 B竜","Цnh b筰 Kim Ti襫 B竜",1,1,21,1797,3952},
+			[7] = {"Цnh b筰 Heo R鮪g","Цnh b筰 Heo R鮪g",1,1,21,1881,3788},
+			[8] = {"Цnh b筰 T玭g H飊g","Цnh b筰 T玭g H飊g",1,0,21,241,238},
+			[9] = {"Quay l筰 g苝 C秐h T?K?,"Sau khi nh b筰 n╩ con th? quay l筰 g苝 C秐h T?K? C秐h T?K?nh?b筺 t譵 c竎h c鴘 con g竔 玭g ta 產ng l﹎ tr鋘g b謓h.",1,1,21,1846,3924},
+			[10] = {"Tr?l筰 Л阯g M玭 n ph遪g Y Dc, g苝 Л阯g D?,"Tr?l筰 Л阯g M玭 n ph遪g Y Dc, g苝 Л阯g D?. g ta b秓 cho b筺 bi誸 phng thu鑓 ch鱝 c╪ b謓h k?l?.",0,1,32,1603,3210},
+			[11] = {"Цnh b筰 Hung Th?- T鋋 ч 1","L蕐 頲 m閠 trong n╩ lo筰 dc li謚: da c馻 Ve s莡, gan r緉 c, v?h箃 Anh T骳, 畊玦 r誸 c, u c馻 Thi猲 t籱.",1,1,21,2545,3415},
+			[12] = {"Цnh b筰 Hung Th?- T鋋 ч 2","L蕐 頲 m閠 trong n╩ lo筰 dc li謚: da c馻 Ve s莡, gan r緉 c, v?h箃 Anh T骳, 畊玦 r誸 c, u c馻 Thi猲 t籱.",1,1,21,2436,3635},
+			[13] = {"Цnh b筰 Linh 猽 - T鋋 ч 1","L蕐 頲 m閠 trong n╩ lo筰 dc li謚: da c馻 Ve s莡, gan r緉 c, v?h箃 Anh T骳, 畊玦 r誸 c, u c馻 Thi猲 t籱.",1,1,21,2535,3448},
+			[14] = {"Цnh b筰 Linh 猽 - T鋋 ч 2","L蕐 頲 m閠 trong n╩ lo筰 dc li謚: da c馻 Ve s莡, gan r緉 c, v?h箃 Anh T骳, 畊玦 r誸 c, u c馻 Thi猲 t籱.",1,1,21,2434,3492},
+			[15] = {"Цnh b筰 Linh 猽 - T鋋 ч 3","L蕐 頲 m閠 trong n╩ lo筰 dc li謚: da c馻 Ve s莡, gan r緉 c, v?h箃 Anh T骳, 畊玦 r誸 c, u c馻 Thi猲 t籱.",1,1,21,2502,3578},
+			[16] = {"Цnh b筰 H綾 g","L蕐 頲 m閠 trong n╩ lo筰 dc li謚: da c馻 Ve s莡, gan r緉 c, v?h箃 Anh T骳, 畊玦 r誸 c, u c馻 Thi猲 t籱.",1,1,21,2370,3708},
+			[17] = {"Quay l筰 g苝 C秐h T?K?,"Quay l筰 g苝 C秐h T?K?. C秐h T?K?t??h鑙 h薾 v? hi觰 l莔 Л阯g D?trc y.",1,1,21,1846,3924},
+			[18] = {"Tr?l筰 Л阯g M玭 n ph遪g Y Dc, g苝 Л阯g D?,"Tr?l筰 Л阯g M玭 n ph遪g Y Dc, b竜 l筰 k誸 qu?v韎 Л阯g D?. Ho祅 th祅h nhi謒 v?,0,1,32,1603,3210},
+		},
+		[5] = {
+			[1] = {"S?頲 phong l? T?L穙 M玭 Nh﹏.<enter>H鋍 頲 v?c玭g: L玦 K輈h thu藅<enter>N琲 ti誴 nh薾 nhi謒 v? Л阯g Nh祅.<enter>C竎 bc th鵦 hi謓 nhi謒 v?enter><color=red>Bc 1:<color> дn ph遪g 竚 kh?(504/317) g苝 Л阯g Nh祅, nh薾 nhi謒 v?truy t譵 b?k輕 b?m蕋.<enter><color=red>Bc 2:<color> дn ph遪g Ngh?s?(507/319) g苝 Л阯g Nh蕋 Tr莕 , bi誸 頲 c?2 k?ng kh?nghi.<enter><color=red>Bc 3:<color> дn Th祅h Й -> th玭 Giang T﹏, g苝 Л阯g Nguy猲 (430/385). Л阯g Nguy猲 cho bi誸  th蕐 Л阯g H遖  甶 n Hng Th駓 Йng.<enter><color=red>Bc 4:<color> дn Th祅h Й -> Thanh Th祅h S琻 -> Hng Th駓 ng (214/242) n籱 ?c鵦 t﹜ c馻 n骾 Thanh Th祅h. V祇 ng nh b筰 Л阯g H遖 (234/207), bi誸 頲 竚 Kh?ph?產ng gi蕌 trong s琻 ng.<enter><color=red>Bc 5:<color> Цnh b筰 c竎 t猲 ng ng c馻 Л阯g H遖 l? Thi誸 Quy襫 Di謒 La (232/210; 214/203; 224/201; 246/204) ho芻 Thi誸 Ch飝 Ma Qu﹏ (217/205; 234/200). Цnh b筰 b鋘 ch髇g s?l蕐 l筰 頲 竚 Kh?ph?(X竎 su蕋 50%).<enter><color=red>Bc 6:<color> Tr?l筰 ph遪g 竚 kh? giao 竚 Kh?ph?cho Л阯g Nh祅 , ho祅 th祅h nhi謒 v?"},
+			[2] = {"G苝 Л阯g Nh祅","дn ph遪g 竚 kh?(504,317) g苝 Л阯g Nh祅, nh薾 nhi謒 v?truy t譵 b?k輕 b?m蕋.",0,1,29,1599,3203},
+			[3] = {"G苝 Л阯g Nh蕋 Tr莕","дn ph遪g Ngh?s?(507,319) g苝 Л阯g Nh蕋 Tr莕 , bi誸 頲 c?2 k?ng kh?nghi.",0,1,34,1593,3204},
+			[4] = {"G苝 Л阯g Nguy猲","дn Th祅h Й -> th玭 Giang T﹏, g苝 Л阯g Nguy猲 (430,385). Л阯g Nguy猲 cho bi誸  th蕐 Л阯g H遖  甶 n Hng Th駓 Йng.",0,1,20,3444,6169},
+			[5] = {"Цnh b筰 Л阯g H遖","дn Th祅h Й -> Thanh Th祅h S琻 -> Hng Th駓 ng (214,242) n籱 ?c鵦 t﹜ c馻 n骾 Thanh Th祅h. V祇 ng nh b筰 Л阯g H遖 (234,207), bi誸 頲 竚 Kh?ph?產ng gi蕌 trong s琻 ng.",1,0,24,234,207},
+			[6] = {"Цnh b筰 Thi誸 Quy襫 Di謒 La","Цnh b筰 t猲 ng ng c馻 Л阯g H遖: Thi誸 Quy襫 Di謒 La l蕐 l筰 頲 竚 Kh?ph?(X竎 su蕋 50%)",1,0,24,232,210},
+			[7] = {"Цnh b筰 Thi誸 Ch飝 Ma Qu﹏","Цnh b筰 t猲 ng ng c馻 Л阯g H遖: Thi誸 Ch飝 Ma Qu﹏ l蕐 l筰 頲 竚 Kh?ph?(X竎 su蕋 50%)",1,1,24,1736,3295},
+			[8] = {"Giao 竚 Kh?ph?cho Л阯g Nh祅","Tr?l筰 ph遪g 竚 kh? giao 竚 Kh?ph?cho Л阯g Nh祅 , ho祅 th祅h nhi謒 v?",0,1,29,1599,3203},
+		},
+		[6] = {
+			[1] = {"S?頲 phong l? Thi猲 Th?Th莕 V?<enter>N琲 ti誴 nh薾 nhi謒 v? Chng M玭 Л阯g C鰑.<enter>C竎 bc th鵦 hi謓 nhi謒 v?enter><color=red>Bc 1:<color> дn Ph遪g kh竎h (508,322) g苝 Chng m玭 Л阯g C鮱 , nh薾 nhi謒 v?thu h錳 Th蕋 Tinh Tuy謙 M謓h Ki誱.<enter><color=red>Bc 2:<color> дn Tr骳 T?ng (523,326) (甶 c鯽 b猲 ph秈 c馻 Л阯g M玭).<enter><color=red>Bc 3:<color> T筰 t莕g 1 nh b筰 t猲 M穘g H竛 u L躰h (189,205; 185,204; 190,202; 192,200; 197,201) s?l蕐 頲 ch譨 kho?t莕g 2.<enter><color=red>Bc 4:<color> T筰 t莕g 2 nh b筰 Tinh H?(194,198; 197,201) s?l蕐 頲 ch譨 kho?l猲 t莕g 3.<enter><color=red>Bc 5:<color> L猲 t莕g 3 c?2 rng: tr猲 v?di (1 ch鴄 ti襫, 1 ch鴄 箃 H錸 Ki誱). Ch鋘 rng ?tr猲 s?l蕐 頲 Th蕋 Tinh Tuy謙 M謓h Ki誱.<enter><color=red>Bc 6:<color> V?giao ki誱 cho Chng m玭 Л阯g C鮱 l?ho祅 th祅h nhi謒 v? C遪 n誹 ch鋘 nh莔 rng ch鴄 ti襫 th?v?g苝 Chng m玭 Л阯g C鮱 n閜 ph箃 4 v筺 lng r錳 l祄 l筰 nhi謒 v?<enter><color=red>L璾 ?<color><enter>N誹  l猲 頲 t莕g 2 r錳 m?b?ch誸 th?khi v祇 ng l筰 c?vi謈 l猲 t莕g 2, kh玭g c莕 nh l筰 ?t莕g 1."},
+			[2] = {"G苝 Chng m玭 Л阯g C鮱","дn Ph遪g kh竎h (508,322) g苝 Chng m玭 Л阯g C鮱 , nh薾 nhi謒 v?thu h錳 Th蕋 Tinh Tuy謙 M謓h Ki誱.",0,1,33,1617,3191},
+			[3] = {"Цnh b筰 t猲 M穘g H竛 u L躰h","T筰 t莕g 1 Tr骳 T?ng nh b筰 t猲 M穘g H竛 u L躰h s?l蕐 頲 ch譨 kho?t莕g 2",1,1,26,1512,3290},
+			[4] = {"S?d鬾g ch譨 kh鉧 l猲 t莕g 2","S?d鬾g ch譨 kh鉧 v鮝 l蕐 頲 t?M穘g H竛 u L躰h m?ra l鑙 l猲 t莕g 2 Tr骳 T?чng.",1,1,26,1597,3216},
+			[5] = {"Цnh b筰 Tinh H?,"T筰 t莕g 2 nh b筰 Tinh H?(194,198; 197,201) s?l蕐 頲 ch譨 kho?l猲 t莕g 3",1,0,27,194,198},
+			[6] = {"S?d鬾g ch譨 kh鉧 l猲 t莕g 3","S?d鬾g ch譨 kh鉧 v鮝 l蕐 頲 t?Tinh H?m?ra l鑙 l猲 t莕g 3 Tr骳 T?чng. Ch鋘 rng ?tr猲.",1,1,27,1602,3210},
+			[7] = {"G苝 Chng m玭 Л阯g C鮱","V?giao ki誱 cho Chng m玭 Л阯g C鮱 l?ho祅 th祅h nhi謒 v? ",0,1,33,1617,3191},
+		},
+		[7] = {
+			[1] = {"Y猽 c莡: ngi ch琲  xu蕋 s? ng c蕄 tr猲 60, ch璦 gia nh藀 bang ph竔 n祇, c?th?n g苝 trng m玭 c馻 ph竔 giao 5 v筺 lng  tr飊g ph秐 s?m玭. T? v?sau c?th?t飝 ?ra v祇 s?m玭.<enter>Ph莕 Thu雗g:<enter>Ti觰 L?Phi o<enter>T竛 Hoa Ti猽<enter>Thi猲 La мa V鈔g<enter>T﹎ Nh穘<enter>Л頲 phong l祄: L鬰 C竎 Trng L穙."},
+		},
+		[8] = {
+			[1] = {"Y猽 c莡: T?c蕄 90 tr?l猲, danh v鋘g tr猲 240 甶觤, l?Л阯g M玭 k?danh  t? trc m総 ch璦 gia nh藀 m玭 ph竔 n祇.<enter>Ph莕 thng:<enter>Nhi誴 H錸 Nguy謙 秐h<enter>C鰑 Cung Phi T輓h<enter>B筼 V?L?Hoa<enter>Lo筺 Ho祅 K輈h<enter>Danh v鋘g 頲 30 甶觤. (T蕋 c?c竎 m玭 ph竔 kh竎 u c?th?l祄 nhi謒 v?n祔  nh薾 ph莕 thng 甶觤 danh v鋘g, nh璶g kh玭g h鋍 頲 chi猽 th鴆)<enter>C竎 bc th鵦 hi謓 nhi謒 v?enter><color=red>Bc 1: <color>дn Th祅h Й -> th玭 Giang T﹏, g苝 Л阯g Nguy猲 (430,385), bi誸 頲 Л阯g B蕋 Nhi詍 c?nh鱪g d蕌 hi謚 b蕋 thng v?b筺 quy誸 t﹎ t譵 hi觰 cho c苙 k?m鋓 vi謈.<enter><color=red>Bc 2: <color>дn Л阯g M玭 t筰 ph遪g T?t?ph遪g (513,317), g苝 Л阯g B蕋 Nhi詍... H緉 nh?b筺 chuy觧 d飉 1 b鴆 th?<enter><color=red>Bc 3: <color>дn Bi謓 Kinh g苝 B筩h C玭g T?(207,191) giao th? H緉 c th?m閠 h錳 r錳 giao l筰 cho b筺 1 b鴆 th?h錳 ﹎.<enter><color=red>Bc 4: <color>Quay l筰 Л阯g M玭 giao th?cho Л阯g B蕋 Nhi詍 . Цnh b筰 Л阯g B蕋 Nhi詍, nh薾 quy觧 s竎h Л阯g M玭 Tuy謙 H鋍 M藅 T辌h. (L璾 ? n誹 nh?trong l骳 nh, b筺 c?b?t?thng, b筺 v蒼 c?th?v祇 nh ti誴, m竨 c馻 Л阯g B蕋 Nhi詍 v蒼 b?m蕋 nh?th阨 甶觤 b筺 ch誸).<enter><color=red>Bc 5: <color>дn Bi謓 Kinh -> Thi猲 Nh蒼 gi竜 -> t莕g 1 -> t莕g 2 -> t莕g 3 g苝 an M閏 Du?(225,199) giao s竎h. an M閏 Du?l筰 nh?b筺 g鰅 l阨 n Л阯g B蕋 Nhi詍.<enter><color=red>Bc 6: <color>Quay l筰 Л阯g M玭 g苝 Л阯g B蕋 Nhi詍, ho祅 th祅h nhi謒 v?<enter>L璾 ?<enter>N誹  l猲 頲 t莕g 2 r錳 m?b?ch誸 th?khi v祇 ng l筰 c?vi謈 l猲 t莕g 2, kh玭g c莕 nh l筰 ?t莕g 1."},
+			[2] = {"G苝 Л阯g Nguy猲","дn th玭 Giang T﹏, g苝 Л阯g Nguy猲, bi誸 頲 Л阯g B蕋 Nhi詍 c?nh鱪g d蕌 hi謚 b蕋 thng v?b筺 quy誸 t﹎ t譵 hi觰 cho c苙 k?m鋓 vi謈.",0,1,20,3444,6169},
+			[3] = {"G苝 Л阯g B蕋 Nhi詍","дn Л阯g M玭 t筰 ph遪g T?t?ph遪g, g苝 Л阯g B蕋 Nhi詍... H緉 nh?b筺 chuy觧 d飉 1 b鴆 th?",0,1,36,1595,3189},
+			[4] = {"G苝 B筩h C玭g T?,"дn Bi謓 Kinh g苝 B筩h C玭g T?giao th? H緉 c th?m閠 h錳 r錳 giao l筰 cho b筺 1 b鴆 th?h錳 ﹎.",0,1,37,1656,3062},
+			[5] = {"Giao th?cho Л阯g B蕋 Nhi詍","Quay l筰 Л阯g M玭 giao th?cho Л阯g B蕋 Nhi詍 . Цnh b筰 Л阯g B蕋 Nhi詍, nh薾 quy觧 s竎h Л阯g M玭 Tuy謙 H鋍 M藅 T辌h.",0,1,36,1595,3189},
+			[6] = {"G苝 an M閏 Du?,"дn Thi猲 Nh蒼 gi竜 t莕g 3 g苝 an M閏 Du?giao s竎h. an M閏 Du?l筰 nh?b筺 g鰅 l阨 n Л阯g B蕋 Nhi詍.",0,0,49,225,199},
+			[7] = {"G苝 Л阯g B蕋 Nhi詍","Quay l筰 Л阯g M玭 g苝 Л阯g B蕋 Nhi詍, ho祅 th祅h nhi謒 v?",0,1,36,1595,3189},
+		},
+		[9] = {
+			[1] = {"M藅 t辌h k?n╪g 120 c?th?i t筰 chng m玭. <enter>V藅 ph萴 c莕 thi誸  i:<enter>1 quy觧 B祅 Nhc T﹎ Kinh, 1 b?s竎h k?n╪g 90 c馻 m玭 ph竔 m譶h, 1 vi猲 Tinh H錸g B秓 Th筩h v?1 vi猲 Th駓 Tinh."},
+		},
+		[10] = {
+			[1] = {"<color=red>Bc 1: <color>T譵 c竎h v?Th祅h Й Ph? r錳 ch箉 b?theo hng Йng-Nam  sang Л阯g M玭. дn l鑙 v祇 Tr骳 H秈 Tam Quan, b筺 h穣 n鉯 chuy謓 v韎 Л阯g M玭 Tr竛g nh th?nh蕋 (453,357), v?xin nh薾 l祄  t?K?danh, y s?n鉯 cho b筺 bi誸 ph秈 l祄 g?<enter><color=red>Bc 2: <color>Ch?c莕 gi誸 1 trong 3 con Чi M?H莡 (461,357), (460,354), (455,354) l蕐 頲 Thanh S綾 Tr骳 Trng (g藋 tr骳 m祏 xanh).<enter><color=red>Bc 3: <color>R錳 甶 ti誴 g苝 Л阯g M玭 Tr竛g nh th?2 (468,349), t猲 n祔 s?b総 b筺 gi秈 m閠 b礽 to竛 ma tr薾, n誹 b筺 c秏 th蕐 kh?kh╪ khi gi秈 b礽 to竛 n祔 h穣 tr?l阨 nh?sau: [2-9-4], [7-5-3], [6-1-8]. Gi秈 xong b礽 to竛 , y s?t苙g b筺 B筩h S綾 Tr骳 Trng (g藋 tr骳 m祏 tr緉g).<enter><color=red>Bc 4: <color>C竎 h?t譵 n t猲 Л阯g M玭 Tr竛g nh th?ba (474,342). H緉 s?a ra m閠 s?c﹗ qu?c馻 Kh鎛g Minh cho b筺 gi秈. (p 竛: Li謙 ho?oanh l玦 - M璦 gi?kh雐 sinh - Thi猲 tai d辌h h鋋. Sau khi tr?l阨 xong, y s?t苙g b筺 T?S綾 Tr骳 Trng (g藋 tr骳 m祏 t輒).<enter><color=red>Bc 5: <color>Mang c?3 c﹜ g藋  t韎 g苝 t猲 Л阯g M玭 Tr竛g nh th?t?(479,339) v?giao cho h緉. Ho祅 th祅h nhi謒 v?"},
+			[2] = {"G苝 Л阯g M玭 Tr竛g nh th?nh蕋","дn l鑙 v祇 Tr骳 H秈 Tam Quan, n鉯 chuy謓 v韎 Л阯g M玭 Tr竛g nh th?nh蕋 , v?xin nh薾 l祄  t?K?danh.",1,1,25,3630,5741},
+			[3] = {"Gi誸 Чi M?H莡","Ch?c莕 gi誸 1 trong 3 con Чi M?H莡 l蕐 頲 Thanh S綾 Tr骳 Trng",1,0,25,461,357},
+			[4] = {"G苝 Л阯g M玭 Tr竛g nh th?2","G苝 Л阯g M玭 Tr竛g nh th?2, t猲 n祔 s?b総 b筺 gi秈 m閠 b礽 to竛 ma tr薾, tr?l阨 nh?sau: [2-9-4], [7-5-3], [6-1-8]. Gi秈 xong 頲 B筩h S綾 Tr骳 Trng.",1,1,25,3749,5599},
+			[5] = {"G苝 Л阯g M玭 Tr竛g nh th?3","G苝 Л阯g M玭 Tr竛g nh th?ba. H緉 s?a ra m閠 s?c﹗ qu?c馻 Kh鎛g Minh. Цp 竛: Li謙 ho?oanh l玦 - M璦 gi?kh雐 sinh - Thi猲 tai d辌h h鋋. Sau khi tr?l阨 xong, y s?t苙g b筺 T?S綾 Tr骳 Trng",1,1,25,3792,5480},
+			[6] = {"G苝 Л阯g M玭 Tr竛g nh th?t?,"Mang c?3 c﹜ g藋  t韎 g苝 t猲 Л阯g M玭 Tr竛g nh th?t?v?giao cho h緉. Ho祅 th祅h nhi謒 v?",0,0,25,479,339},
+		},
+	},
+	[3] = { --Ngu doc OK
+		[1] = {
+			[1] = {"S?頲 phong l? 箃 H錸 T竛 Nh﹏. H鋍 頲 v?c玭g: Ng?чc o ph竝, Ng?чc Chng ph竝, C鰑 Thi猲 Cu錸g L玦. N琲 ti誴 nh薾 nhi謒 v? M芻 Th?tr筰, ch?tr筰 чc Nha."},
+			[2] = {"G苝 Tang Chu","",0,1,186,1599,3193},
+			[3] = {"Nh謓 1 (Thu th藀  10 con)","",1,1,195,716,2920},
+			[4] = {"Nh謓 2 (Thu th藀  10 con)","",1,1,195,713,3048},
+			[5] = {"Nh謓 3 (Thu th藀  10 con)","",1,1,195,726,3169},
+			[6] = {"Nh謓 4 (Thu th藀  10 con)","",1,1,195,790,3126},
+			[7] = {"Mua 10 bao t輓 th筩h","",0,1,174,1574,3255},
+			[8] = {"Quay v?g苝 Tang Chu","",0,1,186,1599,3193},
+		},
+		[2] = {
+			[1] = {"S?頲 phong l? Th玦 M謓h S?gi? H鋍 頲 v?c玭g: X輈h Di謒 Th鵦 Thi猲, T筽 Nan Dc Kinh, N琲 ti誴 nh薾 nhi謒 v? Ng﹏ Thi襪 tr筰 ch?B筩h Doanh Doanh."},
+			[2] = {"G苝 B筩h Doanh Doanh","",0,1,188,1602,3189},
+			[3] = {"S綾 Qu?1 (Thu th藀 7 u ngi)","",1,1,179,1962,2661},
+			[4] = {"S綾 Qu?2 (Thu th藀 7 u ngi)","",1,1,179,1976,2724},
+			[5] = {"S綾 Qu?3 (Thu th藀 7 u ngi)","",1,1,179,1932,2706},
+			[6] = {"S綾 Qu?4 (Thu th藀 7 u ngi)","",1,1,179,1851,2557},
+			[7] = {"S綾 Qu?5 (Thu th藀 7 u ngi)","",1,1,179,1809,2599},
+			[8] = {"S綾 Qu?6 (Thu th藀 7 u ngi)","",1,1,179,1828,2666},
+			[9] = {"S綾 Qu?7 (Thu th藀 7 u ngi)","",1,1,179,1859,2712},
+			[10] = {"G苝 B筩h Doanh Doanh","",0,1,188,1602,3189},
+		},
+		[3] = {
+			[1] = {"S?頲 phong l? H綾 竚 Di猰 La. H鋍 頲 v?c玭g: U Minh Kh?L﹗, V?H譶h чc, B竎h c Xuy猲 T﹎, B╪g Lam Huy襫 Tinh. N琲 ti誴 nh薾 nhi謒 v? X輈h Y誸 tr筰 ch?у D?"},
+			[2] = {"G苝 у D?,"",0,1,184,1599,3197},
+			[3] = {"Цnh b筰 Ph秐 T芻 (l蕐 M閏 Hng жnh)","",1,1,193,1170,2928},
+			[4] = {"Giao l筰 cho у D?,"",0,1,184,1599,3197},
+			[5] = {"Цnh Ph秐 T芻 u M鬰 (l蕐 M閏 Hng жnh th藅)","",1,1,193,1170,2928},
+			[6] = {"Giao cho у D?,"",0,1,184,1599,3197},
+		},
+		[4] = {
+			[1] = {"S?頲 phong l? V?чng La S竧. H鋍 頲 v?c玭g: V筺 чc Th鵦 T﹎, Xuy猲 Y Ph?Gi竝. N琲 ti誴 nh薾 nhi謒 v? Kim X?tr筰 ch?V﹏ B蕋 T?"},
+			[2] = {"G苝 V﹏ B蕋 T?,"",0,1,185,1607,3200},
+			[3] = {"дn Hi謚 thu鑓 (Mua X?Hng)","",0,1,80,1771,3079},
+			[4] = {"Цnh Nh穘 K輓h Vng M穘g X?(B総 1 con)","",1,1,183,944,2240},
+			[5] = {"G苝 V﹏ B蕋 T?,"",0,1,185,1607,3200},
+		},
+		[5] = {
+			[1] = {"S?頲 phong l? C?чc T玭 Gi? H鋍 頲 v?c玭g: Xuy猲 T﹎ чc Th? N琲 ti誴 nh薾 nhi謒 v? Thanh Ng?tr筰 ch?Thang B藅."},
+			[2] = {"G苝 Thang B藅","",0,1,187,1598,3192},
+			[3] = {"L璾 Kh蕌 1 (l蕐 tin t鴆 v?Ng鋍 San H?,"",1,1,194,1835,3215},
+			[4] = {"L璾 Kh蕌 2 (l蕐 tin t鴆 v?Ng鋍 San H?,"",1,1,194,1561,2816},
+			[5] = {"Цnh t猲 Cng Чo (l蕐 Ng鋍 San H?","",1,1,182,1896,3464},
+			[6] = {"Giao cho Thang B藅","",0,1,187,1598,3192},
+		},
+		[6] = {
+			[1] = {"S?頲 phong l? U Minh Qu?S? N琲 ti誴 nh薾 nhi謒 v? Gi竜 ch?Ng?чc gi竜 H綾 Di謓 Lang Qu﹏."},
+			[2] = {"G苝 H綾 Di謓 Lang Qu﹏","",0,1,189,1606,3189},
+			[3] = {"Цnh Nh筺 ng ph竔  t?(дn khi chng m玭 xu蕋 hi謓, nh b筰 chng m玭 l蕐 T?чc Chu)","",1,1,196,1648,2944},
+			[4] = {"G苝 H綾 Di謓 Lang Qu﹏","",0,1,189,1606,3189},
+		},
+		[7] = {
+			[1] = {"G苝 H綾 Di謓 Lang Qu﹏ n閜 ti襫"},
+			[2] = {"G苝 H綾 Di謓 Lang Qu﹏","",0,1,189,1606,3189},
+		},
+		[8] = {
+			[1] = {"C?b竛 trong K?Tr﹏ C竎"},
+		},
+		[9] = {
+			[1] = {"C?b竛 trong K?Tr﹏ C竎"},
+		},
+		[10] = {
+			[1] = {"Ch璦 ho祅 thi謓"},
+		},
+	},
+	[4] = { --Nga Mi. OK
+		[1] = {
+			[1] = {"S?頲 phong l? <color=yellow>V?Y Ni<color>.<enter>H鋍 頲 v?c玭g:<color=yellow>Nga My Ki誱 ph竝<color>, <color=yellow>Nga My Chng ph竝<color><enter>C竎 bc th鵦 hi謓 nhi謒 v?enter><color=red>Bc 1: <color>дn Ti襫 甶謓 (238,310) g苝 Di謚 萵 , ti誴 nh薾 nhi謒 v?gi髉 c?蕐 h祅 g緉 chi誧 gng ng.<enter><color=red>Bc 2: <color>Xu鑞g n骾, t譵 Di謚 萵 tng c玭g (241,328), nh蕄 v祇 l阨 tho筰, nh薾 頲 n鯽 mi課g gng c遪 l筰.<enter><color=red>Bc 3: <color>дn Th祅h Й g苝 th?r蘮 (388,320).<enter><color=red>Bc 4: <color>в hai mi課g gng l筰 ch?ngi th?r蘮, 甶 t譵 Lng Ng﹏ Kho竛g trong r鮪g ph輆 t﹜ Th祅h Й (378,303; 379,299; 386,302; 386,300; 375,301; 375,297; 370,299). Ch?c莕 l蕐 1 vi猲.<enter><color=red>Bc 5: <color>Giao Lng Ng﹏ Kho竛g cho th?r蘮, nh薾 頲 t蕀 gng  s鯽 xong.<enter><color=red>Bc 6: <color>Tr?v?Nga My ph竔 g苝 Di謚 萵.<enter><color=red>Bc 7: <color>Xu鑞g n骾, g苝 Di謚 萵 tng c玭g , truy襫 l阨 c馻 Di謚 萵.<enter><color=red>Bc 8: <color>Tr?v?Nga My ph竔, g苝 Di謚 萵 , ho祅 th祅h nhi謒 v?"},
+			[2] = {"G苝 Di謚 ","дn Ti襫 甶謓 g苝 Di謚 萵 , ti誴 nh薾 nhi謒 v?gi髉 c?蕐 h祅 g緉 chi誧 gng ng",0,1,16,1604,3170},
+			[3] = {"T譵 Di謚 萵 tng c玭g","Xu鑞g n骾, t譵 Di謚 萵 tng c玭g, nh薾 頲 n鯽 mi課g gng c遪 l筰.",1,1,13,1927,5260},
+			[4] = {"T譵 th?r蘮 Th祅h Й","дn Th祅h Й g苝 th?r蘮",0,0,11,388,320},
+			[5] = {" l蕐 Lng Ng﹏ Kho竛g","в hai mi課g gng l筰 ch?ngi th?r蘮, 甶 t譵 Lng Ng﹏ Kho竛g trong r鮪g ph輆 t﹜ Th祅h Й, Ch?c莕 l蕐 1 vi猲",1,0,11,378,303},
+			[6] = {"Giao Lng Ng﹏ Kho竛g cho th?r蘮","Giao Lng Ng﹏ Kho竛g cho th?r蘮, nh薾 頲 t蕀 gng  s鯽 xong.",0,0,11,388,320},
+			[7] = {"G苝 Di謚 ","Tr?v?Nga My ph竔 g苝 Di謚 萵.",0,1,16,1604,3170},
+			[8] = {"T譵 Di謚 萵 tng c玭g","Xu鑞g n骾, g苝 Di謚 萵 tng c玭g , truy襫 l阨 c馻 Di謚 萵..",1,1,13,1927,5260},
+			[9] = {"G苝 Di謚 ","Tr?v?Nga My ph竔 g苝 Di謚 萵.",0,1,16,1604,3170},
+		},
+		[2] = {
+			[1] = {"S?頲 phong l? <color=yellow>C萴 Y Ni<color>.<enter>H鋍 頲 v?c玭g: <color=yellow>T?H祅g Ph?ч<color><enter>N琲 ti誴 nh薾 nhi謒 v? Gi秐g Kinh Л阯g, Di謚 Nh?<enter>C竎 bc th鵦 hi謓 nhi謒 v?enter><color=red>Bc 1: <color>дn Gi秐g Kinh 阯g (240,307) g苝 Di謚 Nh? ti誴 nh薾 nhi謒 v?thu ph鬰 M穘h h?<enter><color=red>Bc 2: <color>дn M穘h H?huy謙 ng ph輆 sau n骾, trong  c?ba con B筩h H?(H?Tr緉g) (222,199; 225,201; 222,202), ph秈 nh ba con n祔 li猲 t鬰 ba l莕, s?khu蕋 ph鬰 頲 ch髇g.<enter><color=red>Bc 3: <color>Tr?v?Gi秐g Kinh 阯g g苝 Di謚 Nh?ph鬰 m謓h, ho祅 th祅h nhi謒 v?"},
+			[2] = {"G苝 Di謚 Nh?,"дn Gi秐g Kinh 阯g g苝 Di謚 Nh? ti誴 nh薾 nhi謒 v?thu ph鬰 M穘h h?,0,1,15,1586,3199},
+			[3] = {"дn M穘h H?huy謙 ng","дn M穘h H?huy謙 ng ph輆 sau n骾, trong  c?ba con B筩h H? ph秈 nh ba con n祔 li猲 t鬰 ba l莕, s?khu蕋 ph鬰 頲 ch髇g.",1,1,14,1784,3197},
+			[4] = {"G苝 Di謚 Nh?,"Tr?v?Gi秐g Kinh 阯g g苝 Di謚 Nh?ph鬰 m謓h, ho祅 th祅h nhi謒 v?,0,1,15,1586,3199},
+		},
+		[3] = {
+			[1] = {"S?頲 phong l? B筩h Li猲 Ti猲 T?<enter>H鋍 頲 v?c玭g:<enter>Th玦 Song V鋘g Nguy謙<enter>T?Tng уng Quy<enter>M閚g 謕<enter>N琲 ti誴 nh薾 nhi謒 v? M鬰 V﹏ T?<enter>C竎 bc th鵦 hi謓 nhi謒 v?enter><color=red>Bc 1: <color>дn ph輆 sau H藆 甶謓 (242,305), g苝 M鬰 V﹏ T? ti誴 nh薾 nhi謒 v?<enter><color=red>Bc 2: <color>дn ti謒 t筽 h鉧 ?Th祅h Й (386,321) mua ch﹏ g?enter><color=red>Bc 3: <color>дn ph輆 sau n骾, t譵 th蕐 m閠 m nc, nh b筰 n╩ con Th籲 L籲 Ch骯 (297,302; 327,294; 312,304; 324,298; 311,300) s?c鴘 頲 H醓 H?(X竎 su蕋 50%). H醓 H?s?ph竛 畂竛 xem b筺 c?ch﹏ g?hay kh玭g, n誹 c?th?b筺 c鴘 n?th祅h c玭g. N誹 b筺 kh玭g c?ch﹏ g?th?xem nh?ph秈 th鵦 hi謓 nhi謒 v?l筰 t?u.<enter><color=red>Bc 4: <color>Tr?v?giao H醓 H?giao cho M鬰 V﹏ T?ho祅 th祅h nhi謒 v?"},
+			[2] = {"G苝 M鬰 V﹏ T?,"дn ph輆 sau H藆 甶謓, g苝 M鬰 V﹏ T? ti誴 nh薾 nhi謒 v?,0,1,13,1937,4893},
+			[3] = {"дn ti謒 t筽 h鉧 ?Th祅h Й","дn ti謒 t筽 h鉧 ?Th祅h Й mua ch﹏ g?,0,1,11,3095,5137},
+			[4] = {"Цnh Th籲 L籲 Ch骯","дn ph輆 sau n骾, t譵 th蕐 m閠 m nc, nh b筰 Th籲 L籲 Ch骯 c鴘 頲 H醓 H?(X竎 su蕋 50%).N誹 c?ch﹏ g?th?b筺 c鴘 n?th祅h c玭g. N誹 b筺 kh玭g c?ch﹏ g?th?xem nh?ph秈 th鵦 hi謓 nhi謒 v?l筰 t?u",1,0,13,297,302},
+			[5] = {"G苝 M鬰 V﹏ T?,"Tr?v?giao H醓 H?giao cho M鬰 V﹏ T?ho祅 th祅h nhi謒 v?",0,1,13,1937,4893},
+		},
+		[4] = {
+			[1] = {"S?頲 phong l? Thanh Li猲 Ti猲 T?<enter>H鋍 頲 v?c玭g: L璾 Th駓<enter>N琲 ti誴 nh薾 nhi謒 v? T?Thi猲 甶謓 <color=yellow>B竔 Nguy謙 Ti猲 T?color> T?T?Hinh.<enter>C竎 bc th鵦 hi謓 nhi謒 v?enter><color=red>Bc 1: <color>дn T?Thi猲 甶謓 (246,304) g苝 T?T?Hinh, ti誴 nh薾 nhi謒 v?t譵 B筩h 觰 Tri襲 Ph鬾g kh骳 ph?<enter><color=red>Bc 2: <color>дn Th祅h Й -> Thanh Th祅h S琻 -> Th莕 Ti猲 чng. V祇 trong ng t譵 Cao nh﹏ (234,204), 玭g ta s?y猽 c莡 B筺 nh b筰 con Linh th?(235,203).<enter><color=red>Bc 3: <color>Sau khi nh b筰 n? b筺 l筰 nh蕄 v祇 l阨 tho筰 v韎 Cao nh﹏. g ta y猽 c莡 b筺 mang b鴆 tranh Ph?Dung C萴 K?n i kh骳 ph?<enter><color=red>Bc 4: <color>дn Th竔 B譶h Ti猽 C鬰 ?Th祅h Й ph? g苝 玭g ch?Ti猽 C鬰 (376,316), nh蕄 v祇 l阨 tho筰, 玭g ta y猽 c莡 b筺 t譵 Linh X?Hng nang, g T譶h H?Th﹏ ph?v?B輈h T?Gi韎 Ch? s?giao Ph?Dung C萴 K?<enter><color=red>Bc 5: <color>V祇 trong th祅h 甶 t譵 ba ngi, b筺 s?l蕐 頲 ba m鉵 b秓 v藅 n鉯 tr猲 :<enter>- Linh X?Hng nang: дn Th祅h Й t譵 Ti誸 Ti觰 mu閕 (383,315), nh蕄 v祇 l阨 tho筰, Ti誸 Ti觰 mu閕 y猽 c莡 b筺 mang Ng﹏ thi襪 (Tr﹎ c礽) n i. дn ti謒 t筽 h鉧 mua Ng﹏ thi襪 (386,321) v韎 gi?200 lng. Tr?l筰 g苝 Ti誸 Ti觰 mu閕, d飊g Ng﹏ thi襪 (Tr﹎ c礽) i Hng nang. <enter>- g T譶h H?Th﹏ ph? T譵 g苝 T?V﹏ Ph竝 S?t筰 T輓 Tng t?(403,319) ?Th祅h Й ph? l莕 lt tr?l阨 ba c﹗ h醝, s?nh薾 頲 g T譶h H?Th﹏ ph? (Цp 竛 l莕 lt l? B, D, C). N誹 nh?p sai, b筺 c?th?nh蕄 v祇 l阨 tho筰  th鵦 hi謓 l筰. <enter>- B輈h T?Gi韎 Ch? дn Th祅h Й t譵 T﹏ Vi猲 Ngo筰 (400,309), tr?l阨 hai c﹗ h醝 s?nh薾 頲 B輈h T?Gi韎 Ch?(Цp 竛 l?: B, C). N誹 nh?p sai, b筺 c?th?nh蕄 v祇 l阨 tho筰  th鵦 hi謓 l筰.<enter><color=red>Bc 6: <color>Tr?l筰 Th竔 B譶h Ti猽 C鬰 ?Th祅h Й ph? giao Linh X?Hng nang, g T譶h H?Th﹏ ph?v?B輈h T?Gi韎 Ch? i Ph?Dung C萴 K?<enter><color=red>Bc 7: <color>Tr?v?Th莕 Ti猲 ng, g苝 Cao nh﹏, nh蕄 v祇 l阨 tho筰, d飊g Ph?Dung C萴 K?i B竎h 觰 Tri襲 Phong.<enter><color=red>Bc 8: <color>Tr?v?Nga My ph竔, n T?Thi猲 甶謓 g苝 T?T?Hinh, giao B竎h 觰 Tri襲 Phong, ho祅 th祅h nhi謒 v?"},
+			[2] = {"G苝 T?T?Hinh","дn T?Thi猲 甶謓 g苝 T?T?Hinh, ti誴 nh薾 nhi謒 v?t譵 B筩h 觰 Tri襲 Ph鬾g kh骳 ph?",0,1,18,1603,3190},
+			[3] = {"T譵  Cao nh﹏","дn Th祅h Й -> Thanh Th祅h S琻 -> Th莕 Ti猲 чng. V祇 trong ng t譵 Cao nh﹏, 玭g ta s?y猽 c莡 B筺 nh b筰 con Linh th? Sau khi nh b筰 n? b筺 l筰 nh蕄 v祇 l阨 tho筰 v韎 Cao nh﹏. g ta y猽 c莡 b筺 mang b鴆 tranh Ph?Dung C萴 K?n i kh骳 ph?",1,0,23,234,204},
+			[4] = {"G苝 玭g ch?Ti猽 C鬰","дn Th竔 B譶h Ti猽 C鬰 ?Th祅h Й ph? g苝 玭g ch?Ti猽 C鬰, nh蕄 v祇 l阨 tho筰, 玭g ta y猽 c莡 b筺 t譵 Linh X?Hng nang, g T譶h H?Th﹏ ph?v?B輈h T?Gi韎 Ch? s?giao Ph?Dung C萴 K?",0,1,11,3012,5060},
+			[5] = {"T譵 Ti誸 Ti觰 mu閕","дn Th祅h Й t譵 Ti誸 Ti觰 mu閕 (383,315), nh蕄 v祇 l阨 tho筰, Ti誸 Ti觰 mu閕 y猽 c莡 b筺 mang Ng﹏ thi襪 (Tr﹎ c礽) n i",0,1,11,3068,5048},
+			[6] = {"дn ti謒 t筽 h鉧 mua Ng﹏ thi襪","дn ti謒 t筽 h鉧 mua Ng﹏ thi襪 (386,321) v韎 gi?200 lng.",0,1,11,3096,5136},
+			[7] = {"Tr?l筰 g苝 Ti誸 Ti觰 mu閕","Tr?l筰 g苝 Ti誸 Ti觰 mu閕, d飊g Ng﹏ thi襪 (Tr﹎ c礽) i Hng nang.",0,1,11,3068,5048},
+			[8] = {"T譵 g苝 T?V﹏ Ph竝 S?,"T譵 g苝 T?V﹏ Ph竝 S?t筰 T輓 Tng t?(403,319) ?Th祅h Й ph? l莕 lt tr?l阨 ba c﹗ h醝, s?nh薾 頲 g T譶h H?Th﹏ ph?,0,1,11,3223,5108},
+			[9] = {"T譵 T﹏ Vi猲 Ngo筰","дn Th祅h Й t譵 T﹏ Vi猲 Ngo筰 (400,309), tr?l阨 hai c﹗ h醝 s?nh薾 頲 B輈h T?Gi韎 Ch?(Цp 竛 l?: B, C)",0,1,11,3202,4951},
+			[10] = {"Tr?l筰 Th竔 B譶h Ti猽 C鬰","Tr?l筰 Th竔 B譶h Ti猽 C鬰 ?Th祅h Й ph? giao Linh X?Hng nang, g T譶h H?Th﹏ ph?v?B輈h T?Gi韎 Ch? i Ph?Dung C萴 K?",0,1,11,3012,5060},
+			[11] = {"Tr?l筰 g苝 Cao nh﹏","Tr?v?Th莕 Ti猲 ng, g苝 Cao nh﹏, nh蕄 v祇 l阨 tho筰, d飊g Ph?Dung C萴 K?i B竎h 觰 Tri襲 Phong.",1,0,23,234,204},
+			[12] = {"Tr?v?g苝 T?T?Hinh","Tr?v?Nga My ph竔, n T?Thi猲 甶謓 g苝 T?T?Hinh, giao B竎h 觰 Tri襲 Phong, ho祅 th祅h nhi謒 v?",0,1,18,1603,3190},
+		},
+		[5] = {
+			[1] = {"S?頲 phong l? T竛 Hoa Thi猲 N? H鋍 頲 v?c玭g: Ph藅 T﹎ T?H鱱, N琲 ti誴 nh薾 nhi謒 v? Ch竛h 甶謓, Chng m玭 Thanh Hi觰 S?Th竔."},
+			[2] = {"G苝 Thanh Hi觰 S?Th竔","",0,1,17,1595,3207},
+			[3] = {"G苝 T?V﹏ Ph竝 S?,"",0,1,11,3222,5107},
+			[4] = {"Цnh b筰 Ph秐 T╪g u M鬰 c鴘 T?H秈 Чi S?,"",1,1,12,1841,3181},
+			[5] = {"G苝 Thanh Hi觰 S?Th竔","",0,1,17,1595,3207},
+		},
+		[6] = {
+			[1] = {"S?頲 phong l? Th竛h N? N琲 ti誴 nh薾 nhi謒 v? Ch竛h 甶謓, Chng m玭 Thanh Hi觰 S?Th竔."},
+			[2] = {"G苝 Thanh Hi觰 S?Th竔","",0,1,17,1595,3207},
+			[3] = {"Цnh Thanh H遖 l蕐 Y猲 Ng鋍 Ch?Ho祅","",1,1,9,2111,5992},
+			[4] = {"G苝 Thanh Hi觰 S?Th竔","",0,1,17,1595,3207},
+		},
+		[7] = {
+			[1] = {"Y猽 c莡: ngi ch琲  xu蕋 s? ng c蕄 tr猲 60, ch璦 gia nh藀 bang ph竔 n祇, c?th?n g苝 trng m玭 c馻 ph竔 giao 5 v筺 lng  tr飊g ph秐 s?m玭. T? v?sau c?th?t飝 ?ra v祇 s?m玭. Ph莕 Thu雗g: B蕋 Di謙 B蕋 Tuy謙, Ph藅 Quang Ph?Chi誹, Phan  Ph筺 Xng, Ph藅 Ph竝 V?Bi猲. Л頲 phong l祄:Kim жnh Th竛h N?"},
+		},
+		[8] = {
+			[1] = {"Y猽 c莡: T?c蕄 90 tr?l猲, danh v鋘g tr猲 240 甶觤, l?Nga My k?danh  t? trc m総 ch璦 gia nh藀 m玭 ph竔 n祇. Ph莕 thng: Tam Nga T?Nguy謙, Phong Sng To竔 秐h, Ph?ч Ch髇g Sinh. Danh v鋘g 頲 30 甶觤."},
+			[2] = {"G苝 Ti猽 B?B?,"",0,1,11,3109,5011},
+			[3] = {"Цnh D?Xoa, l蕐 V?T?Thi猲 Th?,"",1,1,23,1669,3164},
+			[4] = {"G苝 Ti猽 B?B?,"",0,1,11,3109,5011},
+			[5] = {"G苝 Thanh Hi觰 S?Th竔","",0,1,17,1595,3207},
+			[6] = {"G苝 Ti猽 B?B?,"",0,1,11,3109,5011},
+			[7] = {"G苝 Thanh Hi觰 S?Th竔","",0,1,17,1595,3207},
+		},
+		[9] = {
+			[1] = {"K?n╪g c蕄 120 c?th?mua trong k?tr﹏ c竎"},
+		},
+		[10] = {
+			[1] = {"Nhi謒 v?k?danh  t?ph竔 Nga My. Ph秈 xu蕋 s?m韎 c?th?l祄 nhi謒 v?n祔."},
+			[2] = {"G苝 Di謕 B╪g H祅. Цp 竛 3-3-1","",1,1,13,1916,5320},
+			[3] = {"G苝 T莕 K?Phong. Цp 竛 3-1-2","",1,1,13,1817,5157},
+			[4] = {"G苝 H?Linh Phi猽. Цp 竛 1-2-3","",1,1,13,1836,5126},
+			[5] = {"G苝 T?V﹏ La","",1,1,13,1775,5145},
+			[6] = {"Цnh b筰 V?Y Ni l蕐 B筩h Ng鋍 Nh??,"",1,1,13,1733,5116},
+			[7] = {"G苝 Di謚 Tr莕","",1,1,13,1845,5010},
+		},
+	},
+	[5] = { --Thuy yen OK
+		[1] = {
+			[1] = {"S?頲 phong l? Tam Ph萴 Hoa S? H鋍 頲 v?c玭g: Th髖 Y猲 o Ph竝, Th髖 Y猲 Song o. N琲 ti誴 nh薾 nhi謒 v? Ch?ph遪g, Chng m玭 Do穘 H祄 Y猲.\n<color=red>Bc 1<color>: дn Ch?ph遪g <color=yellow>(35/75)<color> g苝 Chng m玭 Do穘 H祄 Y猲 , ti誴 nh薾 nhi謒 v?truy t譵 c﹜ Tr﹎ b?th蕋 l筩.\n<color=red>Bc 2<color>: дn khu r鮪g ph輆 Йng c馻 Thu?Y猲, b筺 h穣 nh nh鱪g con H錸g H?(C竜 ) <color=yellow>(83/105; 90/99; 82/ 99; 87/ 97)<color> l蕐 頲 Th髖 V?Tr﹎.\n<color=red>Bc 3<color>: Mang Th髖 V?Tr﹎ v?giao cho Chng m玭 Do穘 H祄 Y猲, ho祅 th祅h nhi謒 v?"},
+			[2] = {"G苝 Do穘 H祄 Y猲","",0,1,161,1591,3203},
+			[3] = {"Цnh b筰 C竜 п","",1,1,154,667,1691},
+			[4] = {"Tr?v?giao Th髖 V?Tr﹎ cho Do穘 H祄 Y猲","",0,1,161,1591,3203},
+		},
+		[2] = {
+			[1] = {"S?頲 phong l? Nh?Ph萴 Hoa S? H鋍 頲 v?c玭g: B╪g T﹎ Tr竔 秐h. N琲 ti誴 nh薾 nhi謒 v? Thi猲 謓, Y猲 Hi觰 Tr竔..\n<color=red>Bc 1<color>: дn Th?Ng鋍 ёnh <color=yellow>(43/90)<color> g苝 Y猲 Hi觰 Tr竔 , ti誴 nh薾 nhi謒 v?甶 h竔 hoa. (M筺 У La Hoa l?m閠 lo筰 hoa k辌h c, v?v藋 n閕 trong th阨 gian quy nh ph秈 h竔  甧m v? 頲 chng m玭 gi秈 c, n誹 kh玭g b筺 s?ch誸).\n<color=red>Bc 2<color>:  v?hng T﹜ B綾 (b猲 tr竔 g莕 M?Cung c蕀 a), h穣 h竔 10 a Чi M筺 У La hoa (56/59; 55/63; 72/42; 69/53; 61/48; 73/47; 80/43; 72/39; 66/39; 63/40). Khi b筺 b総 u h竔 a hoa u ti猲 th?th阨 gian tr髇g c c馻 b筺 b総 u 頲 t輓h. Tr髇g c chia l祄 b鑞 giai 畂筺, m鏸 giai 畂筺 l?30 ph髏.\n<color=red>Bc 3<color>: M鏸 giai 畂筺 b?tr髇g c, h?th鑞g u ph竧 ra th玭g b竜 cho ngi ch琲 bi誸, sau khi giai 畂筺 th?t?k誸 th骳, ngi ch琲 s?b?ch誸. L骳 n祔 b筺 s?ph秈 th鵦 hi謓 nhi謒 v?l筰 t?u. Trc khi giai 畂筺 th?t?k誸 th骳, b筺 ph秈 甶 t譵 Y猲 Hi觰 Tr竔  頲 gi秈 c v?t輓h s?lng hoa. N閕 trong th阨 gian h筺 nh b筺 h竔  10 a hoa 甧m v?giao th?m韎 ho祅 th祅h 頲 nhi謒 v?\nMang  10 a hoa v?cho Y猲 Hi觰 Tr竔 , ho祅 th祅h nhi謒 v?"},
+			[2] = {"G苝 Y猲 Hi觰 Tr竔","",0,1,160,1593,3195},
+			[3] = {"дn n琲 h竔 Чi M筺 У La Hoa 1","",1,0,154,56,59},
+			[4] = {"дn n琲 h竔 Чi M筺 У La Hoa 2","",1,1,154,446,1020},
+			[5] = {"дn n琲 h竔 Чi M筺 У La Hoa 3","",1,1,154,579,680},
+			[6] = {"дn n琲 h竔 Чi M筺 У La Hoa 4","",1,0,154,69,53},
+			[7] = {"дn n琲 h竔 Чi M筺 У La Hoa 5","",1,0,154,60,49},
+			[8] = {"дn n琲 h竔 Чi M筺 У La Hoa 6","",1,1,154,587,769},
+			[9] = {"дn n琲 h竔 Чi M筺 У La Hoa 7","",1,0,154,80,43},
+			[10] = {"дn n琲 h竔 Чi M筺 У La Hoa 8","",1,0,154,72,39},
+			[11] = {"дn n琲 h竔 Чi M筺 У La Hoa 9","",1,0,154,66,39},
+			[12] = {"дn n琲 h竔 Чi M筺 У La Hoa 10","",1,1,154,509,648},
+			[13] = {"Tr?v?giao cho Y猲 Hi觰 Tr竔","",0,1,160,1593,3195},
+		},
+		[3] = {
+			[1] = {"S?頲 phong l? <color=yellow>Nh蕋 Ph萴 Hoa S?color>. H鋍 頲 v?c玭g: <color=yellow>V?Ф L?Hoa, Ph?V﹏ T祅 Tuy誸<color>. N琲 ti誴 nh薾 nhi謒 v? <color=yellow>B竎h Hoa 甶謓, H?M?Tuy誸<color>.<enter><color=red>Bc 1<color>: дn B竎h Hoa 謓 <color=yellow>(53/85)<color> g苝 <color=yellow>H?M?Tuy誸<color>, ti誴 nh薾 nhi謒 v?<enter><color=red>Bc 2<color>: дn <color=yellow>Чi L?color> t譵 <color=yellow>祅 L穙 H竛 (189/204)<color>, v鮝 g苝 th?th蕐 <color=yellow>祅 L穙 H竛<color> 產ng kh鉩 l鉩 產u bu錸, bi誸 頲 con g竔 l穙 b?<color=yellow>Th?Ph?color> b総 甶.<enter><color=red>Bc 3<color>:  v?ph輆 t﹜ th祅h, n 觤 Thng S琻, 甶 v祇 Th?ph?s琻 ng <color=yellow>(232/172)<color>, gi誸 t猲 Th?ph?<color=yellow>(232/193)<color> b筺 c?th?c鴘 頲 con g竔 c馻 祅 L穙 H竛 nh璶g x竎 su蕋 r蕋 th蕄.<enter><color=red>Bc 4<color>: Tr?l筰 g苝 <color=yellow>祅 L穙 H竛<color>, nh蕄 v祇 l阨 tho筰, bi誸 頲 c莕 ph秈 甶 t譵 ba lo筰 dc li謚.<enter><color=red>Bc 5<color>: дn B課 T祏 t譵 m閠 Thuy襫 gia <color=yellow>(204/183)<color>, b?1000 lng mua 頲 v礽 con Ng﹏ Tuy誸 Ng?<enter><color=red>Bc 6<color>: V祇 Th祅h Чi L?n su鑙 H?謕, s?th蕐 hai con bm B輈h Thng Ph鬾g 謕 <color=yellow>(184/196)<color>, b筺 ch?c莕 nh蕄 chu閠 v祇 m閠 con, s?th蕐 xu蕋 hi謓 d遪g ch?<color=yellow>Nh薾 頲 B輈h Thng Ph鬾g 謕<color>, b筺 ch?c莕 l蕐 m閠 con l?.<enter><color=red>Bc 7<color>: дn V﹏ L閚g ёnh, t譵 m閠 con Th籲 l籲  <color=yellow>(182/197)<color>, nh蕄 chu閠 v祇 n? s?th蕐 xu蕋 hi謓 d遪g ch? <color=yellow>Nh薾 頲 th籲 l籲 <color> (S?h琲 kh?t譵 v?n?bi m竔 nh che khu蕋), b筺 ch?c莕 l蕐 m閠 con l?.<enter><color=red>Bc 8<color>: Sau khi t譵 頲 ba lo筰 dc li謚 tr猲, tr?v?Th髖 Y猲 m玭, giao cho H?M?Tuy誸, ho祅 th祅h nhi謒 v?"},
+			[2] = {"дn B竎h Hoa 謓 g苝 H?M?Tuy誸","",0,1	,155,	1586,	3205},
+			[3] = {"дn Чi L?t譵 祅 L穙 Ho竛","",	0,	1,	162,	1512,	3277},
+			[4] = {"V祇 Th?Ph?S琻 чng gi誸 Th?Ph?c鴘 con g竔 祅 L穙 Ho竛","",	1,	1,	170,	1858,	3094},
+			[5] = {"Tr?l筰 g苝 祅 L穙 Ho竛","",	0,	1	,162,	1512,	3277},
+			[6] = {"дn b課 t祏 mua Ng﹏ Tuy誸 Ng?c馻 Thuy襫 Gia","",	1,	1,	162,	1640,	2935},
+			[7] = {"дn su鑙 H?謕 th祅h Чi L?b総 B輈h Thng Ph鬾g 謕","",	0,	1,	162,	1472,	3145},
+			[8] = {"дn V﹏ L閚g ёnh b総 Th籲 L籲 п","",	0,	1,	162,	1459,	3146},
+			[9] = {"Quay tr?v?g苝 H?M?Tuy誸","",	0,	1,	155,	1586,	3205},
+		},
+		[4] = {
+			[1] = {"S?頲 phong l? Hoa Th莕 S?Gi? H鋍 頲 v?c玭g: <color=yellow>H?Th?H祅 B╪g<color>. N琲 ti誴 nh薾 nhi謒 v? Thi猲 謓, Y猲 Hi觰 Tr竔.<enter><color=red>Bc 1<color>: дn Th?Ng鋍 ёnh (43/90) g苝 Y猲 Hi觰 Tr竔, ti誴 nh薾 nhi謒 v?甶 c鴘 nh鱪g c?g竔 b?竎 b?b総 甶.<enter><color=red>Bc 2<color>: дn Чi L? t譵 nh?t猲 竎 b?(206/200), trong nh?s?kh玭g c?ai, trong s﹏ b筺 s?ph竧 hi謓 ra m閠 l鑙 甶 v祇 m藅 o.  v祇 trong M藅 o nh b筰 nh鱪g t猲 竎 b? th?(223/199; 201/204; 197/195), ph竧 hi謓 ra 竎 b? mang nh鱪g c?g竔 kia l猲 觤 Thng S琻.<enter><color=red>Bc 3<color>: L藀 t鴆 l猲 觤 Thng S琻, ti課 v祇 觤 Thng ng (210/195), b猲 trong l?m閠 m?cung c?r蕋 nhi襲 <color=yellow>Ф Th?color>\n\t\t\t-T筰 t莕g m閠 b筺 nh b筰 hai t猲 竎 B?B秓 Ti猽 (199/191; 186/189), l蕐 頲 chi誧 ch譨 kh鉧 th?nh蕋 (X竎 su蕋 50%).\n\t\t\t- T筰 t莕g th?hai nh hai t猲 竎 B?H?Vi謓 (193/190; 186/195), l蕐 頲 chi誧 ch譨 kh鉧 th?hai (X竎 su蕋 40%).\n\t\t\t- L猲 t莕g th?ba nh m閠 t猲 竎 B?Ф Th?(197/185; 196/186), l蕐 頲 chi誧 ch譨 kh鉧 th?ba (X竎 su蕋 30%).<enter><color=red>Bc 4<color>: Sau khi l蕐  ba chi誧 ch譨 kh鉧, nh蕄 chu閠 v祇 c?quan (197/186), h?th鑞g s?xu蕋 hi謓 d遪g ch?<color=yellow>竎 B? qu?s?b筺 n猲 b?tr鑞 r錳 ! H穣 d飊g ba chi誧 ch譨 kh鉧 m?'竚 Th蕋' c鴘 c竎 c?g竔 ra<color>.<enter><color=red>Bc 5<color>: Tr?v?Th髖 Y猲 m玭 g苝 Y猲 Hi觰 Tr竔 ph鬰 m謓h, ho祅 th祅h nhi謒 v?"},
+			[2] = {"дn Th?Ng鋍 ёnh g苝 Y猲 Hi觰 Tr竔","",	0,	1,	160,	1593,	3195},
+			[3] = {"дn 竎 B?gia a o ti猽 di謙 竎 B?Ф Th?,"",	1,	1,	163,	1789,	3195},
+			[4] = {"Ti猽 di謙 竎 B?B秓 Ti猽","",	1,	0,	171,	199,	191},
+			[5] = {"Ti猽 di謙 竎 B?H?Vi謓","",	1,	1,	172,	1550,	3040},
+			[6] = {"Ti猽 di謙 竎 B?Ф Th?t筰 t莕 3 觤 Thng чng","",	1,	1,	173,	1582,	2966},
+			[7] = {"D飊g 3 ch譨 kh鉧 m?c?quan","",	1,	1,	173,	1582,	2966},
+			[8] = {"Tr?v?g苝 Y猲 Hi觰 Tr竔","",	0,	1,	160,	1593,	3195},
+		},
+		[5] = {
+			[1] = {"S?頲 phong l? Hoa Tinh. H鋍 頲 v?c玭g: <color=yellow>Tuy誸 秐h<color>. N琲 ti誴 nh薾 nhi謒 v? Chng m玭 Do穘 H祄 Y猲.<enter><color=red>Bc 1<color>: дn Ch?ph遪g (35/75) g苝 Chng m玭 Do穘 H祄 Y猲 , ti誴 nh薾 nhi謒 v?gi髉 H?Vi猲 phng trng 畂箃 l筰 V?уng Quan .<enter><color=red>Bc 2<color>: дn Чi L?trc m苩 S飊g Th竛h t?l?Thi猲 T莔 th竝. G苝 H?Vi猲 phng trng (219/196), nh蕄 v祇 l阨 tho筰.<enter><color=red>Bc 3<color>:  V祇 Thi猲 T莔 Th竝, M鏸 t莕g ch?c莕 nh m閠 t猲 tr閙 b秓 t芻. T莕g 1 (214/193), T莕g 2 (195/202), T莕g 3 (198/200), sau khi nh b筰 h誸 ba t猲 s?l蕐 l筰 頲 V?уng Quan  .<enter><color=red>Bc 4<color>: Mang V?уng Quan  V?cho H?Vi猲 phng trng.<enter><color=red>Bc 5<color>: Tr?l筰 Th髖 Y猲 m玭 g苝 Chng m玭 Do穘 H祄 Y猲 ph鬰 m謓h, ho祅 th祅h nhi謒 v?"},
+			[2] = {"дn ch?ph遪g g苝 Do穘 H祄 Y猲","",	0,	1,	161,	1591,	3203},
+			[3] = {"дn Чi L?g苝 H?Vi猲 Phng Trng","",	0,	1,	162,	1750,	3136},
+			[4] = {"Ti猽 di謙 Tr閙 B秓 T芻 t筰 t莕g 1 Thi猲 T﹎ Th竝","",	1,	1,	164,	1710,	3088},
+			[5] = {"Ti猽 di謙 Tr閙 B秓 T芻 t筰 t莕g 2 Thi猲 T﹎ Th竝","",	1,	1,	165	,1558,	3232},
+			[6] = {"Ti猽 di謙 Tr閙 B秓 T芻 t筰 t莕g 3 Thi猲 T﹎ Th竝","",	1,	1,	166,	1582,	3200},
+			[7] = {"Mang V?уng Quan  cho H?Vi猲 Phng Trng","",	0,	1,	162,	1750,	3136},
+			[8] = {"Tr?v?g苝 Do穘 H祄 Y猲","",	0,	1,	161,	1591,	3203},
+		},
+		[6] = {
+			[1] = {"S?頲 phong l? Hoa Ti猲. N琲 ti誴 nh薾 nhi謒 v? Xu﹏ Hoa B?B?<enter><color=red>Bc 1<color>: дn H藆 Hoa Vi猲 (40/74) g苝 Xu﹏ Hoa B?B? ti誴 nh薾 nhi謒 v?甶襲 tra s?th藅 trong c蕀 a Th髖 Y猲 m玭.<enter><color=red>Bc 2<color>: дn m Ng鋍 n?s?th蕐 l鑙 v祇 C蕀 мa s琻 ng (78/78).<enter><color=red>Bc 3<color>: V祇 C蕀 мa s琻 ng, nh hai t猲 Th秓 kh蕌 (187/193; 209/175), l蕐 頲 m閠 chi誧 kh╪ t?(X竎 su蕋 r蕋 th蕄).<enter><color=red>Bc 4<color>:  v祇 trong g苝 m閠 玭g gi?(228/191) nh薾 1 b鴆 th?<enter><color=red>Bc 5<color>: Quay l筰 giao th?cho Xu﹏ Hoa B?B?<enter><color=red>Bc 6<color>: Sau  n Ch?ph遪g (35/75) g苝 Chng m玭 Do穘 H祄 Y猲, ho祅 th祅h nhi謒 v?"},
+			[2] = {"дn h藆 hoa vi猲 g苝 Xu﹏ Hoa B?B?,"",	0,	0,	154,	40,	74},
+			[3] = {"Ti猽 di謙 th秓 kh蕌 t筰 c蕀 a s琻 ng l蕐 kh╪ t?,"",	1,	1,	158,	1504,	3098},
+			[4] = {"Nh薾 b鴆 th?t?m閠 玭g gi?,"",	1,	1,	158,	1832,	3066},
+			[5] = {"Quay l筰 g苝 Xu﹏ Hoa B?B?,"",	0,	0,	154,	40,	74},
+			[6] = {"G苝 trng m玭 Do穘 H祄 Y猲","",	0,	1,	161,	1591,	3203},
+		},
+		[7] = {
+			[1] = {"S?頲 phong l? Hoa Th莕. H鋍 頲 v?c玭g: <color=yellow>M鬰 D?L璾 Tinh, B輈h H秈 Tri襲 Sinh, B╪g C鑤 Tuy誸 T﹎<color>. N琲 ti誴 nh薾 nhi謒 v? Chng m玭 Do穘 H祄 Y猲.<enter><color=yellow>Y猽 c莡<color>: ngi ch琲  xu蕋 s? ng c蕄 tr猲 60, ch璦 gia nh藀 bang ph竔 n祇, c?th?n g苝 trng m玭 c馻 ph竔 giao 5 v筺 lng  tr飊g ph秐 s?m玭. T? v?sau c?th?t飝 ?ra v祇 s?m玭."},
+		},
+		[8] = {
+			[1] = {"K?n╪g c蕄 90 c?th?mua t筰 c鯽 h祅g tinh l鵦 hay k?tr﹏ c竎"},
+		},
+		[9] = {
+			[1] = {"K?n╪g 120 c?th?mua t筰 k?tr﹏ c竎"},
+		},
+		[10] = {
+			[1] = {"Ch鴆 n╪g ch璦 ph竧 tri觧"},
+		},
+	},
+	[6] = { --Cai bang OK
+		[1] = {
+			[1] = {"S?頲 phong l? Ch蕄 Чi е t? H鋍 頲 v?c玭g: C竔 Bang B鎛g ph竝, C竔 Bang Chng ph竝. N琲 ti誴 nh薾 nhi謒 v? Bang ch?H?Nh﹏ Ng?<enter><color=red>Ch??color>цi tho筰 v韎 T髖 B竛 Ti猲 ng c筺h 玭g ch?T鰑 L莡 p 竛 CBD"},
+			[2] = {"дn g苝 Bang ch?H?Nh﹏ Ng?,"дn g苝 Bang ch?H?Nh﹏ Ng?(191/231), ti誴 nh薾 nhi謒 v?甶 mua ru.",0,1,115,1527,3706},
+			[3] = {"дn T鰑 l莡 (mua 4 lo筰 ru, c莕 ng﹏ lng)","дn T鰑 l莡 ?Dng Ch﹗, g苝 玭g ch?t鰑 甶誱 (216/189), nh蕄 v祇 l阨 tho筰. Mua 頲 b鑞 lo筰 ru , duy ch?c?Hu?Tuy襫 t鰑 th?v鮝 b竛 cho T髖 B竛 Ti猲 m蕋 r錳!",0,1,80,1731,3033},
+			[4] = {"G苝 T髖 b竛 ti猲 (ngay b猲 c筺h - p 竛 B-C-D)","",0,1,80,1731,3033},
+			[5] = {"Mang 5 lo筰 ru v?cho H?Nh﹏ Ng?,"Mang n╩ lo筰 ru v?giao cho Bang ch?H?Nh﹏ Ng?, ho祅 th祅h nhi謒 v?",0,1,115,1527,3706},
+		},
+		[2] = {
+			[1] = {"S?頲 phong l? Ch蕄 B竧 е t? H鋍 頲 v?c玭g: H鉧 Hi觤 Vi Di. N琲 ti誴 nh薾 nhi謒 v? е t?C竔 Bang."},
+			[2] = {"G苝  t?c竔 bang","",0,1,115,1477,3575},
+			[3] = {"Цnh b筰 M筺h Vi詎 T礽","",1,1,115,1529,3040},
+			[4] = {"G苝 M筺h Thng Lng","",0,1,115,1555,3792},
+		},
+		[3] = {
+			[1] = {"S?頲 phong l? Ch蕄 B鎛g е t? H鋍 頲 v?c玭g: Gi竛g Long Chng, Ф C萿 Tr薾. N琲 ti誴 nh薾 nhi謒 v? Chng B鎛g Trng l穙 La Khu玭g Sinh."},
+			[2] = {"G苝 La Khu玭g Sinh","",0,1,115,1520,3616},
+			[3] = {"T譵 Tri謚 У Ch?,"",0,0,80,213,177},
+			[4] = {"Цnh b筰 Kim Binh (c鴘  t?c竔 bang)","",1,1,92,1832,2487},
+			[5] = {"T譵 Tri謚 У Ch?(nh薾 V╪ Th?","",0,0,80,213,177},
+			[6] = {"Giao cho La Khu玭g Sinh","",0,1,115,1520,3616},
+		},
+		[4] = {
+			[1] = {"S?頲 phong l? Long u е t? H鋍 頲 v?c玭g: Ho箃 B蕋 L璾 Th? N琲 ti誴 nh薾 nhi謒 v? Truy襫 C玭g Trng l穙 Ng魕 Li評 g.<enter><color=red>Ch??color>Цnh Kim Qu鑓 Th輈h Kh竎h cho t韎 khi nh薾 Th輈h s竧 m藅 h祄"},
+			[2] = {"дn g苝 Ng魕 Li評 g","",0,1,115,1530,3867},
+			[3] = {"Цnh b筰 Kim Qu鑓 Th輈h Kh竎h 1 (l蕐 Th輈h s竧 m藅 h祄 - t?l?th蕄)","",1,0,180,226,183},
+			[4] = {"Цnh b筰 Kim Qu鑓 Th輈h Kh竎h 2 (l蕐 Th輈h s竧 m藅 h祄 - t?l?th蕄)","",1,0,180,178,195},
+			[5] = {"V?g苝 Ng魕 Li評 g","",0,1,115,1529,3866},
+			[6] = {"G苝 Trng Tu蕁","",0,1,80,1608,3154},
+			[7] = {"Tr?l筰 g苝 Ng魕 Li評 g","",0,1,115,1529,3866},
+		},
+		[5] = {
+			[1] = {"S?頲 phong l? Чi Long u. H鋍 頲 v?c玭g: B鎛g Ф 竎 C萿, H祅g Long H鱱 H鑙. N琲 ti誴 nh薾 nhi謒 v? Bang ch?H?Nh﹏ Ng?<enter><color=red>Ch??color> Sau khi v祇 頲 Ho祅g Cung, t?ch箉 n 202 200  v祇 m藅 th蕋, n 210 187  a a  cho T祇 C玭g C玭g.<enter><enter>Sau khi ph竧 hi謓 T祇 C玭g C玭g l?n閕 gi竛, quay l筰 m藅 o, nh蕄 n鉯 chuy謓 v韎 T祇 C玭g C玭g r錳 m韎 quay ra nh чi Trng V?Binh, th蕐 c?th玭g b竜 <color=red>(nh ng?t猲 v?s?ho祅g cung 產ng b秓 v?t祇 c玭g c玭g)<color> th?n鉯 chuy謓 v韎 T祇 C玭g C玭g."},
+			[2] = {"дn g苝 Bang ch?H?Nh﹏ Ng?,"",0,1,115,1527,3706},
+			[3] = {"G苝 v?binh ho祅g cung L﹎ An (b?ng╪ l筰 kh玭g cho v祇)","",0,1,176,1634,3203},
+			[4] = {"T譵 Trng Tu﹏","",0,1,176,1482,3416},
+			[5] = {"Tr?l筰 g苝 v?binh ho祅g cung L﹎ An","",0,1,176,1634,3203},
+			[6] = {"Sau khi a a  cho T祇 C玭g C玭g, tr?v?g苝 Trng Tu蕁","",0,1,176,1482,3416},
+			[7] = {"t l鉻 Ti觰 Th竔 Gi竚  v祇 Ho祅g Cung","",0,1,176,1634,3203},
+			[8] = {"Цnh b筰 T祇 C玭g C玭g r錳 quay v?t譵 Trng Tu﹏","",0,1,176,1482,3416},
+			[9] = {"дn g苝 Bang ch?H?Nh﹏ Ng?,"",0,1,115,1527,3706},
+		},
+		[6] = {
+			[1] = {"S?頲 phong l? Ti猽 Dao Th莕 C竔. N琲 ti誴 nh薾 nhi謒 v? Chng B竧 Trng l穙 T?Tam Trng.<enter><color=red>Ch??color> : ?nhi謒 v?n祔, ?c竎 rng c莕 ch譨 kh鉧  m? b筺 c?th?nh b筰 qu竔 v藅 tng 鴑g  nh薾 ch譨 kh鉧 nhi襲 l莕. V?d? sau khi  m?rng b筺 c?th?quay l筰 nh H?Quy襫 l莕 n鱝  l蕐 ch譨 kh鉧 ra m?rng, cho n khi b筺 nh薾 頲 2 c竔 t骾 th?th玦.<enter>T﹏g 1 : Цnh H?Quy襫 m?rng cho n khi l蕐 頲 2 t骾 v秈<enter>T﹏g 2 c?2 rng nh璶g ch?l蕐 頲 1 t骾 v秈 ho芻 kh玭g l蕐 頲 t骾 n祇. T﹏g 5 Nhi襲 nh蕋 l蕐 頲 2 t骾 v秈. "},
+			[2] = {"G苝 T?Tam Trng","",0,1,115,1512,3790},
+			[3] = {"T1 nh b筰 H?Quy襫 (l蕐 ch譨 kh鉧 - max 2 c竔)","",1,1,116,1711,3016},
+			[4] = {"T1 m?rng H?Quy襫. Max 2 t骾","",1,1,116,1775,3087},
+			[5] = {"T2 kh玭g c莕 ch譨 m?rng 1. T2 2 rng max 1 t骾","",1,1,117,1615,3131},
+			[6] = {"T2 kh玭g c莕 ch譨 m?rng 2. T2 2 rng max 1 t骾","",1,1,117,1688,3022},
+			[7] = {"T4 kh玭g c莕 ch譨 m?rng 1. Rng 1&2 max 2 t骾","",1,1,119,1518,3122},
+			[8] = {"T4 kh玭g c莕 ch譨 m?rng 2. Rng 1&2 max 2 t骾","",1,1,119,1526,3192},
+			[9] = {"T4 nh b筰 V藅 H筩 H祅h (l蕐 ch譨 kh鉧)","",1,1,119,1511,3301},
+			[10] = {"T4 m?rng (l蕐 t骾 r錳 quay l筰 nh H筩 H祅h l蕐 ch譨 kh鉧 2). Max 2 t骾","",1,1,119,1504,3327},
+			[11]= {"T5 nh b筰 X輈h di謒 (l蕐 ch譨 kh鉧)","",1,1,120,1757,3041},
+			[12]= {"T5 m?rng 1. Max 2 t骾","",1,1,120,1738,3024},
+			[13]= {"T5 m?rng 2. Max 2 t骾","",1,1,120,1696,3051},
+			[14] = {"я 9 t骾 v秈 v?g苝 T?Tam Trng","",0,1,115,1512,3790},
+		},
+		[7] = {
+			[1] = {"Y猽 c莡: ngi ch琲  xu蕋 s? ng c蕄 tr猲 60, ch璦 gia nh藀 bang ph竔 n祇, c?th?n g苝 trng m玭 c馻 ph竔 giao 5 v筺 lng  tr飊g ph秐 s?m玭. T? v?sau c?th?t飝 ?ra v祇 s?m玭. Ti猽 Di猽 C玭g, T髖 謕 Cu錸g V? Л頲 phong l祄:C鰑 Чi Trng L穙."},
+		},
+		[8] = {
+			[1] = {"Y猽 c莡: T?c蕄 90 tr?l猲, danh v鋘g tr猲 240 甶觤, l?C竔 Bang k?danh  t? trc m総 ch璦 gia nh藀 m玭 ph竔 n祇 (Ch?). H鋍 頲 Phi Long T筰 Thi猲, Thi猲 H?V?C萿. Danh v鋘g 頲 30 甶觤. (T蕋 c?c竎 m玭 ph竔 kh竎 u c?th?l祄 nhi謒 v?n祔  nh薾 ph莕 thng 甶觤 danh v鋘g, nh璶g kh玭g h鋍 頲 chi猽 th鴆).<enter><color=red>Ch??color> Sau khi nh b筰 m cao th?c鴘 頲 Gi韎 V?T?r錳 ph秈 n鉯 chuy謓 v韎 n?th?m韎 quay v?g苝 La Khu玭g Sinh"},
+			[2] = {"G苝 Gi韎 V?T?,""},
+			[3] = {"Mua Hu?Tuy襫 T鰑",""},
+			[4] = {"Mang ru cho Gi韎 V?T?,""},
+			[5] = {"G苝 La Khu玭g Sinh",""},
+			[6] = {"Quay tr?l筰 g苝 Gi韎 V?T?,""},
+			[7] = {"C鴘 頲 Gi韎 V?T? quay v?g苝 La Khu玭g Sinh",""},
+		},
+		[9] = {
+			[1] = {"K?n╪g c蕄 120 c?th?mua trong K?Tr﹏ C竎"},
+		},
+		[10] = {
+			[1] = {"Nhi謒 v?k?danh  t?},
+			[2] = {"G苝 T?Tam Trng","",0,1,115,1512,3790},
+			[3] = {"G苝 Li評 Чi Gia, n鉯 v?chuy謓 Con Ch竨","",0,1,80,1666,3220},
+			[4] = {"Nhi謒 Thi猲 Nhai, n鉯 v?chuy謓 C玭g Danh","",0,1,80,1769,3124},
+			[5] = {"Nh?? n鉯 v?tng m筼","",0,1,80,1689,3085},
+			[6] = {"T玭 Vi猲 Ngo筰, n鉯 v?T礽 Ph骳","",0,1,80,1621,3051},
+			[7] = {"G苝 T?Tam Trng","",0,1,115,1512,3790},
+		},
+	},
+	[7] = { --Thien nhan
+		[1] = {
+			[1] = {"S?頲 phong l? V?秐h S竧 Th? H鋍 頲 v?c玭g: Thi猲 Nh蒼 o ph竝, Thi猲 Nh蒼 M﹗ ph竝, H醓 Ph莕 Li猲 Hoa. N琲 ti誴 nh薾 nhi謒 v? H醓 Л阯g Л阯g ch?Ng閠 Ng筼."},
+			[2] = {"G苝 Ng閠 Ng筼","",0,1,49,1642,3156},
+			[3] = {"T?t?1 (l蕐 L謓h b礽 1)","",1,1,50,1500,3259},
+			[4] = {"T?t?2 (l蕐 L謓h b礽 2)","",1,1,50,1495,3183},
+			[5] = {"T?t?3 (l蕐 L謓h b礽 3)","",1,1,50,1569,3187},
+			[6] = {"T?t?4 (l蕐 L謓h b礽 4)","",1,1,50,1569,3257},
+			[7] = {"T?t?5 (l蕐 L謓h b礽 5)","",1,1,50,1526,3144},
+			[8] = {"T?t?6 (l蕐 L謓h b礽 6)","",1,1,50,1601,3214},
+			[9] = {"T?t?7 (l蕐 L謓h b礽 7)","",1,1,50,1533,3219},
+			[10] = {"G苝 Ng閠 Ng筼","",0,1,49,1642,3156},
+		},
+		[2] = {
+			[1] = {"S?頲 phong l? T?S? H鋍 頲 v?c玭g: 秓 秐h Phi H? N琲 ti誴 nh薾 nhi謒 v? Nh藅 Nguy謙 Уn Ch??H頿 T竧."},
+			[2] = {"G苝 ?H頿 T竧 (p 竛 l?Hng xu鑞g t)","",1,1,45,1604,3181},
+			[3] = {"g苝 b?trai (p 竛 Anh Hai)","",1,1,45,1709,3251},
+			[4] = {"T譵 con ch?nh?,"",1,1,45,1685,3063},
+			[5] = {"T譵 con la x竚","",1,1,45,1568,3123},
+			[6] = {"g苝 b?trai (i Nh藅 nguy謙 song lu﹏)","",1,1,45,1709,3251},
+			[7] = {"Mang v?cho ?H頿 T竧","",1,1,45,1604,3181},
+		},
+		[3] = {
+			[1] = {"S?頲 phong l? U Minh T?S? H鋍 頲 v?c玭g: Phi H錸g V?T輈h, Li謙 H醓 T譶h Thi猲, Li謙 Th玦 S琻 襫 H秈. N琲 ti誴 nh薾 nhi謒 v? Phong 阯g 阯g ch? Ho祅 Nhan Tuy誸 Y."},
+			[2] = {"G苝 Ho祅 Nhan Tuy誸 Y","",0,1,49,1708,3226},
+			[3] = {"T譵 N玭g phu (mua V﹏ M閚g T?","",1,1,7,2373,2530},
+			[4] = {"Tr閙 b秓 t芻 1 (l蕐 C竝 huy誸 h錸g)","",1,1,8,1465,3255},
+			[5] = {"Tr閙 b秓 t芻 2 ( l蕐 B╪g tinh lam)","",1,1,8,1676,3358},
+			[6] = {"Tr閙 b秓 t芻 3 (l蕐 T?m蓇 l鬰)","",1,1,8,1610,3207},
+			[7] = {"Mang v?cho Ho祅 Nhan Tuy誸 Y","",0,1,49,1708,3226},
+		},
+		[4] = {
+			[1] = {"S?頲 phong l? Chng K?S? H鋍 頲 v?c玭g: Bi T?Thanh Phong. N琲 ti誴 nh薾 nhi謒 v? H鱱 H?ph竝 Gia Lu藅 T?Li."},
+			[2] = {"G苝 Gia Lu藅 T?Li","",0,1,49,1657,3032},
+			[3] = {"Цnh Li謚 K?(l蕐 Thi猲 Nh蒼 m藅 h祄)","",1,1,6,1570,3241},
+			[4] = {"Giao l筰 cho Gia Lu藅 T?Li","",0,1,49,1657,3032},
+		},
+		[5] = {
+			[1] = {"S?頲 phong l? H?Gi竜 S? H鋍 頲 v?c玭g: L?Ma 箃 H錸. N琲 ti誴 nh薾 nhi謒 v? T?H?ph竝 an M閏 Du?"},
+			[2] = {"G苝 an M閏 Du?,"",0,1,49,1800,3184},
+			[3] = {"Цnh o binh i trng (l蕐 ch譨 kh鉧)","",1,1,38,1729,3033},
+			[4] = {"M?rng t莕g 1 ( m?c?quan l猲 t莕g 2)","",1,1,38,1665,3246},
+			[5] = {"Nh蕁 v祇 c?quan ( l猲 t莕g 2)","",1,1,38,1705,3131},
+			[6] = {"Цnh o binh th鑞g l躰h (l蕐 ch譨 kh鉧)","",1,1,39,1734,3128},
+			[7] = {"M?rng t莕g 2 ( m?c?quan l猲 t莕g 3)","",1,1,39,1639,3201},
+			[8] = {"Nh蕁 v祇 c?quan ( l猲 t莕g 3)","",1,1,39,1688,3028},
+			[9] = {"Цnh T鎛g binh (l蕐 ch譨 kh鉧)","",1,1,40,1626,3149},
+			[10] = {"M?rng t莕g 3 (c鴘 Ph鬾g H蕄 Nh?","",1,1,40,1688,3019},
+			[11] = {"Tr?v?g苝 an M閏 Du?,"",0,1,49,1800,3184},
+		},
+		[6] = {
+			[1] = {" "},
+			[2] = {"G苝 Ho祅 Nhan H錸g Li謙","",0,1,49,1721,3129},
+			[3] = {"G苝 Kh骳 Thi誸 Tng","",0,1,37,1746,3052},
+			[4] = {"Mang ng﹏ tr﹎ cho Trng qu?ph?,"",0,1,37,1707,3198},
+			[5] = {"V?g苝 Kh骳 Thi誸 Tng (l蕐 Y觤 Nh藅 Ki誱)","",0,1,37,1746,3052},
+			[6] = {"G苝 T玭 T?T礽 (p 竛 b-c-a-b-a) l蕐 筺 Th駓 Ki誱","",0,1,37,1834,2953},
+			[7] = {"G苝 con b筩 (mua Chuy觧 Ph竎h Ki誱 v韎 gi?500 lng)","",0,1,37,1608,3118},
+			[8] = {"G苝 Йng Mai","",0,1,37,1837,3053},
+			[9] = {"G苝 Ti觰 H秈","",0,1,37,1762,3072},
+			[10] = {"Quay l筰 Йng Mai b竜 tin (l蕐 Kh?T?Ki誱)","",0,1,37,1837,3053},
+			[11] = {"дn g苝 ╪ m祔 (cho ti襫 3 l莕 s?l蕐 頲 Di謙 H錸 Ki誱)","",0,1,37,1685,2998},
+			[12] = {"Mang 5 thanh ki誱 v?cho Ho祅 Nhan H錸g Li謙 (sau  t?ch箉 t韎 c鯽 th竛h ng ngay sau)","",0,1,49,1721,3129},
+			[13] = {"Nh謓 tinh","",1,1,51,1603,3188},
+			[13] = {"чc x?tinh","",1,1,51,1878,3206},
+			[13] = {"R誸 tinh","",1,1,51,1678,3112},
+			[13] = {"Nh謓 tinh","",1,1,51,1839,3166},
+			[13] = {"B?c筽 ch骯 (l蕐 ch譨 kh鉧 th竛h ng)","",1,1,52,1796,3106},
+			[13] = {"M?rng (l蕐 quy觧 s竎h da d?","",1,1,52,1865,3159},
+			[13] = {"G苝 Ho祅 Nhan H錸g Li謙","",0,1,49,1721,3129},
+		},
+		[7] = {
+			[1] = {"Y猽 c莡: ngi ch琲  xu蕋 s? ng c蕄 tr猲 60, ch璦 gia nh藀 bang ph竔 n祇, c?th?n g苝 trng m玭 c馻 ph竔 giao 5 v筺 lng  tr飊g ph秐 s?m玭. T? v?sau c?th?t飝 ?ra v祇 s?m玭. Ph莕 thng: Th﹗ Thi猲 Ho竛 Nh藅, Ma Di謒 Th蕋 S竧, Thi猲 Ma Gi秈 Th? Л頲 phong l祄:Th竛h Gi竜 Trng L穙."},
+		},
+		[8] = {
+			[1] = {"C?b竛 trong k?tr﹏ c竎"},
+		},
+		[9] = {
+			[1] = {"C?b竛 trong K?tr﹏ c竎"},
+		},
+		[10] = {
+			[1] = {"C?b竛 trong K?tr﹏ c竎"},
+		},
+	},
+	[8] = { --Vo dang OK
+		[1] = {
+			[1] = {"S?頲 phong l? Nh祅 T竛 Чo Nh﹏. H鋍 頲 v?c玭g: V?ng Ki誱 Ph竝, V?ng Quy襫 Ph竝. N琲 ti誴 nh薾 nhi謒 v? T?Ti猽 Чi 謓, Чo Nh蕋 Ch﹏ Nh﹏."},
+			[2] = {"G苝 Чo Nh蕋 Ch﹏ Nh﹏","",0,1,84,1598,3183},
+			[3] = {"G苝 Di謕 Ti誴 M?(Ch?c莕 nh蕄 v祇 n鉯 chuy謓)","",0,1,81,1703,3041},
+			[4] = {"Tr?l阨 Чo Nh蕋 Ch﹏ Nh﹏ (C,B,B)","",0,1,84,1598,3183},
+		},
+		[2] = {
+			[1] = {"S?頲 phong l? Thanh Tu Чo Nh﹏. H鋍 頲 v?c玭g: Th蕋 Tinh Tr薾. N琲 ti誴 nh薾 nhi謒 v? Ph?M蓇 謓, Уo Th筩h M玭."},
+			[2] = {"G苝 Уo Th筩h M玭","",0,1,86,1605,3187},
+			[3] = {"Цnh S鉯 п 1 (L蕐 Thi猲 T籱 B祇 r竎h)","дn khi nh薾 頲 Thi猲 T籱 Чo B祇 r竎h",1,1,83,1510,3050},
+			[4] = {"Цnh S鉯 п 2 (L蕐 Thi猲 T籱 B祇 r竎h)","дn khi nh薾 頲 Thi猲 T籱 Чo B祇 r竎h",1,1,83,1642,2899},
+			--[5] = {"Цnh S鉯 п 3","дn khi nh薾 頲 Thi猲 T籱 Чo B祇 r竎h",1,1,83,1750,3182},
+			--[6] = {"Цnh S鉯 п 4","дn khi nh薾 頲 Thi猲 T籱 Чo B祇 r竎h",1,1,83,1680,3043},
+			[5] = {"Quay l筰 g苝 Уo Th筩h M玭","",0,1,86,1605,3187},
+			[6] = {"дn T筽 H鉧 Tng Dng v?竜","",0,1,78,1627,3259},
+			[7] = {"Цnh D?H竛 1 (C鴘 a b? l蕐 thi猲 t籱)","дn khi c鴘 頲 a b?l蕐 頲 Thi猲 T籱",1,1,83,1582,2860},
+			[8] = {"Цnh D?H竛 2 (C鴘 a b? l蕐 thi猲 t籱)","дn khi c鴘 頲 a b?l蕐 頲 Thi猲 T籱",1,1,83,1676,2932},
+			[9] = {"Tr?l筰 T筽 H鉧  v?竜","",0,1,78,1627,3259},
+			[10] = {"Giao 竜 cho Уn Th筩h M玭","",0,1,86,1605,3187},
+		},
+		[3] = {
+			[1] = {"S?頲 phong l? Tu莕 S琻 Чi Nh﹏. H鋍 頲 v?c玭g: Ki誱 Phi Kinh Thi猲, B竧 C蕄 Nhi Ph鬰. N琲 ti誴 nh薾 nhi謒 v? Th藀 Phng 甶謓, T?Чi Nh筩."},
+			[2] = {"G苝 T?Чi Nh筩","",0,1,85,1598,3187},
+			[3] = {"Чi H醓 H?1 (l蕐 5 c?h鋋 mi)","",1,1,90,1796,3286},
+			[4] = {"Чi H醓 H?2 (l蕐 5 c?h鋋 mi)","",1,1,90,1617,3321},
+			[5] = {"Чi Tuy誸 Lang 1 (l蕐 5 c?h鋋 mi)","",1,1,90,1917,3086},
+			[6] = {"Чi Tuy誸 Lang 2 (l蕐 5 c?h鋋 mi)","",1,1,90,1742,3176},
+			[7] = {"Чi Thanh Lang 1 (l蕐 5 c?h鋋 mi)","",1,1,90,1877,3186},
+			[8] = {"Чi Thanh Lang 2 (l蕐 5 c?h鋋 mi)","",1,1,90,2009,3265},
+			[9] = {"Чi Thanh Lang 3 (l蕐 5 c?h鋋 mi)","",1,1,90,1804,2979},
+			[10] = {"я 5 c?h鋋 mi v?giao cho T?Чi Nh筩","",0,1,85,1598,3187},
+		},
+		[4] = {
+			[1] = {"S?頲 phong l? Nh藀 Quan Чo Nh﹏. H鋍 頲 v?c玭g: Th?V﹏ Tung. N琲 ti誴 nh薾 nhi謒 v? Chu V﹏ Tuy襫."},
+			[2] = {"G苝 Chu V﹏ Tuy襫","",0,1,81,1754,3081},
+			[3] = {"G苝 Nhu薾 Nng","",1,1,91,1618,2962},
+			[4] = {"B筩h Ng鋍 H?1","",1,1,91,1592,2931},
+			[5] = {"B筩h Ng鋍 H?2","",1,1,91,1537,3016},
+			[6] = {"B筩h Ng鋍 H?3","",1,1,91,1680,2965},
+			[7] = {"B筩h Ng鋍 H?4","",1,1,91,1648,3088},
+			[8] = {"B筩h Ng鋍 H?5","",1,1,91,1661,2891},
+			[9] = {"V?g苝 Nhu薾 Nng","",1,1,91,1618,2962},
+			[10] = {"Nhu薾 Nng Gia H?(l蕐 th?h錳 ﹎)","",1,1,91,1616,2819},
+			[11] = {"Nhu薾 Nng Gia B竜 (l蕐 th?h錳 ﹎)","",1,1,91,1697,2740},
+			[12] = {"Giao th?cho Чo Nh蕋 Ch﹏ Nh﹏","",0,1,84,1598,3183},
+		},
+		[5] = {
+			[1] = {"S?頲 phong l? Chng Kinh Чo Nh﹏. H鋍 頲 v?c玭g: T鋋 V鋘g V?Ng? N琲 ti誴 nh薾 nhi謒 v? Long H?甶謓, Кn T?Nam."},
+			[2] = {"G苝 Кn T?Nam","",0,1,87,1602,3186},
+			[3] = {"u m鬰 th?ph?Thi誸 T竜 (l蕐 1 v筺 lng)","",1,1,42,1513,3168},
+			[4] = {"G苝 Кn T?Nam","",0,1,87,1602,3186},
+			[5] = {"T譵 Tr辬h Gia T萿 T?,"",0,1,78,1648,3277},
+			[6] = {"Tr?v?g苝 Кn T?Nam","",0,1,87,1602,3186},
+		},
+		[6] = {
+			[1] = {"S?頲 phong l? Huy襫 V?Th莕 Th? N琲 ti誴 nh薾 nhi謒 v? T?Ti猽 Чi 謓, Чo Nh蕋 Ch﹏ Nh﹏."},
+			[2] = {"G苝 Чo Nh蕋 Ch﹏ Nh﹏","",0,1,84,1598,3183},
+			[3] = {"T譵 c竔 rng th?nh蕋","",1,1,81,1897,2912},
+			[4] = {"G苝 玭g ch?dc 甶誱","",0,1,78,1610,3245},
+			[5] = {"L蕐 Л琻g Quy","",1,1,90,2002,3454},
+			[6] = {"L蕐 H頿 Hoan","",1,1,90,1812,3652},
+			[7] = {"L蕐 Huy襫 S﹎","",1,1,90,1745,3607},
+			[8] = {"L蕐 Ph遪g K?,"",1,1,90,1915,3554},
+			[9] = {"L蕐 Chu Sa","",1,1,90,1777,3667},
+			[10] = {"Giao 5 dc li謚 cho 玭g ch?dc 甶誱","",0,1,78,1610,3245},
+			[11] = {"V?m?rng th?nh蕋 (l蕐 Ng鋍 Thanh ch﹏ kinh)","",1,1,81,1897,2912},
+			[12] = {"T譵 c竔 rng th?2","",1,1,81,1897,2876},
+			[13] = {"T譵 th?r蘮","",0,1,78,1554,3216},
+			[14] = {"L蕐 T?thi誸 kho竛g","",1,1,78,1422,2987},
+			[15] = {"L蕐 Lng ng﹏ kho竛g","",1,1,78,1400,3072},
+			[16] = {"L蕐 X輈h ng kho竛g","",1,1,78,1466,2988},
+			[17] = {"T譵 th?r蘮","",0,1,78,1554,3216},
+			[18] = {"V?m?rng th?2 (l蕐 Thng Thanh ch﹏ kinh)","",1,1,81,1897,2876},
+			[19] = {"T譵 chi誧 rng th?3","",1,1,81,1876,2833},
+			[20] = {"T譵 Nha m玭 v?binh","",0,1,78,1590,3209},
+			[21] = {"Цnh b筰 Tng Dng th?tng","",1,1,79,1750,3229},
+			[22] = {"V?m?rng th?3 (l蕐 Th竔 Thanh ch﹏ kinh)","",1,1,81,1876,2833},
+			[23] = {"V?g苝 Чo Nh蕋 Ch﹏ Nh﹏","",0,1,84,1598,3183},
+		},
+		[7] = {
+			[1] = {"Y猽 c莡: ngi ch琲  xu蕋 s? ng c蕄 tr猲 60, ch璦 gia nh藀 bang ph竔 n祇, c?th?n g苝 trng m玭 c馻 ph竔 giao 5 v筺 lng  tr飊g ph秐 s?m玭. T? v?sau c?th?t飝 ?ra v祇 s?m玭. Ph莕 thng: Th竔 C鵦 Th莕 C玭g, V?Ng?V?Ki誱, Tam Ho祅 Thao Nguy謙. Л頲 phong l祄: Huy襫 V?Ch﹏ Qu﹏."},
+		},
+		[8] = {
+			[1] = {"S竎h k?n╪g c蕄 90 c?b竛 trong K?Tr﹏ C竎"},
+		},
+		[9] = {
+			[1] = {"S竎h k?n╪g c蕄 120 c?b竛 trong K?Tr﹏ C竎"},
+		},
+		[10] = {
+			[1] = {"Ch璦 ho祅 th祅h"},
+		},
+	},
+	[9] = { --Con lon OK
+		[1] = {
+			[1] = {" "},
+			[2] = {"G苝 Ti觰 H祅","",0,1,131,1472,3140},
+			[3] = {"Цnh M蘯 R鮪g l蕐 5 lo筰 th秓 dc","",1,1,140,2437,3742},
+			[4] = {"Giao cho Ti觰 H祅","",0,1,131,1472,3140},
+		},
+		[2] = {
+			[1] = {" "},
+			[2] = {"G苝 Th竛 T鴆 L穙 Nh﹏ nh薾 nhi謒 v?,"",0,1,131,1526,3225},
+			[3] = {"Цnh Th?Ph?l蕐 Xng u l筩 ","",1,1,141,1548,3193},
+			[4] = {"Giao cho Th竛 T鴆 L穙 Nh﹏","",0,1,131,1526,3225},
+		},
+		[3] = {
+			[1] = {" "},
+			[2] = {"G苝 Chu Khuy誸 Чi S?,"",0,1,131,1587,3202},
+			[3] = {"Цnh C竜 п l蕐 3 D?Minh Ch﹗","",1,1,145,1629,3222},
+			[4] = {"Giao cho Chu Khuy誸 Чi S?,"",0,1,131,1587,3202},
+		},
+		[4] = {
+			[1] = {" "},
+			[2] = {"G苝 Thanh Li猲 T?nh薾 nhi謒 v?,"",0,1,139,1606,3199},
+			[3] = {"Цnh b筰 H錸g Nguy謙 l蕐 th玭g tin v?thanh ki誱","",1,1,135,1675,2853},
+			[4] = {"Цnh Lam V﹏ l蕐 ch譨 kh鉧","",1,1,135,1764,3194},
+			[5] = {"D飊g ch譨 kh鉧 m?rng","",1,1,135,1529,2804},
+			[6] = {"Giao Huy誸 H錸 Th莕 Ki誱 cho Thanh Li猲 T?,"",0,1,139,1606,3199},
+		},
+		[5] = {
+			[1] = {" "},
+			[2] = {"G苝 Ng鋍 Ho祅h T?nh薾 nhi謒 v?,"",0,1,137,1596,3193},
+			[3] = {"Цnh Чi tuy誸 qu竔 1","",1,1,132,1472,3209},
+			[4] = {"Цnh Чi tuy誸 qu竔 2","",1,1,132,1645,3218},
+			[5] = {"Цnh Чi tuy誸 qu竔 3","",1,1,132,1620,3168},
+			[6] = {"Цnh Чi tuy誸 qu竔 4","",1,1,132,1528,3208},
+			[7] = {"Цnh Чi tuy誸 qu竔 5","",1,1,132,1476,3262},
+			[8] = {"Цnh qu竔 nh﹏ l蕐 N髆 T鉩","",1,1,132,1574,3215},
+			[9] = {"Giao cho Ng鋍 Ho祅h T?ho祅 th祅h nhi謒 v?,"",0,1,137,1596,3193},
+		},
+		[6] = {
+			[1] = {" "},
+			[2] = {"G苝 Truy襫 C?T?nh薾 nhi謒 v?,"",0,1,138,1596,3196},
+			[3] = {"T譵 g苝 V?Danh L穙 Чo","",1,1,122,1712,3142},
+			[4] = {"Цnh Truy H錸 l蕐 Ph鬰 ty t醓","",1,1,125,1689,3245},
+			[5] = {"Ti課 v祇 t﹏g 2, ch鋘 T魕 Nh﹏  l猲 t莕g 2","",1,1,125,1591,3205},
+			[6] = {"Цnh Th鮝 Phong, l蕐 Vi猰  t醓","",1,1,126,1614,3015},
+			[7] = {"Ti課 v祇 t莕g 3, ch鋘 Tinh V? l猲 t莕g 3","",1,1,126,1674,3060},
+			[8] = {"Цnh b筰 L璾 Tinh, l蕐 Thi誹 t筼 t醓","",1,1,127,1664,3087},
+			[9] = {"Ti課 v祇 t莕g 4, ch鋘 Xu﹏  l猲 t莕g 4","",1,1,127,1697,3232},
+			[10] = {"Цnh b筰 T藅 謓, l蕐 Chuy猲 t骳 t醓","",1,1,128,1619,3142},
+			[11] = {"Ti課 n t莕g 5, ch鋘 t tr阨 ph﹏ i  l猲 t莕g 5","",1,1,128,1521,3057},
+			[12] = {"Цnh b筰 N?Th輈h Kh竎h, l蕐 Ho祅g  t醓","",1,1,129,1745,3347},
+			[13] = {"Ti課 n t莕g 6, ch鋘 Hai b鴆 tng s骳 v藅 b籲g g? l猲 t莕g 6","",1,1,129,1645,3250},
+			[14] = {"M?rng l蕐 Ng?s綾 th筩h","",1,1,130,1587,3195},
+			[15] = {"Giao cho Truy襫 C?T?ho祅 th祅h nhi謒 v?,"",0,1,138,1596,3196},
+		},
+		[7] = {
+			[1] = {"Nhi謒 v?tr鮪g ph秐 s?m玭: Chu萵 b? 5 v筺 g苝 chng m玭 l?c?th?ho祅 th祅h"},
+		},
+		[8] = {
+			[1] = {"K?n╪g c蕄 9 c?b竛 t筰 c鯽 h祅g tinh l鵦 hay K?tr﹏ c竎"},
+		},
+		[9] = {
+			[1] = {"K?n╪g 120 c?b竛 t筰 K?tr﹏ c竎"},
+		},
+		[10] = {
+			[1] = {"Ch鴆 n╪g ch璦 ho祅 th祅h"},
+		},
+	},
+}
+
+function help_quest()
+	local nFaction = GetLastFactionNumber()
+	if nFaction < 0 then
+		Msg2Player("Xin h穣 gia nh藀 m玭 ph竔 r錳 m韎 s?d鬾g ch鴆 n╪g n祔!")
+		return
+	elseif nFaction == 0 then
+		TenMP = "Thi誹 L﹎"
+	elseif nFaction == 1 then
+		TenMP = "Thi猲 Vng"
+	elseif nFaction == 2 then
+		TenMP = "Л阯g M玭"
+	elseif nFaction == 3 then
+		TenMP = "Ng?чc"
+	elseif nFaction == 4 then
+		TenMP = "Nga My"
+	elseif nFaction == 5 then
+		TenMP = "Th髖 Y猲"
+	elseif nFaction == 6 then
+		TenMP = "C竔 Bang"
+	elseif nFaction == 7 then
+		TenMP = "Thi猲 Nh蒼"
+	elseif nFaction == 8 then
+		TenMP = "V?ng"
+	elseif nFaction == 9 then
+		TenMP = "C玭 L玭"
+	elseif nFaction == 10 then
+		TenMP = "Hoa S琻"
+	end
+	if TenMP == "Hoa S琻" then
+		return Msg2Player("<color=yellow>Hi謓 t筰 ch璦 ho祅 th祅h nhi謒 v?Hoa S琻<color>")
+	end
+	local tab_Content = {
+		"Nhi謒 v?c蕄 10 "..TenMP.."/#help_quest_step1("..nFaction..",1,2,"..getn(tb_HelpQuest[nFaction][1])..")",
+		"Nhi謒 v?c蕄 20 "..TenMP.."/#help_quest_step1("..nFaction..",2,2,"..getn(tb_HelpQuest[nFaction][2])..")",
+		"Nhi謒 v?c蕄 30 "..TenMP.."/#help_quest_step1("..nFaction..",3,2,"..getn(tb_HelpQuest[nFaction][3])..")",
+		"Nhi謒 v?c蕄 40 "..TenMP.."/#help_quest_step1("..nFaction..",4,2,"..getn(tb_HelpQuest[nFaction][4])..")",
+		"Nhi謒 v?c蕄 50 "..TenMP.."/#help_quest_step1("..nFaction..",5,2,"..getn(tb_HelpQuest[nFaction][5])..")",
+		"Nhi謒 v?Xu蕋 S?"..TenMP.."/#help_quest_step1("..nFaction..",6,2,"..getn(tb_HelpQuest[nFaction][6])..")",
+		"Nhi謒 v?Tr鮪g Ph秐 S?M玭 "..TenMP.."/#help_quest_step1("..nFaction..",7,2,"..getn(tb_HelpQuest[nFaction][7])..")",
+		"Nhi謒 v?c蕄 90 "..TenMP.."/#help_quest_step1("..nFaction..",8,2,"..getn(tb_HelpQuest[nFaction][8])..")",
+		"K?n╪g 120 "..TenMP.."/#help_quest_step1("..nFaction..",9,2,"..getn(tb_HelpQuest[nFaction][9])..")",
+		"K?danh  t?"..TenMP.."/#help_quest_step1("..nFaction..",10,2,"..getn(tb_HelpQuest[nFaction][10])..")",
+		"Quay l筰/character",
+		"K誸 th骳 i tho筰/Quit"
+		}
+		Say("H?tr?t﹏ th?l祄 nhi謒 v?m玭 ph竔. Xin h穣 c?g緉g ho祅 th祅h nhi謒 v?m玭 ph竔 r錳 m韎 gia nh藀 bang h閕 tung ho祅h giang h? ", getn(tab_Content), tab_Content);
+end
+function help_quest_step1(nFaction,nIDQ,nX,nY)
+	local strDesc = tb_HelpQuest[nFaction][nIDQ][1][1]
+	if (not nX) then
+		nX1 = 2;
+		nY1 = 10;
+	else
+		nX1 = nX;
+		nY1 = nY;
+	end
+	if (nY1 - nX1 > 9) then
+		nY1 = nX1 + 9;
+	end
+	if nIDQ == 1 then
+		TenNV = "Nhi謒 v?c蕄 10"
+	elseif nIDQ == 2 then
+		TenNV = "Nhi謒 v?c蕄 20"
+	elseif nIDQ == 3 then
+		TenNV = "Nhi謒 v?c蕄 30"
+	elseif nIDQ == 4 then
+		TenNV = "Nhi謒 v?c蕄 40"
+	elseif nIDQ == 5 then
+		TenNV = "Nhi謒 v?c蕄 50"
+	elseif nIDQ == 6 then
+		TenNV = "Nhi謒 v?Xu蕋 S?
+	elseif nIDQ == 7 then
+		TenNV = "Nhi謒 v?Tr鮪g Ph秐 S?M玭"
+	elseif nIDQ == 8 then
+		TenNV = "Nhi謒 v?c蕄 90"
+	elseif nIDQ == 9 then
+		TenNV = "K?n╪g 120"
+	elseif nIDQ == 10 then
+		TenNV = "K?danh  t?
+	end
+	local tbOpt = {}
+	local TotalSelect = getn(tb_HelpQuest[nFaction][nIDQ])
+	for i=nX1,nY1 do
+		local FightState = tb_HelpQuest[nFaction][nIDQ][i][3]
+		local TypeMove = tb_HelpQuest[nFaction][nIDQ][i][4] --Ban u m譶h l祄 ph莕 to?畂?l?ki觰 nh?game v?d?271 - 291 nh璶g to? n祔 n?ph?kh玭g ch輓h x竎 n猲 v?sau  h誸 sang to? ki觰 4 s? TypeMove lu玭 l?1
+		local MapId = tb_HelpQuest[nFaction][nIDQ][i][5]
+		local nX =tb_HelpQuest[nFaction][nIDQ][i][6]
+		local nY = tb_HelpQuest[nFaction][nIDQ][i][7]
+		tinsert(tbOpt, {tb_HelpQuest[nFaction][nIDQ][i][1],help_quest_step2,{FightState,TypeMove,MapId,nX,nY,TenMP,TenNV,tb_HelpQuest[nFaction][nIDQ][i][2],tb_HelpQuest[nFaction][nIDQ][i][1]}})
+	end
+	if (nX1 ~= 2) then
+		tinsert(tbOpt,{"Trang trc",help_quest_step1,{nFaction,nIDQ,2,nX1-1}});
+	end
+	if (nY1 < TotalSelect) then
+		tinsert(tbOpt,{"Trang sau",help_quest_step1,{nFaction,nIDQ,nY1+1,TotalSelect}});
+	end
+	tinsert(tbOpt, {"Quay l筰",help_quest})
+	tinsert(tbOpt, {"Tho竧."})
+	CreateNewSayEx(strDesc, tbOpt);
+end
+function help_quest_step2(FightState,TypeMove,MapId,nX,nY,MonPhai,NhiemVu,BuocThucHien,NoiDungNhiemVu)
+	if TypeMove == 0 then
+		NewWorld(MapId,nX*8,nY*16) --
+	else
+		NewWorld(MapId,nX,nY) --
+	end
+	SetFightState(FightState)
+	Msg2Player("ng th鵦 hi謓 <color=yellow>"..NhiemVu.."<color> m玭 ph竔 <color=yellow>"..MonPhai.."<color>. N閕 dung nhi謒 v? <color=green>"..NoiDungNhiemVu.."<color>")
+	AddNote("N閕 dung nhi謒 v? <color=green>"..BuocThucHien.."<color>")
+end
+--------------------------------------------------------------
+--			 		H?Tr?L祄 nv ho祅g kim					--
+--------------------------------------------------------------
+tb_HelpGoldQuest = {
+--=========================================================Ho祅g Kim Ch輓h Tuy課 START
+	[1] = { --Chinh tuyen
+		[1] = { --Chinh phai OK
+			[1] = { --Cap 20
+				[1] = {"дn Чi L?g苝 L?M筩 S莡",0,1,162,1470,3170},
+				[2] = {"Ra b課 t祏 nh b筰 M筩 S莡",1,1,162,1636,2984},
+				[3] = {"V?th祅h g苝 M筩 S莡",0,1,162,1470,3170},
+			},
+			[2] = { --Cap 30
+				[1] = {"T譵 C玭g T?Ti誹",0,1,11,3223,5118},
+				[2] = {"Цnh b筰 Gi韎 L璾 Phong",1,1,141,1544,3323},
+				[3] = {"V?g苝 M筩 S莡",0,1,162,1470,3170},
+			},
+			[3] = { --Cap 40
+				[1] = {"T譵 g苝 H?V?Th?,0,1,80,1705,3119},
+				[2] = {"Цnh b筰 T?o Hi謕",1,1,173,1557,3049},
+				[3] = {"Quay v?g苝 M筩 S莡",0,1,162,1470,3170},
+			},
+			[4] = { --Cap 50
+				[1] = {"T譵 g苝 M筺h Ph祄",0,1,176,1626,2990},
+				[2] = {"Ti猽 di謙 O竛 чc",1,1,24,2109,3322},
+				[3] = {"Quay v?g苝 M筺h Ph祄",0,1,176,1626,2990},
+			},
+			[5] = { --Cap 60
+				[1] = {"Ti猽 di謙 Th莕 b?nam nh﹏",1,1,79,1681,3142},
+				[2] = {"Quay v?g苝 M筩 S莡",0,1,162,1470,3170},
+			},
+		},
+		[2] = { --Trung lap OK
+			[1] = { --Cap 20 OK
+				[1] = {"T譵 g苝 Ph?Nam B╪g",0,1,37,1699,3161},
+				[2] = {"Цnh Ninh Tng Qu﹏",1,1,179,2033,2755},
+				[3] = {"T譵 g苝 Ph?Nam B╪g",0,1,37,1699,3161},
+			},
+			[2] = { --Cap 30 OK
+				[1] = {"T譵 g苝 Ph?Nam B╪g",0,1,37,1699,3161},
+				[2] = {"Цnh L?Thi猲 Tng",1,1,136,1602,3197},
+				[3] = {"T譵 g苝 Ph?Nam B╪g",0,1,37,1699,3161},
+			},
+			[3] = { --Cap 40 OK
+				[1] = {"G苝 L?Thu Thu?,0,1,154,343,1346},
+				[2] = {"Цnh T?T?L鵦",1,1,5,1476,3433},
+				[3] = {"G苝 L?Thu Thu?,0,1,154,343,1346},
+			},
+			[4] = { --Cap 50 OK
+				[1] = {"T譵 g苝 Ph?Nam B╪g",0,1,37,1699,3161},
+				[2] = {"T譵 чc 誹 T萿",0,1,59,1642,3188},
+				[3] = {"Ti猽 di謙 чc 誹 T萿",1,1,66,1596,3307},
+				[4] = {"Quay l筰 g苝 Ph?Nam B╪g",0,1,37,1699,3161},
+			},
+			[5] = { --Cap 60 -OK
+				[1] = {"T譵 g苝 Ph?Nam B╪g",0,1,37,1699,3161},
+				[2] = {"G苝 i s?Kh玭g T辌h",0,1,103,1776,2843},
+				[3] = {"Цnh b筰 Kh玭g T辌h",1,1,103,1744,2662},
+				[4] = {"V?g苝 Ph?Nam B╪g",0,1,37,1699,3161},
+			},
+		},
+		[3] = { --Ta phai OK
+			[1] = { --Cap 20 OK
+				[1] = {"G苝 V﹏ Nhi",0,1,100,1729,3173},
+				[2] = {"G苝 Th竔 C玭g C玭g",0,1,176,1625,3203},
+				[3] = {"Цnh b筰 Ti觰 K?Nhi",1,1,90,1798,3284},
+				[4] = {"G苝 Th竔 C玭g C玭g",0,1,176,1625,3203},
+				[5] = {"G苝 V﹏ Nhi",0,1,100,1729,3173},
+			},
+			[2] = { --Cap 30 OK
+				[1] = {"G苝 Ti猽 S?,0,1,80,1597,3117},
+				[2] = {"Цnh b筰 H?H莡 Ph鬰",1,1,21,2720,3956},
+				[3] = {"G苝 V﹏ Nhi",0,1,100,1729,3173},
+				[4] = {"G苝 Ph?L玦 Th?,0,1,174,199*8,203*16},
+				[5] = {"G苝 M芻 Th?Hng Ch?,0,1,186,1600,3196},
+				[6] = {"G苝 Ph?L玦 Th?,0,1,174,199*8,203*16},
+			},
+			[3] = { --Cap 40 OK
+				[1] = {"G苝 Уo Th筩h M玭",0,1,86,1606,3190},
+				[2] = {"Цnh Ti觰 V?Thng",1,1,92,1948,3233},
+				[3] = {"G苝 Уo Th筩h M玭",0,1,86,1606,3190},
+				[4] = {"G苝 Ph?L玦 Th?,0,1,174,199*8,203*16},
+				[5] = {"G苝 Nh?Ng鋍",0,1,37,1681,3139},
+			},
+			[4] = { --Cap 50 OK
+				[1] = {"G苝 Tr莕 Tam B秓",0,1,37,1756,2995},
+				[2] = {"Ti猽 di謙 Чo T芻 L鬰 Phi",1,1,195,599,3068},
+				[3] = {"G苝 Tr莕 Tam B秓",0,1,37,1756,2995},
+				[4] = {"Цnh tng Kim у Lan ?T莕g 3 Thi誸 Th竝",1,1,40,1699,3044},
+				[5] = {"G苝 祅 M閏 Du?,0,1,49,1801,3183},
+				[6] = {"G苝 祅 M閏 Thanh",0,1,121,2013,4490},
+			},
+			[5] = { --Cap 60 -OK
+				[1] = {"G苝 祅 M閏 Thanh",0,1,121,2013,4490},
+				[2] = {"Ti猽 anh h飊g kh竛g Kim, Li猽 мnh",1,1,94,1565,3141},
+				[3] = {"G苝 祅 M閏 Thanh",0,1,121,2013,4490},
+			},
+		},
+	},
+--=========================================================Ho祅g Kim Ch輓h Tuy課 END
+--=========================================================Ho祅g Kim Ph?Tuy襫 START
+	[2] = { --Ph?tuy課
+		[1] = { --------------------------------------------Ph?tuy課 Chinh phai OK
+			[1] = { --Cap 20-29 OK
+				[1] = {"G苝 Ng筼 V﹏ T玭g",0,1,1,1587,3303},
+				[2] = {"G苝 Si T╪g",0,1,332,167*8,176*16},
+				[3] = {"Цnh T祅g B秓 Kh竎h l蕐 5  ph?,1,1,332,156*8,188*16},
+				[4] = {"G苝 Si T╪g",0,1,332,167*8,176*16},
+				[5] = {"G苝 Ng筼 V﹏ T玭g",0,1,1,1587,3303},
+				[6] = {"G苝 Ti詎 u",0,1,333,1246,3267},
+				[7] = {"G苝 S莔 H飊g",0,1,1,192*8,201*16},
+				[8] = {"Цnh b筰 Phan Nh?Long",1,1,1,220*8,190*16},
+				[9] = {"G苝 Ng筼 V﹏ T玭g",0,1,1,1587,3303},
+			},
+			[2] = { --Cap 30-39 OK
+				[1] = {"G苝 Ng筼 V﹏ T玭g",0,1,1,1587,3303},
+				[2] = {"G苝 H?Lan Chi",0,1,11,3085,5191},
+				[3] = {"G苝 Ng?L穙 Th竔",0,1,20,3465,6195},
+				[4] = {"G苝 Ng筼 V﹏ T玭g",0,1,1,1587,3303},
+				[5] = {"Цnh 50 S鉯 Xanh",1,1,90,1639,3511},
+				[6] = {"G苝 Ng筼 V﹏ T玭g",0,1,1,1587,3303},
+				[7] = {"G苝 Cung A Ng璾",0,1,78,1551,3191},
+				[8] = {"Цnh 竎 Lang",1,1,90,1789,3140},
+				[9] = {"G苝 Cung A Ng璾",0,1,78,1551,3191},
+				[10] = {"G苝 Ng?L穙 Th竔",0,1,20,3465,6195},
+				[11] = {"G苝 Ng筼 V﹏ T玭g",0,1,1,1587,3303},
+			},
+			[3] = { --Cap 40-49 OK
+				[1] = {"G苝 Ng筼 V﹏ T玭g",0,1,1,1587,3303},
+				[2] = {"G苝 C玭g B譶h T?nh l玦 i l莕 1",0,1,11,3165,5194},
+				[3] = {"G苝 Ng筼 V﹏ T玭g",0,1,1,1587,3303},
+				[4] = {"G苝 H鏽 H鏽",0,1,80,1846,3046},
+				[5] = {"G苝 C玭g B譶h T?nh l玦 i l莕 2",0,1,11,3165,5194},
+				[6] = {"G苝 H鏽 H鏽",0,1,80,1846,3046},
+				[7] = {"G苝 Ng筼 V﹏ T玭g",0,1,1,1587,3303},
+				[8] = {"Цnh Du Sng T﹏",1,1,11,3371,4889},
+				[9] = {"G苝 Ng筼 V﹏ T玭g",0,1,1,1587,3303},
+			},
+			[4] = { --Cap 50-59 OK
+				[1] = {"G苝 H鏽 H鏽",0,1,80,1846,3046},
+				[2] = {"Ho祅 th祅h t鑞g kim v?g苝 H鏽 H鏽",1,1,80,1846,3046},
+				[3] = {"Цnh T?T鴆 Phong",1,1,176,1680,2575},
+				[4] = {"G苝 Ng筼 V﹏ T玭g",0,1,1,1587,3303},
+			},
+		},
+		[2] = { --------------------------------------------Ph?tuy課 Trung l藀 OK
+			[1] = { --Cap 20 OK
+				[1] = {"G苝 Li評 Nam V﹏",0,1,176,1368,3050},
+				[2] = {"Цnh 50 nh輒 T莕 L╪g",1,1,7,2277,2824},
+				[3] = {"G苝 Giang Nh蕋 Ti誹",0,1,80,204*8,192*16},
+				[4] = {"G苝 L筩 Thanh Thu",0,1,80,1694,3129},
+				[5] = {"G苝 b秓 k?s遪g b筩",0,1,80,1744,3151},
+				[6] = {"Цnh L?Trng Thi猲",1,1,80,1999,2882},
+				[7] = {"G苝 b秓 k?s遪g b筩",0,1,80,1744,3151},
+				[8] = {"G苝 L筩 Thanh Thu",0,1,80,1694,3129},
+				[9] = {"Цnh nh﹏ v藅 v?l﹎ l蕐 b秓 ki誱",1,1,80,1396,3397},
+				[10] = {"G苝 L筩 Thanh Thu",0,1,80,1694,3129},
+			},
+			[2] = { --Cap 30 OK
+				[1] = {"G苝 Li評 Nam V﹏",0,1,176,1368,3050},
+				[2] = {"G苝 ch?ti猽 c鬰 Song g",0,1,1,1543,3191},
+				[3] = {"G苝 A Ng璾",0,1,1,1567,3253},
+				[4] = {"G苝 H?L穙 B秐 (Ch?ti猽 c鬰)",0,1,11,3011,5057},
+				[5] = {"Цnh 50 kh?x竚",1,1,92,1977,3116},
+				[6] = {"G苝 H?L穙 B秐 (Ch?ti猽 c鬰)",0,1,11,3011,5057},
+				[7] = {"Цnh B輈h Ng鋍, Nh?Y猲, T╪g M閚g",1,1,131,1872,3392},
+				[8] = {"G苝 H?L穙 B秐 (Ch?ti猽 c鬰)",0,1,11,3011,5057},
+				[9] = {"G苝 Li評 Nam V﹏",0,1,176,1368,3050},
+			},
+			[3] = { --Cap 40 OK
+				[1] = {"G苝 Li評 Nam V﹏",0,1,176,1368,3050},
+				[2] = {"G苝 C玭g B譶h T?nh l玦 i l莕 1",0,1,11,3165,5194},
+				[3] = {"Th緉g l玦 i v?g苝 Li評 Nam V﹏",0,1,176,1368,3050},
+				[4] = {"G苝 C玭g B譶h T?nh l玦 i l莕 2",0,1,11,3165,5194},
+				[5] = {"G苝 Li評 Nam V﹏",0,1,176,1368,3050},
+				[6] = {"Цnh Du Sng T﹏",1,1,11,3371,4889},
+				[7] = {"G苝 Li評 Nam V﹏",0,1,176,1368,3050},
+			},
+			[4] = { --Cap 50 OK
+				[1] = {"G苝 Li評 Nam V﹏",0,1,176,1368,3050},
+				[2] = {"Ho祅 th祅h t鑞g kim v?g苝 Li評 Nam V﹏",0,1,176,1368,3050},
+				[3] = {"Цnh b筰 Long Truy V?,1,1,162,1723,2987},
+				[4] = {"G苝 Li評 Nam V﹏",0,1,176,1368,3050},
+			},
+		},
+		[3] = { --------------------------------------------Ph?tuy課 t?ph竔 OK
+			[1] = { --Cap 20 OK
+				[1] = {"G苝 Th竎 B箃 Ho礽 Xuy猲",0,1,37,1677,3040},
+				[2] = {"Цnh 50 H綾 Di謕 H莡",1,1,25,3952,5284},
+				[3] = {"G苝 Th竎 B箃 Ho礽 Xuy猲",0,1,37,1677,3040},
+				[4] = {"G苝 Ch﹗ Trng C鰑",0,1,11,3139,5086},
+				[5] = {"G苝 Th萴 Phong",0,1,80,1684,3078},
+				[6] = {"Цnh Th萴 Phong",1,1,80,1788,3383},
+				[7] = {"G苝 Th竎 B箃 Ho礽 Xuy猲",0,1,37,1677,3040},
+			},
+			[2] = { --Cap 30 OK
+				[1] = {"G苝 Th竎 B箃 Ho礽 Xuy猲",0,1,37,1677,3040},
+				[2] = {"Цnh 50 con s鉯 v祅g",1,1,193,1560,3188},
+				[3] = {"G苝 Th竎 B箃 Ho礽 Xuy猲",0,1,37,1677,3040},
+				[4] = {"G苝 L璾 U萵 C?,0,1,78,1611,3185},
+				[5] = {"G苝 Th竎 B箃 Ho礽 Xuy猲",0,1,37,1677,3040},
+				[6] = {"G苝 Tu?H竛 (T鰑 Qu?",0,1,176,1691,3033},
+				[7] = {"Цnh Thi Nghi Sinh",1,1,176,1701,3388},
+				[8] = {"G苝 Th竎 B箃 Ho礽 Xuy猲",0,1,37,1677,3040},
+			},
+			[3] = { --Cap 40 OK
+				[1] = {"G苝 Th竎 B箃 Ho礽 Xuy猲",0,1,37,1677,3040},
+				[2] = {"G苝 L璾 U萵 C?,0,1,78,1611,3185},
+				[3] = {"G苝 C玭g B譶h T?nh l玦 i l莕 1",0,1,11,3165,5194},
+				[4] = {"G苝 L璾 U萵 C?,0,1,78,1611,3185},
+				[5] = {"G苝 Th竎 B箃 Ho礽 Xuy猲",0,1,37,1677,3040},
+				[6] = {"G苝 C玭g B譶h T?nh l玦 i l莕 2",0,1,11,3165,5194},
+				[7] = {"G苝 Th竎 B箃 Ho礽 Xuy猲",0,1,37,1677,3040},
+				[8] = {"Цnh Nguy詎 Minh Vi詎",1,1,78,1788,3189},
+				[9] = {"G苝 Th竎 B箃 Ho礽 Xuy猲",0,1,37,1677,3040},
+			},
+			[4] = { --Cap 50 OK
+				[1] = {"G苝 Th竎 B箃 Ho礽 Xuy猲",0,1,37,1677,3040},
+				[2] = {"Ho祅 th祅h t鑞g kim v?g苝 Th竎 B箃 Ho礽 Xuy猲",0,1,37,1677,3040},
+				[3] = {"Цnh S?Th辬h Do穘",1,1,78,1372,3500},
+				[4] = {"G苝 Th竎 B箃 Ho礽 Xuy猲",0,1,37,1677,3040},
+			},
+		},
+	},
+}
+--=========================================================Ho祅g Kim Ph?Tuy襫 END
+function helpgoldquest()
+	if GetLevel() < 20 then
+		Msg2Player("<color=yellow>H穣 t n c蕄 20 h穣 s?d鬾g ch鴆 n╪g n祔")
+		return
+	end
+	local tb = {
+	"Ch輓h tuy課/#gquest(1)",
+	"Ph?tuy課/#gquest(2)",
+	"Quay l筰./hotrolamnvhoangkim",
+	"Tho竧./Quit",
+	}
+	Say("",getn(tb),tb)
+end
+function gquest(ID)
+	local MissType = ID --Lo筰 nv ch輓h hay ph?tuy猲. Ch輓h l?1 ph?l?2
+	local tb = {
+	"Ch輓h ph竔 - B?m藅 T莔 Long H閕/#gquest_step1("..MissType..",1)",
+	"Trung l藀 - C﹗ chuy謓 L﹎ Uy猲 Nhai/#gquest_step1("..MissType..",2)",
+	"T?ph竔 - Long kh?chi ho?#gquest_step1("..MissType..",3)",
+	"Quay l筰/character",
+	"K誸 th骳 i tho筰/Quit"
+	}
+	Say("",getn(tb),tb)
+end
+function gquest_step1(ID1,ID2)
+	local MissType = ID1 --Lo筰 NV ch輓h hay ph?
+	local PheType = ID2 --Nhi謒 v?ch輓h - trung - t?
+	if MissType == 1 then --ch輓h tuy課
+		local tab_Content = {
+		"Ch輓h tuy課 c蕄 20/#gquest_step2("..MissType..","..PheType..",1)",
+		"Ch輓h tuy課 c蕄 30/#gquest_step2("..MissType..","..PheType..",2)",
+		"Ch輓h tuy課 c蕄 40/#gquest_step2("..MissType..","..PheType..",3)",
+		"Ch輓h tuy課 c蕄 50/#gquest_step2("..MissType..","..PheType..",4)",
+		"Ch輓h tuy課 c蕄 60/#gquest_step2("..MissType..","..PheType..",5)",
+		"Quay l筰/character",
+		"K誸 th骳 i tho筰/Quit"
+		}
+		Say("H?tr?l祄 nhi謒 v?ho祅g kim Ch輓h Tuy課. ", getn(tab_Content), tab_Content);
+	elseif MissType == 2 then --ph?tuy課
+		local tab_Content = {
+		"Ph?tuy課 c蕄 20 - 29/#gquest_step2("..MissType..","..PheType..",1)",
+		"Ph?tuy課 c蕄 30 - 39/#gquest_step2("..MissType..","..PheType..",2)",
+		"Ph?tuy課 c蕄 40 - 49/#gquest_step2("..MissType..","..PheType..",3)",
+		"Ph?tuy課 c蕄 50 - 59/#gquest_step2("..MissType..","..PheType..",4)",
+		"Quay l筰/character",
+		"K誸 th骳 i tho筰/Quit"
+		}
+		Say("H?tr?l祄 nhi謒 v?ho祅g kim Ch輓h Tuy課. ", getn(tab_Content), tab_Content);
+	end
+end
+function gquest_step2(ID1,ID2,ID3)
+	local Uworld1061 = nt_getTask(1061)
+	local MissType = ID1 --Lo筰 NV ch輓h hay ph?
+	local PheType = ID2 --Nhi謒 v?ch輓h - trung - t?
+	local CapDo = ID3
+	local strDesc = tb_HelpGoldQuest[MissType][PheType][CapDo][1][1]
+	local tbOpt = {}
+	local TotalSelect = getn(tb_HelpGoldQuest[MissType][PheType][CapDo]) --T鎛g c閚g c?bao nhi猽 l鵤 ch鋘.
+	for i=1,TotalSelect do
+		local FightState = tb_HelpGoldQuest[MissType][PheType][CapDo][i][2]
+		local MapId = tb_HelpGoldQuest[MissType][PheType][CapDo][i][4]
+		local nX =tb_HelpGoldQuest[MissType][PheType][CapDo][i][5]
+		local nY = tb_HelpGoldQuest[MissType][PheType][CapDo][i][6]
+		tinsert(tbOpt, {tb_HelpGoldQuest[MissType][PheType][CapDo][i][1],gquest_step3,{FightState,MapId,nX,nY}})
+	end
+	if ( Uworld1061 == 40 ) or ( Uworld1061 == 50 ) then
+		if MissType == 2 and CapDo == 4 then 
+			Msg2Player("Цp 竛 T鑞g Kim: <color=yellow>AC ABC ABAC CAB<color>")
+		end
+	end
+	tinsert(tbOpt, {"Quay l筰",gquest_step1})
+	tinsert(tbOpt, {"Tho竧."})
+	CreateNewSayEx(strDesc, tbOpt);
+end
+function gquest_step3(ID1,ID2,ID3,ID4)
+	local FightState = ID1
+	local MapId = ID2
+	local nX = ID3
+	local nY = ID4
+	NewWorld(MapId,nX,nY)
+	SetFightState(FightState)
+end
+--------------------------------------------------------------
+--			 			Boss Ho祅g Kim						--
+--------------------------------------------------------------
+function bosshk1()
+		local strFaction = GetFaction()
+		local nW,nX,nY = GetWorldPos();
+		local tbSay = {format(TITLEDIALOG, GetName(), GetAccount() ,nW,nX,nY)};	
+			tinsert(tbSay, "G鋓 Boss Ho祅g Kim/goibosshk");
+			tinsert(tbSay, "T譵 Boss Ho祅g Kim/timbosshk");
+			tinsert(tbSay, "K誸 th骳 i tho筰./no")			
+		CreateTaskSay(tbSay)
+	return 1;
+end
+---------------G鋓 Boss HK------------------------
+function goibosshk()
+BossHK23(f_bossx,f_bossy)
+end
+
+TBBOSS  = 
+{ --t猲 boss,id boss, t?l?r琲 ,series boss,nLevel
+	[1]={	szName = "Huy襫 Gi竎 Чi S?,		nBossId = 740,	nRate = 322,	nSeries = 0,	nLevel = 95},
+	[2]={	szName = "Л阯g B蕋 Nhi詍",			nBossId = 741,	nRate = 336,	nSeries = 1,	nLevel = 95},
+	[3]={	szName = "B筩h Doanh Doanh",		nBossId = 742,	nRate = 336,	nSeries = 1,	nLevel = 95},
+	[4]={	szName = "Thanh Tuy謙 S?Th竔",		nBossId = 743,	nRate = 341,	nSeries = 2,	nLevel = 95},
+	[5]={	szName = "Y猲 Hi觰 Tr竔",			nBossId = 744,	nRate = 336,	nSeries = 2,	nLevel = 95},
+	[6]={	szName = "H?Nh﹏ Ng?,				nBossId = 745,	nRate = 321,	nSeries = 3,	nLevel = 95},
+	[7]={	szName = "T?Чi Nh筩",				nBossId = 746,	nRate = 341,	nSeries = 4,	nLevel = 95},
+	[8]={	szName = "Tuy襫 C?T?,				nBossId = 747,	nRate = 341,	nSeries = 4,	nLevel = 95},
+	[9]={	szName = "H祅 Ngu D鑤",				nBossId = 748,	nRate = 342,	nSeries = 3,	nLevel = 95},
+	[10]={	szName = "筺 M閏 Du?,			nBossId = 565,	nRate = 227,	nSeries = 3,	nLevel = 95},
+	[11]={	szName = "C?B竎h",					nBossId = 566,	nRate = 200,	nSeries = 0,	nLevel = 95},
+	[12]={	szName = "Л阯g Phi Y課",			nBossId = 1366,	nRate = 200,	nSeries = 1,	nLevel = 95},	
+	[13]={	szName = "H?Linh Phi猽",			nBossId = 568,	nRate = 200,	nSeries = 2,	nLevel = 95},
+	[14]={	szName = "Lam Y Y",					nBossId = 582,	nRate = 200,	nSeries = 1,	nLevel = 95},
+	[15]={	szName = "M筺h Thng Lng",		nBossId = 583,	nRate = 200,	nSeries = 3,	nLevel = 95},
+	[16]={	szName = "Gia Lu藅 T?Ly",			nBossId = 563,	nRate = 200,	nSeries = 3,	nLevel = 95},
+	[17]={	szName = "Чo Thanh Ch﹏ Nh﹏",		nBossId = 562,	nRate = 200,	nSeries = 4,	nLevel = 95},
+	[18]={	szName = "Vng T?,				nBossId = 739,	nRate = 200,	nSeries = 0,	nLevel = 95},
+	[19]={	szName = "Huy襫 Nan Чi S?,		nBossId = 1365,	nRate = 200,	nSeries = 0,	nLevel = 95},
+	[20]={	szName = "Chung Linh T?,			nBossId = 567,	nRate = 200,	nSeries = 2,	nLevel = 95},
+	[21]={	szName = "Thanh Li猲 T?,			nBossId = 1368,	nRate = 200,	nSeries = 4,	nLevel = 95},
+	
+}
+
+function BossHK23(f_bossx,f_bossy)
+
+	if (not f_bossx) then
+		f_bossx1 = 1;
+		f_bossy1 = 12;
+	else
+		f_bossx1 = f_bossx;
+		f_bossy1 = f_bossy;
+	end
+	
+	if (f_bossy1 - f_bossx1 > 11) then
+		f_bossy1 = f_bossx1 + 11;
+	end
+	
+	local n_count = getn(TBBOSS);
+	local tb = {}
+	
+	tb = {GetName().." b筺 mu鑞 th?boss n祇?"}
+	
+	for i = f_bossx1, f_bossy1 do
+		tinsert(tb,format("%s/#PickBoss(%d)",TBBOSS[i].szName,i));
+	end
+
+	if (f_bossx1 ~= 1) then
+		tinsert(tb, "Trang trc/#BossHK( 1,"..(f_bossx1-1)..")");
+	end
+	
+	if (f_bossy1 < n_count) then
+		tinsert(tb, "Trang sau/#BossHK( "..(f_bossy1+1)..","..n_count..")");
+	end
+	tinsert(tb,"в ta suy ngh?/cancel");
+	CreateTaskSay(tb)
+	
+end
+
+function PickBoss(nIndex)
+	if GetFightState() == 0 then 
+		Talk(1,"","Kh玭g th?th?boss ?nh鱪g n琲 phi chi課 u 頲.")
+		return 
+	end
+	local item = TBBOSS[nIndex];
+	local nw,nx,ny = GetWorldPos();
+	local index = AddNpcEx(item.nBossId,item.nLevel,item.nSeries,SubWorldID2Idx(nw),nx*32,ny*32,1,item.szName,1);
+	SetNpcDeathScript(index,"\\script\\missions\\boss\\bossdeath.lua")		
+	SetNpcParam(index,1,item.nBossId); --l璾 id boss.
+	SetNpcTimer(index,120*60*18)
+	local W,X,Y = GetWorldPos();
+	str = format("<color=yellow>%s<color>  xu蕋 hi謓 t筰 <color=yellow>%s(%d,%d)<color>",item.szName,SubWorldName(SubWorld),floor(X/8),floor((Y+5)/16))
+	local handle = OB_Create();
+	ObjBuffer:PushObject(handle, str)
+	RemoteExecute("\\script\\event\\msg2allworld.lua", "broadcast", handle)
+	OB_Release(handle)
+end
+--------------T譵 Boss HK --------------------------------
+function timbosshk() 
+    findgoldboss(1,12) 
+end  
+
+tbMapGoldBoss = { 
+{"C?B竎h","Ph?Dung ng",202,"S琻 B秓 ng",76,"Tng Dng",78,"Phng Tng",1,"Th祅h Й",11,"Dng Ch﹗",80,"Bi謓 Kinh",37,"Чi L?,162,"L﹎ An",176}, 
+{"Huy襫 Gi竎 Чi S?,"Nh筺 Th筩h ng",10,"Thanh kh?ng",198,"Tng Dng",78,"Phng Tng",1,"Th祅h Й",11,"Dng Ch﹗",80,"Bi謓 Kinh",37,"Чi L?,162,"L﹎ An",176}, 
+{"Л阯g Phi Y課", "Phong L╪g ",336,"Kho?Lang ng",75,"Tng Dng",78,"Phng Tng",1,"Th祅h Й",11,"Dng Ch﹗",80,"Bi謓 Kinh",37,"Чi L?,162,"L﹎ An",176}, 
+{"Lam Y Y","V?L╪g ng",199,"Phi Thi猲 ng",204,"Tng Dng",78,"Phng Tng",1,"Th祅h Й",11,"Dng Ch﹗",80,"Bi謓 Kinh",37,"Чi L?,162,"L﹎ An",176}, 
+{"H?Linh Phi猽", "Trng B筩h s琻 B綾",322,"V?Danh ng",203,"Tng Dng",78,"Phng Tng",1,"Th祅h Й",11,"Dng Ch﹗",80,"Bi謓 Kinh",37,"Чi L?,162,"L﹎ An",176}, 
+{"Y猲 Hi觰 Tr竔", "Sa M筩 s琻  ng 1",225,"Sa M筩 s琻  ng 3",227,"Tng Dng",78,"Phng Tng",1,"Th祅h Й",11,"Dng Ch﹗",80,"Bi謓 Kinh",37,"Чi L?,162,"L﹎ An",176}, 
+{"M筺h Thng Lng","Sa m筩 a bi觰",224,"Sa M筩 s琻  ng 2",226,"Tng Dng",78,"Phng Tng",1,"Th祅h Й",11,"Dng Ch﹗",80,"Bi謓 Kinh",37,"Чi L?,162,"L﹎ An",176}, 
+{"Gia Lu藅 T?Ly", "Lng Th駓 ng",181,"Dng Trung ng",205,"Tng Dng",78,"Phng Tng",1,"Th祅h Й",11,"Dng Ch﹗",80,"Bi謓 Kinh",37,"Чi L?,162,"L﹎ An",176}, 
+{"Чo Thanh Ch﹏ Nh﹏","Trng B筩h s琻 Nam",321,"M筩 Cao Qu藅",340,"Tng Dng",78,"Phng Tng",1,"Th祅h Й",11,"Dng Ch﹗",80,"Bi謓 Kinh",37,"Чi L?,162,"L﹎ An",176}, 
+{"Tuy襫 C?T?, "T﹜ S琻 o",342,"Phi Thi猲 ng",204,"Tng Dng",78,"Phng Tng",1,"Th祅h Й",11,"Dng Ch﹗",80,"Bi謓 Kinh",37,"Чi L?,162,"L﹎ An",176}, 
+{"Vng T?,"V?L╪g ng",199,"Ph?Dung ng",202,"Tng Dng",78,"Phng Tng",1,"Th祅h Й",11,"Dng Ch﹗",80,"Bi謓 Kinh",37,"Чi L?,162,"L﹎ An",176}, 
+{"Huy襫 Nan Чi S?,"Phong L╪g ",336,"Kho?Lang ng",75,"Tng Dng",78,"Phng Tng",1,"Th祅h Й",11,"Dng Ch﹗",80,"Bi謓 Kinh",37,"Чi L?,162,"L﹎ An",176}, 
+{"Л阯g B蕋 Nhi詍", "Trng B筩h s琻 Nam",321,"Kho?Lang ng",75,"Tng Dng",78,"Phng Tng",1,"Th祅h Й",11,"Dng Ch﹗",80,"Bi謓 Kinh",37,"Чi L?,162,"L﹎ An",176}, 
+{"B筩h Doanh Doanh", "Thanh kh?ng",198,"Sa m筩 a bi觰",224,"Tng Dng",78,"Phng Tng",1,"Th祅h Й",11,"Dng Ch﹗",80,"Bi謓 Kinh",37,"Чi L?,162,"L﹎ An",176}, 
+{"Thanh Tuy謙 S?Th竔", "T﹜ S琻 o",342,"Dng Trung ng",205,"Tng Dng",78,"Phng Tng",1,"Th祅h Й",11,"Dng Ch﹗",80,"Bi謓 Kinh",37,"Чi L?,162,"L﹎ An",176}, 
+{"Chung Linh T?, "Phi Thi猲 ng",204,"V?Danh ng",203,"Tng Dng",78,"Phng Tng",1,"Th祅h Й",11,"Dng Ch﹗",80,"Bi謓 Kinh",37,"Чi L?,162,"L﹎ An",176}, 
+{"H?Nh﹏ Ng?, "Nh筺 Th筩h ng",10,"Lng Th駓 ng",181,"Tng Dng",78,"Phng Tng",1,"Th祅h Й",11,"Dng Ch﹗",80,"Bi謓 Kinh",37,"Чi L?,162,"L﹎ An",176}, 
+{"an M閏 Du?, "Phong L╪g ",336,"S琻 B秓 ng",76,"Tng Dng",78,"Phng Tng",1,"Th祅h Й",11,"Dng Ch﹗",80,"Bi謓 Kinh",37,"Чi L?,162,"L﹎ An",176}, 
+{"T?Чi Nh筩", "M筩 B綾 Th秓 Nguy猲",341,"V?L╪g ng",199,"Tng Dng",78,"Phng Tng",1,"Th祅h Й",11,"Dng Ch﹗",80,"Bi謓 Kinh",37,"Чi L?,162,"L﹎ An",176}, 
+{"Thanh Li猲 T?,"Trng B筩h s琻 B綾",322,"Sa M筩 s琻  ng 3",227,"Tng Dng",78,"Phng Tng",1,"Th祅h Й",11,"Dng Ch﹗",80,"Bi謓 Kinh",37,"Чi L?,162,"L﹎ An",176}, 
+{"Thanh Tuy謙 S?Th竔","Sa M筩 s琻  ng 1",225,"Sa M筩 s琻  ng 3",227,"Tng Dng",78,"Phng Tng",1,"Th祅h Й",11,"Dng Ch﹗",80,"Bi謓 Kinh",37,"Чi L?,162,"L﹎ An",176}, 
+{"H祅 Ngu D鑤","Phong L╪g ",336,"Kho?Lang ng",75,"Tng Dng",78,"Phng Tng",1,"Th祅h Й",11,"Dng Ch﹗",80,"Bi謓 Kinh",37,"Чi L?,162,"L﹎ An",176}, 
+} 
+
+function findgoldboss(f_bossx,f_bossy) 
+    if (not f_bossx) then 
+        f_bossx1 = 1; 
+        f_bossy1 = 22; 
+    else 
+        f_bossx1 = f_bossx; 
+        f_bossy1 = f_bossy; 
+    end 
+     
+    if (f_bossy1 - f_bossx1 > 11) then 
+        f_bossy1 = f_bossx1 + 11; 
+    end 
+     
+    local n_count = getn(tbMapGoldBoss); 
+    local tab_Content = {} 
+    for i = f_bossx1, f_bossy1 do 
+        tinsert(tab_Content, {tbMapGoldBoss[i][1], findgoldboss_Step2, {i}}); 
+    end 
+    tinsert(tab_Content, {"Tho竧./OnCancel"}); 
+    CreateNewSayEx("T譵 ki誱 Boss Чi Ho祅g Kim", tab_Content); 
+end 
+function findgoldboss_Step2(nId) 
+    local tb = {}; 
+    for i=2,getn(tbMapGoldBoss[nId]),2 do 
+        local npcidxtab = GetMapNpcWithName(tbMapGoldBoss[nId][i+1], tbMapGoldBoss[nId][1]); 
+        if npcidxtab == nil then 
+                nNPCCount = 0; 
+        else 
+            nNPCCount = getn(npcidxtab); 
+        end; 
+        for j = 1, nNPCCount do  
+            x, y, subworld = GetNpcPos(npcidxtab[j]);  
+            m,n,k = floor(x/32),floor(y/32),SubWorldIdx2ID(subworld); 
+            tinsert(tb,{tbMapGoldBoss[nId][1].."-"..tbMapGoldBoss[nId][i].."["..m.."-"..n.."]",findgoldboss_Step3,{m.."-"..n.."-"..k}}); 
+        end; 
+    end; 
+    strTittle = "T譵 th蕐 cao th?v?l﹎ "..tbMapGoldBoss[nId][1].." t筰 c竎 v?tr?sau y:"; 
+    tinsert(tb,{"Quay l筰.",findgoldboss}); 
+    tinsert(tb,{"Tho竧./OnCancel"}); 
+    CreateNewSayEx(strTittle, tb); 
+end 
+function findgoldboss_Step3(nStr) 
+    local szICode = lib:Split(nStr, "-"); 
+    local Map = szICode[3] 
+    local xPos = tonumber(floor(szICode[1])) 
+    local yPos = tonumber(floor(szICode[2])) 
+    NewWorld(Map,xPos,yPos)  
+end 
+
+function OnCancel() 
+end  
+--------------------------------------------------------------
+--			 		C閚g 觤 Nhanh							--
+--------------------------------------------------------------
+function add_prop()
+	local tbOpt = 
+	{
+		{"T╪g s鴆 m筺h.", add_prop_str},
+		{"T╪g th﹏ ph竝.", add_prop_dex},
+		{"T╪g sinh kh?", add_prop_vit},
+		{"T╪g n閕 c玭g.", add_prop_eng},
+		{"Tho竧."}
+	}
+	CreateNewSayEx("<npc>Xin m阨 ch鋘 ti襪 n╪g c莕 t╪g!", tbOpt)
+end
+
+function add_prop_str()
+	AskClientForNumber("enter_str_num", 0, GetProp(), "M阨 nh藀 ch?s?s鴆 m筺h: ");
+end
+function add_prop_dex()
+	AskClientForNumber("enter_dex_num", 0, GetProp(), "M阨 nh藀 ch?s?th﹏ ph竝: ");
+end
+function add_prop_vit()
+	AskClientForNumber("enter_vit_num", 0, GetProp(), "M阨 nh藀 ch?s?sinh kh?");
+end
+function add_prop_eng()
+	AskClientForNumber("enter_eng_num", 0, GetProp(), "M阨 nh藀 ch?s?n閕 c玭g: ");
+end
+function enter_str_num(n_key)
+	if (n_key < 0 or n_key > GetProp()) then
+		return
+	end
+	AddStrg(n_key);
+end
+function enter_dex_num(n_key)
+	if (n_key < 0 or n_key > GetProp()) then
+		return
+	end
+	AddDex(n_key);
+end
+function enter_vit_num(n_key)
+	if (n_key < 0 or n_key > GetProp()) then
+		return
+	end
+	AddVit(n_key);
+end
+function enter_eng_num(n_key)
+	if (n_key < 0 or n_key > GetProp()) then
+		return
+	end
+	AddEng(n_key);
+end
+--------------------------------------------------------------
+--							Point							--
+--------------------------------------------------------------
+------------觤 T鑞g Kim-------------------
+function diemtongkim()
+AskClientForNumber("diemtongkim2",0,9999999999999999,"Nh藀 觤") 
+end
+function diemtongkim2(nNum)
+SetTask(747,GetTask(747)+nNum)
+Msg2Player("B筺 nh薾 頲 <color=yellow>"..nNum.."<color> 甶觤 t鑞g kim.") 
+end
+------------C蕄-------------------
+function dangcap200()
+AskClientForNumber("level",0,200,"Nh藀 C蕄 ч:") 
+end
+
+function level(num)
+local nCurLevel = GetLevel()
+local nAddLevel = num - nCurLevel
+ST_LevelUp(nAddLevel)
+Msg2Player("B筺 nh薾 頲 <color=yellow>"..num.."<color> c蕄 .") 
+end
+---EXP-----
+function kinhnghiem()
+AskClientForNumber("kinhnghiem1",0,9999999999999999,"Nh藀 EXP") 
+end
+function kinhnghiem1(nNum)
+AddOwnExp(nNum)
+Msg2Player("B筺 nh薾 頲 <color=yellow>"..nNum.."<color> kinh nghi謒.") 
+end
+---Tien Van---
+function tien()
+AskClientForNumber("tienvan",0,10000000,"Nh藀 S?Lng:") 
+end
+function tienvan(slkv)
+local money= slkv*10000
+local giatrikv=money/10000
+Earn(money)
+Msg2Player(format("B筺 nh薾 頲 <color=yellow>%s v筺<color>.",giatrikv))
+end
+---Tien Dong---
+function tiendong()
+AskClientForNumber("tiendong1",0,1000,"Nh藀 S?Lng:") 
+end;
+function tiendong1(sltiendong)
+for i = 1, sltiendong do
+AddStackItem(1,4,417,1,1,0,0,0)
+end
+Msg2Player("B筺 nh薾 頲 <color=yellow>"..sltiendong.." <color>ti襫 ng.")
+end
+----KNB------
+function knb()
+AskClientForNumber("layknb",0,100000,"Nh藀 S?Lng:") 
+end
+function layknb(slknb)
+for i=1, slknb do
+AddEventItem(343)
+end
+Msg2Player("B筺 nh薾 頲 <color=yellow>"..slknb.." <color>KNB.")
+end
+----------------觤 K?N╪g----------------------------------------
+function pointkynang()
+AskClientForNumber("pointkynang1",0,1000,"Nh藀 S?Lng:") 
+end;
+function pointkynang1(nNum)
+AddMagicPoint(nNum)		---Nh薾 甶觤 k?n╪g
+Msg2Player("B筺 nh薾 頲 <color=yellow>"..nNum.."<color> 甶觤 K?N╪g.")
+end
+------------------觤 Ti襪 N╪g--------------------------------------
+function pointtiemnang()
+AskClientForNumber("pointtiemnang1",0,1000000,"Nh藀 S?Lng:") 
+end;
+function pointtiemnang1(nNum)
+AddProp(nNum)		---Nh薾 甶觤 ti襪 n╪g
+Msg2Player("B筺 nh薾 頲 <color=yellow>"..nNum.."<color> 甶觤 Ti襪 N╪g.")
+end
+------------Danh V鋘g----------------------------
+function danhvong()
+AskClientForNumber("danhvongINPUT",0,100000,"Nh藀 S?Lng:") 
+end
+function danhvongINPUT(nNum)
+AddRepute(nNum);
+Msg2Player("B筺 nh薾 頲 "..nNum.." 甶觤 Danh V鋘g.")
+end
+------------Ph骳 Duy猲----------------------------
+function phucduyen()
+AskClientForNumber("phucduyen2",0,100000,"Nh藀 S?Lng:") 
+end
+function phucduyen2(nNum)
+FuYuan_Start();	
+FuYuan_Add(nNum);
+Msg2Player("B筺 nh薾 頲 "..nNum.." 甶觤 Ph骳 Duy猲.")
+end
+------------T礽 L穘h Чo----------------------------
+function tailanhdao()
+	for i = 1, 250 do
+		AddLeadExp(1000000000)
+	end
+	Msg2Player("B筺 nh薾 頲 100 c蕄 t礽 l穘h o");
+end
+------------觤 C鑞g Hi課----------------------------
+function conghien()
+	AddContribution(1000000);
+	Msg2Player("B筺 nh薾 頲 1.000.000 甶觤 c鑞g hi課")
+end
+
+-- PHAN 1: CAC HAM TRUNG GIAN CHO TUNG MOC CAP (DE GOI KHI CLICK MENU)
+-- =========================================================================
+function NhanThuongCap30()   XuLyCheckDieuKien(30, 2001) end
+function NhanThuongCap80()   XuLyCheckDieuKien(80, 2002) end
+function NhanThuongCap100()  XuLyCheckDieuKien(100, 2003) end
+function NhanThuongCap120()  XuLyCheckDieuKien(120, 2005) end
+
+function ThoatMenu()
+    -- Ham nay de trong de dong menu khi chon "De toi suy nghi lai"
+end
+
+
+-- =========================================================================
+-- PHAN 2: MENU CON - HIEN THI 10 MOC LEVEL THEO FORM CREATENEWSAYEX
+-- =========================================================================
+function MenuThuongLevel()
+    local tbOpt = {
+        {"Nh薾 thng c蕄 30", NhanThuongCap30},
+        {"Nh薾 thng c蕄 80", NhanThuongCap80},
+        {"Nh薾 thng c蕄 100", NhanThuongCap100},
+        {"Nh薾 thng c蕄 190", NhanThuongCap190},
+        
+        {"в t玦 suy ngh?l筰", ThoatMenu},
+    }
+    
+    CreateNewSayEx("Ch鋘 m鑓 c蕄  b筺 mu鑞 nh薾:", tbOpt)
+end
+
+
+-- =========================================================================
+-- PHAN 3: LOGIC CHUNG NH?N DI?N SKILL & PH罷 ? FULL 10 PH罥 (10 M?C C?P)
+-- =========================================================================
+function XuLyCheckDieuKien(nLevelYeuCau, nIdTask)
+
+    -- 3.1 Kiem tra cap do hien tai
+    if GetLevel() < nLevelYeuCau then
+        Say("C蕄  c馻 b筺 ch璦 t m鑓 " .. nLevelYeuCau .. ", kh玭g th?nh薾!", 0)
+        return
+    end
+
+    -- 3.2 Ki?m tra Task ID xem d?nh?n m?c n鄖 chua
+    if GetTask(nIdTask) == 1 then
+        Say("B筺  nh薾 thng m鑓 c蕄  " .. nLevelYeuCau .. " trc  r錳!", 0)
+        return
+    end
+
+    -- 3.3 Ki?m tra h鄋h trang (Tr?ng t? 10 ?tr? l阯)
+    if CalcFreeItemCellCount() < 40 then
+        Say("H穣 c蕋 b韙 v藅 ph萴  m b秓 c?40 ?tr鑞g r錳 ti誴 t鬰 nh?!", 0)
+        return
+    end
+
+    -- =====================================================================
+    -- BU?C A: X罜 ?NH H? S? NH翹 THEO M?C C?P ? (ID tang tinh tien +230)
+    -- =====================================================================
+    local nHeSoMoc  = -1
+    local szTenSetDo = ""
+
+    if nLevelYeuCau == 30 then       nHeSoMoc = 0; szTenSetDo = "Thanh C﹗"
+    elseif nLevelYeuCau == 80 then   nHeSoMoc = 1; szTenSetDo = "V﹏ L閏"
+    elseif nLevelYeuCau == 100 then  nHeSoMoc = 2; szTenSetDo = "Thng Lang"
+    elseif nLevelYeuCau == 190 then  nHeSoMoc = 4; szTenSetDo = "T?M穘g"
+    end
+
+    -- =====================================================================
+    -- BU?C B: D貼G HAVEMAGIC T? ?NG QU蒚 TO繬 B? 10 M訬 PH罥 (24 蠻?NG)
+    -- =====================================================================
+    local nIDGoc      = 0
+    local szTenDuong  = ""
+
+    -- --- 1. THI?U L翸 T? ---
+    if HaveMagic(8) ~= -1 and HaveMagic(8) >= 1 then 
+        nIDGoc = 905; szTenDuong = "Thieu Lam Quyen Phap"
+    elseif HaveMagic(4) ~= -1 and HaveMagic(4) >= 1 then 
+        nIDGoc = 915; szTenDuong = "Thieu Lam Con Phap"
+    elseif HaveMagic(6) ~= -1 and HaveMagic(6) >= 1 then 
+        nIDGoc = 925; szTenDuong = "Thieu Lam Dao Phap"
+
+    -- --- 2. THI蔔 VUONG BANG ---
+    elseif HaveMagic(26) ~= -1 and HaveMagic(26) >= 1 then 
+        nIDGoc = 935; szTenDuong = "Thien Vuong Chuy Phap"
+    elseif HaveMagic(23) ~= -1 and HaveMagic(23) >= 1 then 
+        nIDGoc = 945; szTenDuong = "Thien Vuong Thuong Phap"
+    elseif HaveMagic(24) ~= -1 and HaveMagic(24) >= 1 then 
+        nIDGoc = 955; szTenDuong = "Thien Vuong Dao Phap"
+
+    -- --- 3. NGA MY PH罥 ---
+    elseif HaveMagic(77) ~= -1 and HaveMagic(77) >= 1 then 
+        nIDGoc = 965; szTenDuong = "Nga Mi Kiem Phap"
+    elseif HaveMagic(79) ~= -1 and HaveMagic(79) >= 1 then 
+        nIDGoc = 975; szTenDuong = "Nga My Chuong Phap"
+
+    -- --- 4. TH赮 Y蔔 M訬 ---
+    elseif HaveMagic(95) ~= -1 and HaveMagic(95) >= 1 then 
+        nIDGoc = 985; szTenDuong = "Thuy Yen Dao Phap"
+    elseif HaveMagic(97) ~= -1 and HaveMagic(97) >= 1 then 
+        nIDGoc = 995; szTenDuong = "Thuy Yen Song Dao"
+
+    -- --- 5. NGU ?C GI罯 ---
+    elseif HaveMagic(62) ~= -1 and HaveMagic(62) >= 1 then 
+        nIDGoc = 1005; szTenDuong = "Ngu Doc Chuong Phap"
+    elseif HaveMagic(60) ~= -1 and HaveMagic(60) >= 1 then 
+        nIDGoc = 1015; szTenDuong = "Ngu Doc Dao Phap"
+
+    -- --- 6. 蠻?NG M訬 ---
+    elseif HaveMagic(50) ~= -1 and HaveMagic(50) >= 1 then 
+        nIDGoc = 1025; szTenDuong = "Duong Mon Phi Dao"
+    elseif HaveMagic(54) ~= -1 and HaveMagic(54) >= 1 then 
+        nIDGoc = 1035; szTenDuong = "Duong Mon Tu Tien"
+    elseif HaveMagic(47) ~= -1 and HaveMagic(47) >= 1 then 
+        nIDGoc = 1045; szTenDuong = "Duong Mon Phi Tieu"
+
+    -- --- 7. C罥 BANG ---
+    elseif HaveMagic(116) ~= -1 and HaveMagic(116) >= 1 then 
+        nIDGoc = 1055; szTenDuong = "Cai Bang Chuong Phap"
+    elseif HaveMagic(115) ~= -1 and HaveMagic(115) >= 1 then 
+        nIDGoc = 1065; szTenDuong = "Cai Bang Bong Phap"
+
+    -- --- 8. THI蔔 NH?N GI罯 ---
+    elseif HaveMagic(132) ~= -1 and HaveMagic(132) >= 1 then 
+        nIDGoc = 1075; szTenDuong = "Thien Nhan Mau Phap"
+    elseif HaveMagic(131) ~= -1 and HaveMagic(131) >= 1 then 
+        nIDGoc = 1085; szTenDuong = "Thien Nhan Dao Phap"
+
+    -- --- 9. V?蠥NG PH罥 ---
+    elseif HaveMagic(152) ~= -1 and HaveMagic(152) >= 1 then 
+        nIDGoc = 1095; szTenDuong = "Vo Dang Quyen Phap"
+    elseif HaveMagic(151) ~= -1 and HaveMagic(151) >= 1 then 
+        nIDGoc = 1105; szTenDuong = "Vo Dang Kiem Phap"
+
+    -- --- 10. C訬 L訬 PH罥 ---
+    elseif HaveMagic(167) ~= -1 and HaveMagic(167) >= 1 then 
+        nIDGoc = 1115; szTenDuong = "Con Lon Dao Phap"
+    elseif HaveMagic(168) ~= -1 and HaveMagic(168) >= 1 then 
+        nIDGoc = 1125; szTenDuong = "Con Lon Kiem Phap"
+    end
+
+    -- =====================================================================
+    -- BU?C C: T蚇H TO罭 RA ID CHU?N X罜 V?TI?N H繬H PH罷 ?
+    -- =====================================================================
+    -- N?u kh鬾g kh?p m?c c?p ho?c ngu?i choi chua c?ng di?m skill n鄌 d? nh?n di?n
+    if nIDGoc == 0 or nHeSoMoc == -1 then
+        Say("H?th鑞g kh玭g nh薾 di謓 頲 阯g l鑙 k?n╪g c馻 b筺! Vui l遪g t╪g 輙 nh蕋 1 甶觤 v祇 k?n╪g h?tr?c馻 b筺  頲 nh薾 thng.", 0)
+        return
+    end
+
+    -- 羛 d?ng c鬾g th?c t? d?ng nh?y ID cho to鄋 server:
+    local nStartID = nIDGoc + (nHeSoMoc * 230)
+
+    -- Hi?n th? th鬾g b醥 nh?n di?n ngay tr阯 khung d?i tho?i NPC
+    Say("<color=green>Nh薾 di謓:<color> " .. szTenDuong .. " -> Chu萵 b?trao qu?m鑓 " .. szTenSetDo, 0)
+
+    -- V騨g l?p ph醫 d? 10 m髇 trang b? li阯 ti?p t韓h t? nStartID d?t韓h to醤
+    for i = nStartID, nStartID + 9 do
+        tbAwardTemplet:GiveAwardByList({{szName="Trang b?thng m鑓", tbProp={0, i}, nCount=1, nQuality=1,},}, "NhanThuongMoc_"..nLevelYeuCau, 1)
+    end
+
+    -- 3.5 Luu tr?ng th醝 kh骯 Task ID tr醤h nh?n tr鵱g v?th鬾g b醥 th鄋h c鬾g
+    SetTask(nIdTask, 1)
+    Say("Ch骳 m鮪g! B筺  nh薾 th祅h c玭g qu?thng m鑓 <color=yellow>" .. szTenSetDo .. "<color> d祅h cho b筺!", 0)
+end
+
+
+---------- Gop tu npcthunghiem.lua (6 tinh nang) ----------
+function GotoBLH()
+	local nW, nX, nY = GetWorldPos();
+	if (nW == 246) then
+	Msg2Player("Map n祔 kh玭g th?s?d鬾g t輓h n╪g n祔!")
+	return 1
+	end
+	if (nW == 53) then
+		SetPos(1626,3179);
+	else
+		NewWorld(53, 1626, 3179);
+	end
+	SetFightState(0);
+	Msg2Player("Di chuy觧 v?<color=green>Ba L╪g Huy謓<color> th祅h c玭g!")
+end
+
+function moruong()
+OpenStoreBox(1)
+OpenStoreBox(2)
+OpenStoreBox(3)
+AddItem(6,1,1427,90,1,0,0)
+end
+
+function TayTuyNhanh()
+	local tbSay = {"Ngi mu鑞 t葃 t駓 lo筰 g?y?"}
+		tinsert(tbSay, "T╪g 甶觤 nhanh/tangdiemnhanh")
+		tinsert(tbSay, "T葃 甶觤 k?n╪g/taydiemkynang")
+		tinsert(tbSay, "T葃 甶觤 ti襪 n╪g/taydiemtiemnang")
+		tinsert(tbSay, "K誸 th骳 i tho筰./OnCancel")
+	CreateTaskSay(tbSay)
+end
+
+function taydiemkynang()
+	Say("Ngi ng ?T葃 甶觤 k?n╪g kh玭g?", 2, "T葃 甶觤 k?n╪g /taydiemkynangok","Kh玭g t葃 /OnCancel")
+end
+
+function taydiemkynangok()
+	i = HaveMagic(210)
+	j = HaveMagic(400)
+	n = RollbackSkill()
+	x = 0
+	if (i ~= -1) then x = x + i end
+	if (j ~= -1) then x = x + j end
+	rollback_point = n - x
+	if (rollback_point + GetMagicPoint() < 0) then
+		rollback_point = -1 * GetMagicPoint()
+	end
+	AddMagicPoint(rollback_point)
+	if (i ~= -1) then AddMagic(210,i) end
+	if (j ~= -1) then AddMagic(400,j) end
+	Msg2Player("T葃 T駓 th祅h c玭g! ngi  c?th?ph﹏ ph鑙 "..rollback_point.." 甶觤. ")
+	Talk(1,"KickOutSelf","T葃 T駓 th祅h c玭g! ngi  c?th?ph﹏ ph鑙 "..rollback_point.." 甶觤.")
+end
+
+function taydiemtiemnang()
+	Say("Ngi ng ?t葃 甶觤 ti襪 n╪g kh玭g?", 2, "T葃 甶觤 ti襪 n╪g/taydiemtiemnangok", "Kh玭g t葃 /OnCancel")
+end
+
+function taydiemtiemnangok()
+	base_str = {35,20,25,30,20}
+	base_dex = {25,35,25,20,15}
+	base_vit = {25,20,25,30,25}
+	base_eng = {15,25,25,20,40}
+	player_series = GetSeries() + 1
+	Utask88 = GetTask(88)
+	AddStrg(base_str[player_series] - GetStrg(1) + GetByte(Utask88,1))
+	AddDex(base_dex[player_series] - GetDex(1) + GetByte(Utask88,2))
+	AddVit(base_vit[player_series] - GetVit(1) + GetByte(Utask88,3))
+	AddEng(base_eng[player_series] - GetEng(1) + GetByte(Utask88,4))
+end
+
+function tangdiemnhanh()
+	Say("Th輈h Minh: Ngi mu鑞 t╪g 甶觤 k?n╪g n祇?", 4,
+		"T╪g S鴆 M筺h/add_prop_str",
+		"T╪g Th﹏ Ph竝/add_prop_dex",
+		"T╪g Ngo筰 C玭g/add_prop_vit",
+		"T╪g N閕 C玭g/add_prop_eng")
+end

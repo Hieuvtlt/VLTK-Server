@@ -1,0 +1,81 @@
+Include("\\script\\lib\\common.lua")
+Include("\\script\\dailogsys\\g_dialog.lua")
+Include("\\script\\dailogsys\\dailogsay.lua")
+Include("\\script\\lib\\awardtemplet.lua")
+
+-- ==================== C?U HÌNH EVENT THÁNG 8 ====================
+TSK_GHI_DANH_T8 = 1420
+TSK_NHAN_LV100 = 1421
+TSK_NHAN_LV130 = 1422
+
+function main()
+	local szMsg = "<color=yellow>Sø Gi¶ Th¸ng 8:<color>\nChµo mõng ®¹i hiÖp! §©y lµ sù kiÖn ®Æc biÖt dµnh riªng cho c¸c t©n thñ gia nhËp vµo th¸ng 8. H·y ch¨m chØ luyÖn cÊp ®Ó nhËn th­ëng hËu hinh."
+	
+	-- Menu tinh 100%, không dùng nhánh if-else ngay t?i main() d? ch?ng câm NPC
+	local tbOpt = {
+		{"Ghi Danh T©n Thñ Th¸ng 8", GhiDanhTanThu},
+		{"NhËn th­ëng CÊp 100 (Thiªn S¬n TuyÕt Liªn)", NhanThuong_100},
+		{"NhËn th­ëng CÊp 130 (HuyÒn Ch©n §¬n)", NhanThuong_130},
+		{"Tho¸t", KetThuc}
+	}
+	CreateNewSayEx(szMsg, tbOpt)
+	return 1
+end
+
+-- ==================== X? LÝ GHI DANH ====================
+function GhiDanhTanThu()
+	local nMonth = tonumber(GetLocalDate("%m"))
+	
+	if nMonth ~= 8 then
+		Msg2Player("<color=red>Sù kiÖn ghi danh T©n Thñ chØ diÔn ra trong Th¸ng 8!<color>") 
+		return
+	end
+	
+	if GetLevel() > 10 then
+		Msg2Player("<color=red>ChØ nh÷ng nh©n vËt CÊp 10 trë xuèng míi cã thÓ ghi danh T©n Thñ!<color>") 
+		return
+	end
+	
+	if GetTask(TSK_GHI_DANH_T8) == 1 then
+		Msg2Player("<color=yellow>Ng­¬i ®· ghi danh thµnh c«ng råi, kh«ng cÇn ghi danh l¹i!<color>")
+		return
+	end
+	
+	SetTask(TSK_GHI_DANH_T8, 1)
+	Msg2Player("<color=green>Ghi danh T©n Thñ Th¸ng 8 thµnh c«ng! H·y luyÖn ®¹t cÊp 100 vµ 130 ®Ó nhËn th­ëng.<color>")
+end
+
+-- ==================== X? LÝ NH?N THU?NG C?P 100 ====================
+function NhanThuong_100()
+	if GetTask(TSK_GHI_DANH_T8) ~= 1 then Msg2Player("<color=red>Ng­¬i ch­a ghi danh T©n Thñ Th¸ng 8!<color>") return end
+	if GetLevel() < 100 then Msg2Player("<color=red>Yªu cÇu ®¹t CÊp 100 míi cã thÓ nhËn th­ëng!<color>") return end
+	if GetTask(TSK_NHAN_LV100) == 1 then Msg2Player("<color=red>Ng­¬i ®· nhËn phÇn th­ëng mèc CÊp 100 råi!<color>") return end
+	if CalcFreeItemCellCount() < 1 then Msg2Player("Hµnh trang cÇn Ýt nhÊt 1 « trèng!") return end
+	
+	AddItem(6, 1, 1431, 1, 0, 0)
+	SetTask(TSK_NHAN_LV100, 1)
+	
+	Msg2Player("<color=yellow>Chóc mõng ®¹i hiÖp ®¹t CÊp 100, nhËn ®­îc 1 Thiªn S¬n TuyÕt Liªn!<color>")
+	AddGlobalNews("Chóc mõng t©n thñ ["..GetName().."] ®· b­íc vµo hµng ngò cao thñ CÊp 100 vµ nhËn ®­îc Thiªn S¬n TuyÕt Liªn!")
+end
+
+-- ==================== X? LÝ NH?N THU?NG C?P 130 ====================
+function NhanThuong_130()
+	if GetTask(TSK_GHI_DANH_T8) ~= 1 then Msg2Player("<color=red>Ng­¬i ch­a ghi danh T©n Thñ Th¸ng 8!<color>") return end
+	if GetLevel() < 130 then Msg2Player("<color=red>Yªu cÇu ®¹t CÊp 130 míi cã thÓ nhËn th­ëng!<color>") return end
+	if GetTask(TSK_NHAN_LV130) == 1 then Msg2Player("<color=red>Ng­¬i ®· nhËn phÇn th­ëng mèc CÊp 130 råi!<color>") return end
+	if CalcFreeItemCellCount() < 1 then Msg2Player("Hµnh trang cÇn Ýt nhÊt 1 « trèng!") return end
+	
+	-- S? d?ng tbAwardTemplet d? add v?t ph?m kèm Param chu?n 100% engine VNG
+	local tbHuyenChan = {
+		{szName="HuyÒn Ch©n §¬n", tbProp = {6, 1, 1678, 1, 0, 0}, tbParam = {1500000000}}
+	}
+	tbAwardTemplet:GiveAwardByList(tbHuyenChan, 1)
+	
+	SetTask(TSK_NHAN_LV130, 1)
+	
+	Msg2Player("<color=yellow>Chóc mõng ®¹i hiÖp ®¹t CÊp 130, nhËn ®­îc 1 HuyÒn Ch©n §¬n (T¨ng 1.5 Tû EXP)!<color>")
+	AddGlobalNews("Kinh tµi tuyÖt diÔm! T©n thñ ["..GetName().."] th¸ng 8 ®· ®¹t CÊp 130, vinh dù nhËn ®­îc HuyÒn Ch©n §¬n!")
+end
+
+function KetThuc() end

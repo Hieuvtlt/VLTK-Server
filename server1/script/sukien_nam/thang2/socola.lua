@@ -1,0 +1,73 @@
+Include("\\script\\lib\\common.lua")
+Include("\\script\\lib\\awardtemplet.lua")
+Include("\\script\\task\\task_addplayerexp.lua")
+Include("\\script\\global\\nobitaxd\\config\\cfg_server.lua")
+
+tb_QuaSocola = {
+	[1]  = {szName="Tö Thñy Tinh", tbProp={4, 239, 1, 1, 0, 0}, nRate=0},
+	[2]  = {szName="Lam Thñy Tinh", tbProp={4, 238, 1, 1, 0, 0}, nRate=0},
+	[3]  = {szName="Lôc Thñy Tinh", tbProp={4, 240, 1, 1, 0, 0}, nRate=0},
+	[4]  = {szName="Tinh Hång B¶o Th¹ch", tbProp={4, 353, 1, 1, 0, 0}, nRate=0},
+	[5]  = {szName="Hu©n C«ng Ch­¬ng", tbProp={6, 1, 5129, 1, 0, 0}, nRate=25},
+	[6]  = {szName="C«ng Tr¹ng LÖnh", tbProp={6, 1, 5130, 1, 0, 0}, nRate=25},
+	[7]  = {szName="HuyÒn tinh kho¸ng th¹ch cÊp 3", tbProp={6, 1, 147, 3, 0, 0}, nRate=0},
+	[8]  = {szName="HuyÒn tinh kho¸ng th¹ch cÊp 4", tbProp={6, 1, 147, 4, 0, 0}, nRate=0},
+	[9]  = {szName="HuyÒn tinh kho¸ng th¹ch cÊp 5", tbProp={6, 1, 147, 5, 0, 0}, nRate=0},
+	[10] = {szName="VËt phÈm ngÉu nhiªn 1", tbProp={6, 1, 33, 1, 0, 0}, nRate=0}, 
+	[11] = {szName="VËt phÈm ngÉu nhiªn 2", tbProp={6, 1, 45, 1, 0, 0}, nRate=0},
+	[12] = {szName="M¶nh trang bÞ Hoµng Kim", tbProp={6, 1, 5128, 1, 0, 0}, nRate=0},
+	[13] = {szName="Phi Tèc Hoµn", tbProp={6, 0, 6, 1, 0, 0}, nRate=50},
+	[14] = {szName="§¹i Lùc Hoµn", tbProp={6, 0, 3, 1, 0, 0}, nRate=50},
+	[15] = {szName="Phóc Duyªn Lé (§¹i)", tbProp={6, 1, 124, 1, 0, 0}, nRate=25}
+}
+
+function main()
+	local TSK_TONG_EXP = 1312
+	local TSK_NAM_EVENT = 1313
+	local MAX_EXP = 1500000000
+	local nMonth = tonumber(GetLocalDate("%m"))
+	local nYear = tonumber(GetLocalDate("%Y"))
+
+	if SKN_ThangMo(2) ~= 1 then
+		Msg2Player("<color=red>Socola ®· hÕt h¹n, bÞ ch¶y n­íc vµ ®· bÞ vøt bá!<color>")
+		return 1 
+	end
+
+	local nNamCu = GetTask(TSK_NAM_EVENT)
+	if nNamCu ~= nYear then
+		SetTask(TSK_TONG_EXP, 0) 
+		SetTask(TSK_NAM_EVENT, nYear) 
+	end
+
+	local nExpDaNhan = GetTask(TSK_TONG_EXP)
+	if nExpDaNhan >= MAX_EXP then
+		Msg2Player("<color=red>§¹i hiÖp ®· nhËn tèi ®a 1.5 Tû Kinh NghiÖm, kh«ng thÓ ¨n thªm Socola!<color>")
+		return 1
+	end
+
+	if CalcFreeItemCellCount() < 2 then
+		Msg2Player("Hµnh trang cÇn Ýt nhÊt 2 « trèng ®Ó nhËn th­ëng!")
+		return 1
+	end
+
+	-- L?nh xóa ch? d?ng 1 cái Socola Tình Yêu (ID 5144) trong stack
+	if ConsumeEquiproomItem(1, 6, 1, 5144, -1) ~= 1 then
+		Msg2Player("HÖ thèng bËn, kh«ng thÓ sö dông vËt phÈm lóc nµy!")
+		return 1
+	end
+
+	local nAddExp = 3000000
+	if nExpDaNhan + nAddExp > MAX_EXP then nAddExp = MAX_EXP - nExpDaNhan end
+	
+	tl_addPlayerExp(nAddExp)
+	SetTask(TSK_TONG_EXP, nExpDaNhan + nAddExp)
+	
+	-- C?p nh?t ng?u nhiên ID v?t ph?m lo?i 6 tru?c khi phát thu?ng
+	tb_QuaSocola[10].tbProp[3] = random(33, 43)
+	tb_QuaSocola[11].tbProp[3] = random(45, 62)
+	
+	tbAwardTemplet:GiveAwardByList(tb_QuaSocola, "Socola T×nh Yªu")
+	
+	Msg2Player("<color=pink>Sö dông Socola T×nh Yªu nhËn ®­îc " .. nAddExp .. " Kinh NghiÖm vµ phÇn quµ ngät ngµo!<color>")
+	return 1
+end

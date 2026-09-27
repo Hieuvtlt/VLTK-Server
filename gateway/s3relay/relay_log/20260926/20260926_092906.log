@@ -1,0 +1,66 @@
+[2026/09/26 09:29:06] Loading All Scripts....................
+[2026/09/26 09:29:06] Load Rank FUNC_RANK_EQUIPVALUE
+[2026/09/26 09:29:06] Load Stable Rank count 0
+[2026/09/26 09:29:06] Load Dynamic Rank count 0
+[2026/09/26 09:29:06] Load Rank FUNC_RANK_EQUIPVALUE end
+[2026/09/26 09:29:06] [PLD] Auto reset on startup. Mode = 0
+[2026/09/26 09:29:06] 
+All Scripts Have Been Loaded! Count = 93
+[2026/09/26 09:29:06] TRIP_MODE: None
+[2026/09/26 09:29:06] Loading World Setting...
+[2026/09/26 09:29:06] Reset map pho ban thanh cong
+[2026/09/26 09:29:06] Load LeagueData: LeagueType: 4, Leagues: 7, Roles: 7
+[2026/09/26 09:29:06] Load LeagueData: LeagueType: 500, Leagues: 3, Roles: 3
+[2026/09/26 09:29:06] Load LeagueData: LeagueType: 502, Leagues: 11, Roles: 11
+[2026/09/26 09:29:06] Load LeagueData: LeagueType: 535, Leagues: 18, Roles: 0
+[2026/09/26 09:29:06] Load LeagueData: LeagueType: 10000, Leagues: 1, Roles: 0
+[2026/09/26 09:29:06] =====> THONG BAO TIN TUC TU DONG
+[2026/09/26 09:29:06] =====> BAT DAU KHOI DONG CAC TINH NANG CUA GAME VO LAM TRUYEN KY <=====
+[2026/09/26 09:29:06] =====> Boss Tieu Hoang Kim Xuat Hien Vao Luc :  12:30
+[2026/09/26 09:29:06] =====> SO LUONG BOSS HOANG KIM XUAT HIEN :  0
+[2026/09/26 09:29:06] =====> BOSS DOC CO THIEN PHONG XUAT HIEN :  19:45
+[2026/09/26 09:29:06] =====> Boss Hoang Kim Xuat Hien Vao Luc :  08:00
+[2026/09/26 09:29:06] =====> Boss Dai Hoang Kim Xuat Hien Vao Luc :  19:30
+[2026/09/26 09:29:06] =====> Boss Hoang Kim Xuat Hien Vao Luc :  22:00
+[2026/09/26 09:29:06] =====> HOAT DONG QUA HUY HOANG BAT DAU LUC 12 PM
+[2026/09/26 09:29:06] =====> HOAT DONG QUA HUY HOANG BAT DAU LUC 20 PM
+[2026/09/26 09:29:06] =====> HOAT DONG GIET NHIM BEO PHI BAT DAU 9:30 VA 30 PHUT SAU KET THUC
+[2026/09/26 09:29:06] =====> HOAT DONG HOA DANG KHOI DONG : 0929
+[2026/09/26 09:29:06]  ========================================================================================
+[2026/09/26 09:29:06]                 Tinh nang Lien Dau (Don dau tu do) Start: Phase=2  SeasonID=48 
+[2026/09/26 09:29:06]                            tu thu 2 den thu 6: 19h00 ~ 19h45, 4 tran 
+[2026/09/26 09:29:06]                    2 ngay cuoi tuan 18h00 ~ 18h45 va 20h00 ~ 20h45, 8 tran 
+[2026/09/26 09:29:06] gateway client create: 127.0.0.1
+[2026/09/26 09:29:06] =====> CHIEN TRUONG TONG KIM BAT DAU DA LEN LICH GIO LE, BAT DAU TU 11:00 <=====
+[2026/09/26 09:29:06] =====> PHONG HOA LIEN THANH LEN LICH GIO CHAN, BAT DAU TU 10:00
+[2026/09/26 09:29:06] 
+[2026/09/26 09:29:06] S3Relay -- S3Relay- Khoi dong hoan tat! 
+[2026/09/26 09:29:06] 
+*
+***** S3Relay Start (@ 153859240/00/43200 00:-816008:135861597.136280271) >>>>>
+*
+
+
+[2026/09/26 09:29:06] SockThread start success
+[2026/09/26 09:29:06] Game Module Is Started. -->Hoat dong mua xuan 2006
+[2026/09/26 09:29:06] Game Module Is Started. -->OpenShop
+[2026/09/26 09:29:06] Game Module Is Started. -->Thiep Chuc Mung Nam Moi
+[2026/09/26 09:29:06] Game Module Is Started. -->Do Pho Hoang Kim
+[2026/09/26 09:29:06] Game Module Is Started. -->Phuc Duyen - Phao Bong
+[2026/09/26 09:29:06] Game Module Is Started. -->Truyen Cong
+[2026/09/26 09:29:06] Game Module Is Started. -->Le vat tinh nhan
+[2026/09/26 09:29:06] Game Module Is Started. -->YANDIBAOZANG
+[2026/09/26 09:29:06] Game Module Is Started. -->YANDIBAOZANG_TALK
+[2026/09/26 09:29:06] Game Module Is Started. -->SWITH_DAIYITOUSHI
+[2026/09/26 09:29:06] Game Module Is Started. -->chunjie2009_dangboss
+[2026/09/26 09:29:06] ===> Bang Xep Hang Khoi Dong Hoan Tat<===
+[2026/09/26 09:29:18] ChatConnection create: 127.0.0.1
+[2026/09/26 09:29:18] TongConnection create: 127.0.0.1
+[2026/09/26 09:29:18] HostConnection create: 127.0.0.1
+[2026/09/26 09:29:21] TongDataSendFinish: 127.0.0.1
+[2026/09/26 09:29:21] ============ League Match GSReady(16777343): Phase=2  MatchID=0  SeasonID=48 =============
+[2026/09/26 09:29:21] GameServerLogin: 127.0.0.1
+[2026/09/26 09:29:21] Assign Dynamic map(948,70381) for GS:0
+[2026/09/26 09:29:21] GS:0 Total Dynamic map:1
+[2026/09/26 09:29:21] GS:0 Total Static map:670
+[2026/09/2

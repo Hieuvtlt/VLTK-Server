@@ -1,0 +1,56 @@
+Include("\\script\\sukien_nam\\thang4\\head.lua")
+Include("\\script\\global\\nobitaxd\\config\\cfg_server.lua")
+
+function main(nItemIdx)
+	local nMonth = tonumber(GetLocalDate("%m"))
+	
+	-- §ÔI S? 9 THµNH S? 4 KHI CH¹Y CHİNH THøC
+	if SKN_ThangMo(4) ~= 1 then
+		Msg2Player("<color=red>Sù kiÖn Giç Tæ ®· kÕt thóc, kh«ng thÓ nhãm löa nÊu b¸nh!<color>") 
+		return 1 -- Tr¶ vÒ 1 ®Ó huy thao t¸c, KH¤NG xo¸ ®å
+	end
+
+	-- [20/09/2026] Bo yeu cau to doi 2 nguoi 1 nam 1 nu: nhom lua mot minh cung duoc.
+	
+	if GetLogoutRV() == 1 then
+		Msg2Player("Khu vùc an toµn kh«ng thÓ nhãm löa, h·y ra ngoµi b·i luyÖn c«ng!")
+		return 1 
+	end
+	
+	local nG, nD, nP = GetItemProp(nItemIdx)
+	local _, nx, ny = GetWorldPos()
+
+	-- LÖnh nµy sÏ trõ chİnh x¸c 1 vËt phÈm trong stack xÕp chång
+	if ConsumeEquiproomItem(1, nG, nD, nP, -1) ~= 1 then
+		Msg2Player("HÖ thèng bËn, kh«ng thÓ dïng lóc nµy!")
+		return 1
+	end
+
+	-- QUAN TR§NG: GetWorldPos() tr¶ vÒ toa ñø theo « (tile), cßn AddNpc
+	-- cÇn toa ñø Pixel, nªn PH¶I nh©n 32 (v× trø 1 « bŞ offset) --
+	-- gièng hÖt bªn gèc cookies_ma.lua. ThiÕu b­íc nµy lµ do NPC
+	-- kh«ng hiÖn ra (bŞ spawn sai/ngoµi b¶n ®å).
+	local nIdx = AddNpc(TB_PAN_NPCID[1], 1, SubWorld, (nx-1)*32, (ny-1)*32, 1, "BÕp löa nhá")
+
+	if (nIdx > 0) then
+		local nPlayId = FileName2Id(GetName())
+		SetNpcParam(nIdx, PRM_PAN_PLAYID, nPlayId)
+		-- Set th«ng phase (byte thø 3) = 1, KH¤NG set nguyªn tham sè = 0,
+		-- nÕu kh«ng pan.lua sÏ kh«ng nhËn diÖn ®­îc giai ®o¹n nµo c¶
+		-- vµ ph¶i ®îi hÕt 1 chu k× OnTimer (~30s) míi tù nhÈy sang phase 1.
+		SetNpcParam(nIdx, PRM_PAN_EVENT, SetByte(GetNpcParam(nIdx, PRM_PAN_EVENT), 3, 1))
+		SetNpcParam(nIdx, PRM_PAN_POINT, 0)
+		SetNpcParam(nIdx, PRM_PAN_TIME, 0)
+
+		SetNpcScript(nIdx, "\\script\\sukien_nam\\thang4\\pan.lua")
+		SetNpcTimer(nIdx, 30*18) 
+		Msg2Player("Nhãm löa thµnh c«ng! H·y nhanh chãng cïng ®ång ®éi thao t¸c nÊu b¸nh.")
+	else
+		-- AddNpc thÊt b¹i thËt sù (vd hÕt slot NPC, toa ñø kh«ng hîp lÖ...)
+		-- -> hoµn l¹i nguyªn liÖu cho ng­êi ch¬i thay v× mÊt tr¾ng trong im lÆng
+		AddItem(nG, nD, nP, 1, 0, 0)
+		Msg2Player("<color=red>Kh«ng thÓ nhãm löa t¹i vŞ trİ nµy, nguyªn liÖu ®· ®­îc hoµn tr¶!<color>")
+	end
+	
+	return 1 -- Tr¶ vÒ 1 ®Ó hÖ thèng kh«ng tù ®éng nuèt tói nguyªn liÖu
+end

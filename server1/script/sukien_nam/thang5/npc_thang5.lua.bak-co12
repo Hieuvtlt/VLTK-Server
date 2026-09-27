@@ -1,0 +1,115 @@
+Include("\\script\\lib\\common.lua")
+Include("\\script\\dailogsys\\g_dialog.lua")
+Include("\\script\\dailogsys\\dailogsay.lua")
+
+function main()
+	local nMonth = tonumber(GetLocalDate("%m"))
+	
+	-- §¤I Sè 9 THµNH Sè 5 KHI CH¹Y CHÝNH THøC
+	if nMonth ~= 5 then
+		CreateNewSayEx("<color=yellow>NPC Sù KiÖn:<color>\nSù kiÖn R­îu Mõng ChiÕn Th¾ng chØ diÔn ra trong Th¸ng 5, hÑn gÆp l¹i!", {{"Tho¸t", KetThuc}})
+		return 1
+	end
+
+	local szMsg = "<color=yellow>NPC Sù KiÖn:<color>\nChµo mõng ®¹i tiÖc chiÕn th¾ng! Ng­¬i muèn dïng nguyªn liÖu ®Ó cÊt r­îu ngon hay muèn mua Nho T­¬i?"
+	local tbOpt = {
+		{"GhÐp B×nh R­îu (Th­êng)", Menu_BinhRuou},
+		{"GhÐp R­îu Nho (Cao CÊp)", Menu_RuouNho},
+		{"Mua Nho T­¬i (1 TiÒn §ång)", Menu_MuaNho},
+		{"Tho¸t", KetThuc}
+	}
+	CreateNewSayEx(szMsg, tbOpt)
+	return 1
+end
+
+function Menu_BinhRuou()
+	local tbOpt = {
+		{"GhÐp 1 B×nh", function() GhepBR(1) end},
+		{"GhÐp 10 B×nh", function() GhepBR(10) end},
+		{"GhÐp 50 B×nh", function() GhepBR(50) end},
+		{"GhÐp 100 B×nh", function() GhepBR(100) end},
+		{"Quay l¹i", main}
+	}
+	CreateNewSayEx("<color=pink>C«ng thøc 1 B×nh R­îu:<color>\n- 1 Men R­îu\n- 2 Bao G¹o\n- 3 N­íc Tinh KhiÕt\n- 3 v¹n l­îng\n\nChän sè l­îng:", tbOpt)
+end
+
+function Menu_RuouNho()
+	local tbOpt = {
+		{"GhÐp 1 R­îu", function() GhepRN(1) end},
+		{"GhÐp 10 R­îu", function() GhepRN(10) end},
+		{"GhÐp 50 R­îu", function() GhepRN(50) end},
+		{"GhÐp 100 R­îu", function() GhepRN(100) end},
+		{"Quay l¹i", main}
+	}
+	CreateNewSayEx("<color=pink>C«ng thøc 1 R­îu Nho:<color>\n- 1 Men R­îu\n- 2 Bao G¹o\n- 3 N­íc Tinh KhiÕt\n- 1 Nho T­¬i\n- 3 v¹n l­îng\n\nChän sè l­îng:", tbOpt)
+end
+
+function Menu_MuaNho()
+	local tbOpt = {
+		{"Mua 1 Nho T­¬i (1 TiÒn §ång)", function() MuaNho(1) end},
+		{"Mua 10 Nho T­¬i (10 TiÒn §ång)", function() MuaNho(10) end},
+		{"Mua 50 Nho T­¬i (50 TiÒn §ång)", function() MuaNho(50) end},
+		{"Mua 100 Nho T­¬i (100 TiÒn §ång)", function() MuaNho(100) end},
+		{"Quay l¹i", main}
+	}
+	CreateNewSayEx("1 Nho T­¬i gi¸ 1 TiÒn §ång. Chän sè l­îng:", tbOpt)
+end
+
+function GhepBR(nCount)
+	local nCostCash = nCount * 30000
+	if GetCash() < nCostCash then
+		Msg2Player("Kh«ng ®ñ "..(nCostCash/10000).." v¹n l­îng!") return
+	end
+	if CalcEquiproomItemCount(6,1,2012,-1) < (nCount * 1) then Msg2Player("Kh«ng ®ñ Men R­îu!") return end
+	if CalcEquiproomItemCount(6,1,2010,-1) < (nCount * 2) then Msg2Player("Kh«ng ®ñ Bao G¹o!") return end
+	if CalcEquiproomItemCount(6,1,2011,-1) < (nCount * 3) then Msg2Player("Kh«ng ®ñ N­íc Tinh KhiÕt!") return end
+	
+	if CalcFreeItemCellCount() < floor(nCount/10) + 1 then 
+		Msg2Player("Hµnh trang kh«ng ®ñ chç trèng!") return 
+	end
+
+	Pay(nCostCash)
+	ConsumeEquiproomItem(nCount * 1, 6, 1, 2012, -1)
+	ConsumeEquiproomItem(nCount * 2, 6, 1, 2010, -1)
+	ConsumeEquiproomItem(nCount * 3, 6, 1, 2011, -1)
+
+	for i = 1, nCount do AddItem(6, 1, 2013, 1, 0, 0) end
+	Msg2Player("<color=yellow>GhÐp thµnh c«ng "..nCount.." B×nh R­îu!<color>")
+end
+
+function GhepRN(nCount)
+	if CalcEquiproomItemCount(6,1,2012,-1) < (nCount * 1) then Msg2Player("Kh«ng ®ñ Men R­îu!") return end
+	if CalcEquiproomItemCount(6,1,2010,-1) < (nCount * 2) then Msg2Player("Kh«ng ®ñ Bao G¹o!") return end
+	if CalcEquiproomItemCount(6,1,2011,-1) < (nCount * 3) then Msg2Player("Kh«ng ®ñ N­íc Tinh KhiÕt!") return end
+	if CalcEquiproomItemCount(6,1,2007,-1) < (nCount * 1) then Msg2Player("Kh«ng ®ñ Nho T­¬i!") return end
+	
+	if CalcFreeItemCellCount() < floor(nCount/10) + 1 then 
+		Msg2Player("Hµnh trang kh«ng ®ñ chç trèng!") return 
+	end
+
+	Pay(nCostCash)
+	ConsumeEquiproomItem(nCount * 1, 6, 1, 2012, -1)
+	ConsumeEquiproomItem(nCount * 2, 6, 1, 2010, -1)
+	ConsumeEquiproomItem(nCount * 3, 6, 1, 2011, -1)
+	ConsumeEquiproomItem(nCount * 1, 6, 1, 2007, -1)
+
+	for i = 1, nCount do AddItem(6, 1, 2014, 1, 0, 0) end
+	Msg2Player("<color=yellow>GhÐp thµnh c«ng "..nCount.." R­îu Nho!<color>")
+end
+
+function MuaNho(nCount)
+	-- Sö dông ®óng form TiÒn §ång mµ Server b¸c ®ang nhËn (4, 417, 1)
+	if CalcEquiproomItemCount(4, 417, 1, -1) < nCount then
+		Msg2Player("Kh«ng ®ñ "..nCount.." TiÒn §ång!") return
+	end
+	if CalcFreeItemCellCount() < floor(nCount/10) + 1 then
+		Msg2Player("Hµnh trang kh«ng ®ñ chç trèng!") return
+	end
+
+	ConsumeEquiproomItem(nCount, 4, 417, 1, -1)
+
+	for i = 1, nCount do AddItem(6, 1, 2007, 1, 0, 0) end
+	Msg2Player("<color=yellow>Mua thµnh c«ng "..nCount.." Nho T­¬i!<color>")
+end
+
+function KetThuc() end

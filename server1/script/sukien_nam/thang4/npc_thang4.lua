@@ -1,0 +1,40 @@
+Include("\\script\\lib\\common.lua")
+Include("\\script\\dailogsys\\g_dialog.lua")
+Include("\\script\\dailogsys\\dailogsay.lua")
+Include("\\script\\global\\nobitaxd\\config\\cfg_server.lua")
+
+function main()
+	local nMonth = tonumber(GetLocalDate("%m"))
+	
+	-- Ð?I S? 9 THÀNH S? 4 KHI CH?Y CHÍNH TH?C
+	if SKN_ThangMo(4) ~= 1 then
+		CreateNewSayEx("<color=yellow>Vua Hïng:<color>\nSù kiÖn Giç Tæ chØ diÔn ra trong Th¸ng 4, hÑn gÆp l¹i c¸c ng­¬i sau!", {{"Tho¸t", KetThuc}})
+		return
+	end
+
+	local szMsg = "<color=yellow>Vua Hïng:<color>\nGiç Tæ n¨m nay, tæ tiªn muèn thÊy sù ®ång lßng cña nam thanh n÷ tó. H·y mang <color=yellow>20 Tói Hµng Hãa vµ 10 v¹n l­îng<color> ®Õn ®©y ®Ó nhËn Bao Nguyªn LiÖu. Sau ®ã h·y t×m mét tæ ®éi Nam N÷ ®Ó cïng nhau nhµo bét nhÐ!"
+	local tbOpt = {
+		{"Giao 20 Tói Hµng Hãa + 10 V¹n", DoiNguyenLieu},
+		{"L¸t n÷a ta quay l¹i", KetThuc}
+	}
+	CreateNewSayEx(szMsg, tbOpt)
+end
+
+function DoiNguyenLieu()
+	if GetCash() < 100000 then 
+		Msg2Player("Kh«ng cã ®ñ 10 v¹n l­îng!") return
+	end
+	if CalcEquiproomItemCount(6,1,1393,-1) < 20 then
+		Msg2Player("Hµnh trang kh«ng cã ®ñ 20 Tói Hµng Hãa!") return
+	end	
+	if CalcFreeItemCellCount() < 1 then 
+		Msg2Player("Hµnh trang cÇn Ýt nhÊt 1 « trèng!") return
+	end
+	
+	Pay(100000)
+	ConsumeEquiproomItem(20, 6, 1, 1393, -1)
+	AddItem(6, 1, 1394, 1, 0, 0)
+	Msg2Player("<color=yellow>NhËn ®­îc 1 Bao Nguyªn LiÖu Lµm B¸nh! H·y lËp tæ ®éi Nam N÷ ®Ó nÊu b¸nh.<color>")
+end
+
+function KetThuc() end

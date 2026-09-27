@@ -1,0 +1,462 @@
+
+
+-- ====================== ÎÄ¼þÐÅÏ¢ ======================
+
+-- ½£ÏÀÇéÔµÍøÂç°æ´óÂ½°æ - 
+-- ÎÄ¼þÓÃÍ¾£ºÈ«¾ÖNPCËÀÍö¶¼»áµô¸Ã½Å±¾µÄOnGlobalNpcDeathº¯Êý
+-- ´´½¨Õß¡¡£ºZERO.SYS
+-- ´´½¨Ê±¼ä£º2009-09-28 17:57:03
+
+-- ======================================================
+--Ä¬ÈÏÈ«¾ÖPlayerIndexÎªÎïÆ·ËùÓÐÕß, PlayerIndex
+--nNpcIndex ËÀÍöµÄnpcµÄNpcIndex
+--nAttackerIndex ×îºóÒ»»÷Õß µÄPlayerIndex£¬, 
+IncludeLib("NPCINFO")
+Include("\\script\\lib\\string.lua")
+Include("\\script\\activitysys\\npcfunlib.lua")
+Include("\\script\\activitysys\\g_activity.lua")
+Include("\\script\\task\\killmonster\\killmonster.lua")
+Include("\\script\\missions\\boss\\bigboss.lua");
+Include("\\script\\activitysys\\playerfunlib.lua")
+Include("\\script\\event\\jiefang_jieri\\201004\\refining_iron\\head.lua")
+Include("\\script\\activitysys\\config\\32\\killdailytask.lua")
+--tinhpn 20100706: Vo Lam Minh Chu
+Include("\\script\\bonusvlmc\\killmonster.lua")
+
+Include("\\script\\task\\150skilltask\\g_task.lua")
+Include("\\script\\misc\\eventsys\\eventsys.lua")
+
+-- [BAT HOANG] ti le (%) roi Mau tuoi 6-1-5136 tu quai khi tam phap da bi tac.
+-- Doi so nay de chinh do kho. Chuoi, khong phai so.
+BATHOANG_TILE_MAUTUOI = "5"
+
+TDT_TILE_THIT = "25"    -- % roi Thit tuoi khi dang lam chuong 1
+TDT_TILE_THAO = "8" -- % roi Hoang Tinh Thao khi dang lam chuong 2
+TDT_MAP_THAO  = 68      -- <<< MAP ROI HOANG TINH THAO: doi DUY NHAT so nay
+
+function OnGlobalNpcDeath(nNpcIndex, nAttackerIndex)
+	-- [PARTY XP 2026-07-01] bot trong nhom giet quai -> gan PlayerIndex = chu nhom + cong exp tay
+	--   (engine CalcExp bo qua bot kill; nAttackerIndex=0 -> lay KNpc bot qua GetNpcLastAttacker -> PollParty)
+	if (not PlayerIndex or PlayerIndex <= 0) and GetNpcLastAttacker and PollParty then
+		local _botIdx = GetNpcLastAttacker(nNpcIndex)
+		if _botIdx and _botIdx > 0 then
+			local _pp = PollParty(_botIdx)
+			local _p4 = GetNpcParam(nNpcIndex, 4)
+			if _pp and _pp > 0 and not (_p4 == 1 or _p4 == 2) then   -- KO cong exp khi giet sim-bot (chong farm)
+				PlayerIndex = _pp
+				if NPCINFO_GetLevel and vGetNpcExp and AddOwnExp then
+					local _npcLv = NPCINFO_GetLevel(nNpcIndex)
+					local _plLv = CallPlayerFunction(_pp, GetLevel)
+					if _npcLv and _plLv and _npcLv > 0 and _plLv > 0 then
+						local _rate = 1 + (_plLv - (10 * floor(_plLv / 10))) / 10
+						CallPlayerFunction(_pp, AddOwnExp, floor(vGetNpcExp(min(_npcLv, _plLv)) * _rate))
+					end
+				end
+			end
+		end
+	end
+	if PlayerIndex and PlayerIndex > 0 then
+
+		-- ============ COT TRUYEN TIEU DAO TU (chuong 1 & 2) ============
+		-- Chi roi cho dung nguoi dang lam nhiem vu; xong chuong la het roi.
+		local nTDT = GetTask(3404)
+		if nTDT == 1 then
+			local nMapTDT = GetWorldPos()
+			if nMapTDT == 53 then
+				NpcFunLib:DropSingleItem({nExpiredTime=0,tbProp={6,1,3366,1,0,0},}, 1, TDT_TILE_THIT, nNpcIndex)
+			end
+		elseif nTDT == 2 then
+			local nMapThao = GetWorldPos()
+			if nMapThao == TDT_MAP_THAO then
+				NpcFunLib:DropSingleItem({nExpiredTime=0,tbProp={6,1,5133,1,0,0},}, 1, TDT_TILE_THAO, nNpcIndex)
+			end
+		end
+
+
+		-- ==============================================================
+		-- TÂM PHÁP BÁT HOANG: Hút linh h?n quái v?t
+		-- ==============================================================
+		local nCanhGioi = GetTask(3400)
+		local nLevel = GetTask(3401)
+		local nExp = GetTask(3402)
+		
+		if nCanhGioi > 0 then
+			local nMaxLevel = nCanhGioi * 10
+			
+			local npcLv = NPCINFO_GetLevel(nNpcIndex)
+			local bValid = 0
+			
+			if nCanhGioi == 1 and npcLv >= 10 and npcLv <= 39 then bValid = 1 end
+			if nCanhGioi == 2 and npcLv >= 40 and npcLv <= 69 then bValid = 1 end
+			if nCanhGioi == 3 and npcLv >= 70 and npcLv <= 99 then bValid = 1 end
+			if nCanhGioi == 4 and npcLv >= 100 and npcLv <= 129 then bValid = 1 end
+			if nCanhGioi == 5 and npcLv >= 130 and npcLv <= 159 then bValid = 1 end
+			if nCanhGioi == 6 and npcLv >= 160 and npcLv <= 180 then bValid = 1 end
+
+			if nLevel < nMaxLevel then
+				if bValid == 1 then
+					local nNeedExp = 999999 
+					if nLevel < 10 then nNeedExp = 50 + (nLevel * 50)
+					elseif nLevel < 20 then nNeedExp = 400 + (nLevel * 100)
+					elseif nLevel < 30 then nNeedExp = 800 + (nLevel * 200)
+					elseif nLevel < 40 then nNeedExp = 1700 + (nLevel * 300)
+					elseif nLevel < 50 then nNeedExp = 2500 + (nLevel * 500)
+					elseif nLevel < 60 then nNeedExp = 4000 + (nLevel * 1000)
+					end
+					
+					nExp = nExp + 1
+					SetTask(3402, nExp)
+					
+					if nExp >= nNeedExp then
+						nLevel = nLevel + 1
+						SetTask(3401, nLevel)
+						SetTask(3402, 0)
+						
+						local tbAura = {1508, 1509, 1510, 1511, 1512, 1513}
+						local nAuraID = tbAura[nCanhGioi] or 1508
+						
+						AddSkillState(nAuraID, nLevel, 1, 99999999, 1)
+						Msg2Player("<color=yellow>B¸t hoang t©m ph¸p ®· tiÕn cÊp " .. nLevel .. "!<color>")
+						
+						if nLevel == nMaxLevel then
+							Msg2Player("<color=red>T©m ph¸p bÕ t¾c! H·y vÒ gÆp Tiªu Dao Tö ®Ó tÊn th¨ng!<color>")
+						end
+					end
+				end
+			elseif nLevel >= nMaxLevel then
+				if bValid == 1 and nCanhGioi >= 2 and nCanhGioi <= 5 then
+					NpcFunLib:DropSingleItem({nExpiredTime=0,tbProp={6,1,5136,1,0,0},}, 1, BATHOANG_TILE_MAUTUOI, nNpcIndex)
+				end
+				if random(1, 20) == 1 then
+					Msg2Player("<color=red>T©m ph¸p bÕ t¾c! H·y vÒ gÆp Tiªu Dao Tö ®Ó tÊn th¨ng!<color>")
+				end
+			end
+		end
+
+		-- ==============================================================
+		-- TAM PHAP TIEU VO TUONG CONG: hut linh hon quai vat
+		-- ==============================================================
+		local nTvoCanhGioi = GetTask(3410)
+		local nTvoLevel = GetTask(3411)
+		local nTvoExp = GetTask(3412)
+
+		if nTvoCanhGioi > 0 then
+			local nTvoMaxLevel = nTvoCanhGioi * 10
+			local npcLvTvo = NPCINFO_GetLevel(nNpcIndex)
+			local bTvoValid = 0
+
+			if nTvoCanhGioi == 1 and npcLvTvo >= 10 and npcLvTvo <= 39 then bTvoValid = 1 end
+			if nTvoCanhGioi == 2 and npcLvTvo >= 40 and npcLvTvo <= 69 then bTvoValid = 1 end
+			if nTvoCanhGioi == 3 and npcLvTvo >= 70 and npcLvTvo <= 99 then bTvoValid = 1 end
+			if nTvoCanhGioi == 4 and npcLvTvo >= 100 and npcLvTvo <= 129 then bTvoValid = 1 end
+			if nTvoCanhGioi == 5 and npcLvTvo >= 130 and npcLvTvo <= 159 then bTvoValid = 1 end
+			if nTvoCanhGioi == 6 and npcLvTvo >= 160 and npcLvTvo <= 180 then bTvoValid = 1 end
+
+			if nTvoLevel < nTvoMaxLevel and bTvoValid == 1 then
+				local nTvoNeed = 999999
+				if nTvoLevel < 10 then nTvoNeed = 200 + (nTvoLevel * 200)
+				elseif nTvoLevel < 20 then nTvoNeed = 1600 + (nTvoLevel * 400)
+				elseif nTvoLevel < 30 then nTvoNeed = 3200 + (nTvoLevel * 800)
+				elseif nTvoLevel < 40 then nTvoNeed = 6800 + (nTvoLevel * 1200)
+				elseif nTvoLevel < 50 then nTvoNeed = 10000 + (nTvoLevel * 2000)
+				elseif nTvoLevel < 60 then nTvoNeed = 16000 + (nTvoLevel * 4000)
+				end
+
+				nTvoExp = nTvoExp + 1
+				SetTask(3412, nTvoExp)
+
+				if nTvoExp >= nTvoNeed then
+					nTvoLevel = nTvoLevel + 1
+					SetTask(3411, nTvoLevel)
+					SetTask(3412, 0)
+
+					local tbTvoAura = {1526, 1527, 1528, 1529, 1530, 1531}
+					local nTvoAuraID = tbTvoAura[nTvoCanhGioi] or 1526
+
+					AddSkillState(nTvoAuraID, nTvoLevel, 1, 99999999, 1)
+					Msg2Player("<color=yellow>TiÓu V« T­íng C«ng ®· tiÕn cÊp " .. nTvoLevel .. "!<color>")
+
+					if nTvoLevel == nTvoMaxLevel then
+						Msg2Player("<color=red>TiÓu V« T­íng C«ng bÕ t¾c! H·y vÒ gÆp Tiªu Dao Tö ®Ó tÊn th¨ng!<color>")
+					end
+				end
+			end
+		end
+
+		-- ==============================================================
+		-- TAM PHAP BAC MINH CONG: hut noi luc quai vat
+		-- ==============================================================
+		local nBmhCanhGioi = GetTask(3413)
+		local nBmhLevel = GetTask(3414)
+		local nBmhExp = GetTask(3415)
+
+		if nBmhCanhGioi > 0 then
+			local nBmhMaxLevel = nBmhCanhGioi * 10
+			local npcLvBmh = NPCINFO_GetLevel(nNpcIndex)
+			local bBmhValid = 0
+
+			if nBmhCanhGioi == 1 and npcLvBmh >= 10 and npcLvBmh <= 39 then bBmhValid = 1 end
+			if nBmhCanhGioi == 2 and npcLvBmh >= 40 and npcLvBmh <= 69 then bBmhValid = 1 end
+			if nBmhCanhGioi == 3 and npcLvBmh >= 70 and npcLvBmh <= 99 then bBmhValid = 1 end
+			if nBmhCanhGioi == 4 and npcLvBmh >= 100 and npcLvBmh <= 129 then bBmhValid = 1 end
+			if nBmhCanhGioi == 5 and npcLvBmh >= 130 and npcLvBmh <= 159 then bBmhValid = 1 end
+			if nBmhCanhGioi == 6 and npcLvBmh >= 160 and npcLvBmh <= 180 then bBmhValid = 1 end
+
+			if nBmhLevel < nBmhMaxLevel and bBmhValid == 1 then
+				local nBmhNeed = 999999
+				if nBmhLevel < 10 then nBmhNeed = 100 + (nBmhLevel * 100)
+				elseif nBmhLevel < 20 then nBmhNeed = 800 + (nBmhLevel * 200)
+				elseif nBmhLevel < 30 then nBmhNeed = 1600 + (nBmhLevel * 400)
+				elseif nBmhLevel < 40 then nBmhNeed = 3400 + (nBmhLevel * 600)
+				elseif nBmhLevel < 50 then nBmhNeed = 5000 + (nBmhLevel * 1000)
+				elseif nBmhLevel < 60 then nBmhNeed = 8000 + (nBmhLevel * 2000)
+				end
+
+				nBmhExp = nBmhExp + 1
+				SetTask(3415, nBmhExp)
+
+				if nBmhExp >= nBmhNeed then
+					nBmhLevel = nBmhLevel + 1
+					SetTask(3414, nBmhLevel)
+					SetTask(3415, 0)
+
+					local tbBmhAura = {1520, 1521, 1522, 1523, 1524, 1525}
+					local nBmhAuraID = tbBmhAura[nBmhCanhGioi] or 1520
+
+					AddSkillState(nBmhAuraID, nBmhLevel, 1, 99999999, 1)
+					Msg2Player("<color=yellow>B¾c Minh C«ng ®· tiÕn cÊp " .. nBmhLevel .. "!<color>")
+
+					if nBmhLevel == nBmhMaxLevel then
+						Msg2Player("<color=red>B¾c Minh C«ng bÕ t¾c! H·y vÒ gÆp Tiªu Dao Tö ®Ó tÊn th¨ng!<color>")
+					end
+				end
+			end
+		end
+		-- ==============================================================
+		--PlayerEvent:OnEvent("OnKillNpc", nNpcIndex, nAttackerIndex)
+
+		local szNpcName = GetNpcName(nNpcIndex)
+		if NpcName2Replace then
+			szNpcName = NpcName2Replace(szNpcName)
+		end
+		EventSys:GetType("NpcDeath"):OnEvent(szNpcName, nNpcIndex, nAttackerIndex)		
+		local nTeamSize = GetTeamSize()
+		if nTeamSize > 0 then
+			for i=1, nTeamSize do
+				local nPlayerIndex = GetTeamMember(i)
+				lib:DoFunByPlayer(nPlayerIndex, tbKillMonster.KillMonster, tbKillMonster, nNpcIndex)
+				--tinhpn 20100706: VLMC
+				lib:DoFunByPlayer(nPlayerIndex, VLMC.KillMonster, VLMC, nNpcIndex)
+			end
+		else
+			tbKillMonster:KillMonster(nNpcIndex)
+			--tinhpn 20100706: VLMC
+			VLMC:KillMonster(nNpcIndex)
+		end
+		tbKillDailyTask:OnKillMonster(nNpcIndex)		
+		G_ACTIVITY:OnMessage("NpcOnDeath", nNpcIndex)
+		G_TASK:OnMessage("Thóy Yªn", nNpcIndex, "KillNpc")
+		G_TASK:OnMessage("Nga Mi", nNpcIndex, "KillNpc")
+		G_TASK:OnMessage("§­êng M«n", nNpcIndex, "KillNpc")
+		G_TASK:OnMessage("C¸i Bang", nNpcIndex, "KillNpc")
+		G_TASK:OnMessage("Ngò §éc", nNpcIndex, "KillNpc")
+		G_TASK:OnMessage("Thiªn NhÉn", nNpcIndex, "KillNpc")
+		G_TASK:OnMessage("ThiÕu L©m", nNpcIndex, "KillNpc")
+		G_TASK:OnMessage("Vâ §ang", nNpcIndex, "KillNpc")
+		G_TASK:OnMessage("Thiªn V­¬ng", nNpcIndex, "KillNpc")
+		G_TASK:OnMessage("C«n L«n", nNpcIndex, "KillNpc")
+		DynamicExecute("\\script\\missions\\tianchimijing\\floor4\\bossdeath.lua", "OnDeath", nNpcIndex, PlayerIndex)
+		-- ´³¹Øµ÷Õû 2011.03.03
+		DynamicExecute("\\script\\missions\\challengeoftime\\chuangguang30.lua", "ChuangGuan30:OnNpcDeath", nNpcIndex, PlayerIndex)
+		-- ×ªÉú4¹ÖÎïËÀÍöµôÂäÅùö¨µ¯
+		DynamicExecute("\\script\\task\\metempsychosis\\npcdeath_translife_4.lua", "OnNpcDeath", nNpcIndex, PlayerIndex)
+		
+		-- Á¶½ð»î¶¯µôÂä
+		if NpcFunLib:CheckBoatBoss(nNpcIndex) == 1 and tbRefiningIron:IsCarryOn() == 1 then
+			tbDropTemplet:GiveAwardByList(nNpcIndex, PlayerIndex, {tbProp={6,1, 2293, 1,0,0,},nExpiredTime=tbRefiningIron.nCloseDate,}, "Thñy tÆc ®Çu lÜnh r¬i ë ho¹t ®éng luyÖn kim", 1)
+		end
+		
+		if (DynamicExecute("\\script\\event\\jiefang_jieri\\201004\\main.lua", "FreedomEvent2010:IsActive1") == 1) then
+			DynamicExecute("\\script\\event\\jiefang_jieri\\201004\\soldier\\main.lua", "Soldier2010:MonsterDrop", nNpcIndex, PlayerIndex);
+		end
+		-- »îÔ¾¶ÈÊÀ½çÊ®´óboss
+		DynamicExecute("\\script\\huoyuedu\\worldtop10.lua", "checkworldtop10", nNpcIndex, PlayerIndex)
+	end
+	-- NPC_KILL_DROP_V2: if no valid player owner, run NPC-kill fallback.
+	-- Normal player kills are not duplicated here.
+	if (not PlayerIndex or PlayerIndex <= 0) and vinh_OnGlobalNpcDeath then
+		vinh_OnGlobalNpcDeath(nNpcIndex, nAttackerIndex)
+	end
+end
+
+function vCalcExp(Level, Param1, Param2)
+	result = Param2 * Level + Param1;
+	return result;
+end;
+
+function vGetNpcExp(Level)
+	if (Level <= 10) then
+		DataPara1 = 40
+		DataPara2 = 5
+		return vCalcExp(Level, DataPara1, DataPara2)
+	end;
+
+	if (Level <= 20) then
+		DataPara1 = 120
+		DataPara2 = 5
+		return vCalcExp(Level - 10, DataPara1, DataPara2)
+	end;
+
+	if (Level <= 30) then
+		DataPara1 = 240
+		DataPara2 = 5
+		return vCalcExp(Level - 20, DataPara1, DataPara2)
+	end;
+
+	if (Level <= 40) then
+		DataPara1 = 360
+		DataPara2 = 5
+		return vCalcExp(Level - 30, DataPara1, DataPara2)
+	end;
+
+	if (Level <= 50) then
+		DataPara1 = 480
+		DataPara2 = 5
+		return vCalcExp(Level - 40, DataPara1, DataPara2)
+	end;
+
+	if (Level <= 60) then
+		DataPara1 = 600
+		DataPara2 = 5
+		return vCalcExp(Level - 50, DataPara1, DataPara2)
+	end;
+
+	if (Level <= 70) then
+		DataPara1 = 720
+		DataPara2 = 5
+		return vCalcExp(Level - 60, DataPara1, DataPara2)
+	end;
+
+	if (Level <= 80) then
+		DataPara1 = 800
+		DataPara2 = 5
+		return vCalcExp(Level - 70, DataPara1, DataPara2)
+	end;
+
+	if (Level <= 90) then
+		DataPara1 = 900
+		DataPara2 = 5
+		return vCalcExp(Level - 80, DataPara1, DataPara2)
+	end;
+
+
+	DataPara1 = 1000
+	DataPara2 = 5
+	return vCalcExp(Level - 90, DataPara1, DataPara2)
+end;
+
+
+function vinh_OnGlobalNpcDeath(nNpcIndex, nAttackerIndex)
+	local found = {}
+	local npcType = GetNpcPowerType(nNpcIndex)
+
+	-- Neu la SimCity bi chet thi dung rot gi ca
+	local param4 = GetNpcParam(nNpcIndex, 4)
+	if param4 and (param4 == 1 or param4 == 2) then
+		return 1
+	end
+
+	-- Them diem cho Thanh Vien Bang dung gan
+	if PlayerIndex and PlayerIndex > 0 then		
+
+		local npcLevel = NPCINFO_GetLevel(nNpcIndex)
+		local tbRoundPlayer, nCount = GetNpcAroundPlayerList(nNpcIndex, 20);
+		local myTong = GetTong()
+		found[PlayerIndex] = true
+		for i = 1, nCount do
+			local nPlayerIndex = tbRoundPlayer[i]
+			if nPlayerIndex ~= PlayerIndex then
+				local nPlayerTong = CallPlayerFunction(nPlayerIndex, GetTong)
+				if nPlayerTong == myTong then
+					local nPlayerLevel = CallPlayerFunction(nPlayerIndex, GetLevel)
+					local rate = 1 + (nPlayerLevel - (10 * floor(nPlayerLevel / 10))) / 10
+
+					if npcType and (npcType > 1) then
+						rate = rate * random(4,10)
+					end
+					local AddExpAmount = vGetNpcExp(min(npcLevel, nPlayerLevel))
+
+					lib:DoFunByPlayer(nPlayerIndex, tbKillMonster.KillMonster, tbKillMonster, nNpcIndex)
+					CallPlayerFunction(nPlayerIndex, AddOwnExp, floor(AddExpAmount * rate))
+
+					found[nPlayerIndex] = true
+				end
+			end
+		end
+		return found
+	end
+
+	-- NPC_KILL_EXP_DROP_V3:
+	-- Case: NPC/quai kill NPC/quai, engine has no valid player owner/exp receiver.
+	-- Pick one nearby player as temporary owner, give EXP to that player, then drop item.
+	local npcLevel = NPCINFO_GetLevel(nNpcIndex)
+	local tbRoundPlayer, nCount = GetNpcAroundPlayerList(nNpcIndex, 20);
+	local nNpcKillOwner = 0
+	if tbRoundPlayer and nCount and nCount > 0 then
+		for i = 1, nCount do
+			if tbRoundPlayer[i] and tbRoundPlayer[i] > 0 then
+				nNpcKillOwner = tbRoundPlayer[i]
+				break
+			end
+		end
+	end
+
+	if nNpcKillOwner and nNpcKillOwner > 0 then
+		local __oldPlayerIndex_NpcKill = PlayerIndex
+		PlayerIndex = nNpcKillOwner
+
+		-- Give EXP to the nearby player selected as owner.
+		local nPlayerLevel = CallPlayerFunction(nNpcKillOwner, GetLevel)
+		if npcLevel and nPlayerLevel and npcLevel > 0 and nPlayerLevel > 0 then
+			local rate = 1 + (nPlayerLevel - (10 * floor(nPlayerLevel / 10))) / 10
+			if npcType and (npcType > 1) then
+				rate = rate * random(4,10)
+			end
+			local AddExpAmount = vGetNpcExp(min(npcLevel, nPlayerLevel))
+			lib:DoFunByPlayer(nNpcKillOwner, tbKillMonster.KillMonster, tbKillMonster, nNpcIndex)
+			CallPlayerFunction(nNpcKillOwner, AddOwnExp, floor(AddExpAmount * rate))
+			found[nNpcKillOwner] = true
+		end
+
+		-- Keoxe: them tien + vat pham
+		local _, _, nMapIndex = GetNpcPos(nNpcIndex)
+		local mapDropFile = GetMapDropRateFile(nMapIndex)
+		local npcDropLevel = 10*floor(NPCINFO_GetLevel(nNpcIndex) / 10)
+		local levelDropFile = format("\\settings\\droprate\\npcdroprate%d.ini", npcDropLevel)
+		local npcDropFile = GetNpcDropRateFile(nNpcIndex)
+		local finalDropFile
+
+		-- Map as priority
+		if mapDropFile then
+			finalDropFile = mapDropFile
+		elseif levelDropFile then
+			finalDropFile = levelDropFile
+		else
+			finalDropFile = npcDropFile
+		end
+
+		local rateDrop = random(1,10)
+		if npcType and (npcType > 1) then
+			rateDrop = random((npcType+0)*100, (npcType+1)*100)
+		end
+
+		if finalDropFile then
+			ITEM_DropRateItem(nNpcIndex, rateDrop, finalDropFile, 1, 100, GetNpcSeries(nNpcIndex));
+		end
+
+		PlayerIndex = __oldPlayerIndex_NpcKill
+	end
+
+	
+	return found
+end

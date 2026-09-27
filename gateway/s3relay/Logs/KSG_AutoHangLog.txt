@@ -1,0 +1,17 @@
+
+-----Time: [2026-09-26 09:12]-----
+MapID:237 OnlineCount:0£¬AutoHangCount:0
+MapID:53 OnlineCount:0£¬AutoHangCount:0
+MapID:239 OnlineCount:0£¬AutoHangCount:0
+
+-----Time: [2026-09-26 09:39]-----
+MapID:237 OnlineCount:0£¬AutoHangCount:0
+MapID:53 OnlineCount:1£¬AutoHangCount:0
+MapID:239 OnlineCount:0£¬AutoHangCount:0
+MapID:235 OnlineCount:0£¬AutoHangCount:0
+MapID:241 OnlineCount:0£¬AutoHangCount:0
+
+-----Time: [2026-09-26 10:09]-----
+MapID:237 OnlineCount:0£¬AutoHangCount:0
+MapID:53 OnlineCount:0£¬AutoHangCount:0
+MapID:239 OnlineCount:0£¬AutoHangCount:0

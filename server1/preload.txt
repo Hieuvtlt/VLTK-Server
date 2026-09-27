@@ -1,0 +1,3 @@
+# Moi dong 1 file .so preload cho gameserver (thu tu theo dong). '#' = chu thich.
+# Them vdkfix.so/vdk1.so o day. Chi file CO THAT moi duoc load.
+./vdk.so
